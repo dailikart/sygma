@@ -3,19 +3,55 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Sygma Solar — Solar Management Software for EPCs, O&amp;M and Asset Owners</title>
-  <meta name="description" content="Sygma Solar is an all-in-one solar management platform: real-time plant monitoring, project &amp; EPC management, O&amp;M ticketing, inventory, billing and performance analytics in one place.">
+  <title>Sygma Solar — All-in-One Solar Business Software | Design, CRM, Projects, O&amp;M</title>
+  <meta name="description" content="Sygma Solar is the all-in-one software for solar installers and EPCs: AI rooftop design, instant proposals, CRM, project management, procurement, O&amp;M, plant monitoring and billing.">
   <meta name="theme-color" content="#0b1f3a">
-  <meta property="og:title" content="Sygma Solar — Solar Management Software">
-  <meta property="og:description" content="Monitor plants, run projects, manage O&amp;M and bill customers from one platform.">
+  <meta property="og:title" content="Sygma Solar — All-in-One Solar Business Software">
+  <meta property="og:description" content="Design, sell, install and maintain solar projects from one platform.">
   <meta property="og:type" content="website">
   <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body>
+
+  <!-- Reusable icon sprite -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="M9 16.2 4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4z"/></symbol>
+    <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M12 4l-1.4 1.4 5.6 5.6H4v2h12.2l-5.6 5.6L12 20l8-8z"/></symbol>
+    <symbol id="i-chev" viewBox="0 0 24 24"><path d="M7.4 8.6 12 13.2l4.6-4.6L18 10l-6 6-6-6z"/></symbol>
+    <symbol id="i-crm" viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5s-3 1.34-3 3 1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5C15 14.17 10.33 13 8 13zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></symbol>
+    <symbol id="i-design" viewBox="0 0 24 24"><path d="M3 21h18v-2H3v2zM12 3 2 9.5V12h20V9.5L12 3zM5 13v4h3v-4H5zm5.5 0v4h3v-4h-3zm5.5 0v4h3v-4h-3z"/></symbol>
+    <symbol id="i-doc" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></symbol>
+    <symbol id="i-project" viewBox="0 0 24 24"><path d="M19 3h-4.18C14.4 1.84 13.3 1 12 1s-2.4.84-2.82 2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2zm-7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm-2 14-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9z"/></symbol>
+    <symbol id="i-box" viewBox="0 0 24 24"><path d="M20 2H4c-1 0-2 .9-2 2v3.01c0 .72.43 1.34 1 1.69V20c0 1.1 1.1 2 2 2h14c.9 0 2-.9 2-2V8.7c.57-.35 1-.97 1-1.69V4c0-1.1-1-2-2-2zm-5 12H9v-2h6v2zm5-7H4V4h16v3z"/></symbol>
+    <symbol id="i-wrench" viewBox="0 0 24 24"><path d="M22.7 19 13.6 9.9c.9-2.3.4-5-1.5-6.9-2-2-5-2.4-7.4-1.3L9 6 6 9 1.6 4.7C.4 7.1.9 10.1 2.9 12.1c1.9 1.9 4.6 2.4 6.9 1.5l9.1 9.1c.4.4 1 .4 1.4 0l2.3-2.3c.5-.4.5-1.1.1-1.4z"/></symbol>
+    <symbol id="i-chart" viewBox="0 0 24 24"><path d="M3.5 18.5 9.5 12.5l4 4L22 6.9 20.6 5.5l-7.1 8-4-4L2 17z"/></symbol>
+    <symbol id="i-rupee" viewBox="0 0 24 24"><path d="M13.66 7H18V5H6v2h3.5c1.53 0 2.85.87 3.16 2H6v2h6.66c-.31 1.13-1.63 2-3.16 2H6v2.5L12.5 22h2.8l-6.29-6.5h.49c2.69 0 4.92-1.84 5.27-4.5H18V9h-3.23c-.21-.75-.6-1.43-1.11-2z"/></symbol>
+    <symbol id="i-bolt" viewBox="0 0 24 24"><path d="M7 2v11h3v9l7-12h-4l4-8z"/></symbol>
+    <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 1 3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/></symbol>
+    <symbol id="i-lock" viewBox="0 0 24 24"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V10a2 2 0 0 0-2-2zm-6 9a2 2 0 1 1 0-4 2 2 0 0 1 0 4zm3.1-9H8.9V6a3.1 3.1 0 0 1 6.2 0v2z"/></symbol>
+    <symbol id="i-cloud" viewBox="0 0 24 24"><path d="M19.35 10.04A7.49 7.49 0 0 0 12 4C9.11 4 6.6 5.64 5.35 8.04A5.994 5.994 0 0 0 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96z"/></symbol>
+    <symbol id="i-key" viewBox="0 0 24 24"><path d="M12.65 10A5.99 5.99 0 0 0 7 6c-3.31 0-6 2.69-6 6s2.69 6 6 6a5.99 5.99 0 0 0 5.65-4H17v4h4v-4h2v-4H12.65zM7 14c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2z"/></symbol>
+    <symbol id="i-history" viewBox="0 0 24 24"><path d="M13 3a9 9 0 0 0-9 9H1l3.89 3.89.07.14L9 12H6c0-3.87 3.13-7 7-7s7 3.13 7 7-3.13 7-7 7c-1.93 0-3.68-.79-4.94-2.06l-1.42 1.42A8.954 8.954 0 0 0 13 21a9 9 0 0 0 0-18zm-1 5v5l4.28 2.54.72-1.21-3.5-2.08V8H12z"/></symbol>
+    <symbol id="i-play" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></symbol>
+    <symbol id="i-phone" viewBox="0 0 24 24"><path d="M17 1H7c-1.1 0-2 .9-2 2v18c0 1.1.9 2 2 2h10c1.1 0 2-.9 2-2V3c0-1.1-.9-2-2-2zm0 18H7V5h10v14z"/></symbol>
+    <symbol id="i-bell" viewBox="0 0 24 24"><path d="M12 22a2 2 0 0 0 2-2h-4a2 2 0 0 0 2 2zm6-6V11c0-3.07-1.64-5.64-4.5-6.32V4a1.5 1.5 0 0 0-3 0v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1z"/></symbol>
+    <symbol id="i-sun" viewBox="0 0 24 24"><path d="M6.76 4.84 4.96 3.05 3.55 4.46l1.79 1.79 1.42-1.41zM4 10.5H1v2h3v-2zm9-9.95h-2V3.5h2V.55zm7.45 3.91-1.41-1.41-1.79 1.79 1.41 1.41 1.79-1.79zm-3.21 13.7 1.79 1.8 1.41-1.41-1.8-1.79-1.4 1.4zM20 10.5v2h3v-2h-3zm-8-5c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6zm-1 16.95h2V19.5h-2v2.95zm-7.45-3.91 1.41 1.41 1.79-1.8-1.41-1.41-1.79 1.8z"/></symbol>
+    <symbol id="i-globe" viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm6.93 6h-2.95a15.65 15.65 0 0 0-1.38-3.56A8.03 8.03 0 0 1 18.93 8zM12 4.04c.83 1.2 1.48 2.53 1.91 3.96h-3.82c.43-1.43 1.08-2.76 1.91-3.96zM4.26 14C4.1 13.36 4 12.69 4 12s.1-1.36.26-2h3.38c-.08.66-.14 1.32-.14 2s.06 1.34.14 2H4.26zm.82 2h2.95c.32 1.25.78 2.45 1.38 3.56A7.99 7.99 0 0 1 5.08 16zm2.95-8H5.08a7.99 7.99 0 0 1 4.33-3.56A15.65 15.65 0 0 0 8.03 8zM12 19.96c-.83-1.2-1.48-2.53-1.91-3.96h3.82c-.43 1.43-1.08 2.76-1.91 3.96zM14.34 14H9.66c-.09-.66-.16-1.32-.16-2s.07-1.35.16-2h4.68c.09.65.16 1.32.16 2s-.07 1.34-.16 2zm.25 5.56c.6-1.11 1.06-2.31 1.38-3.56h2.95a8.03 8.03 0 0 1-4.33 3.56zM16.36 14c.08-.66.14-1.32.14-2s-.06-1.34-.14-2h3.38c.16.64.26 1.31.26 2s-.1 1.36-.26 2h-3.38z"/></symbol>
+  </svg>
+
+  <!-- ============ ANNOUNCEMENT BAR ============ -->
+  <div class="announce" id="announce">
+    <div class="container announce-inner">
+      <span class="tag">New</span>
+      <span>AI auto-layout is here — design a rooftop system in under 5 minutes.</span>
+      <a href="#design">See it in action <svg><use href="#i-arrow"/></svg></a>
+      <button class="announce-close" aria-label="Dismiss announcement">×</button>
+    </div>
+  </div>
 
   <!-- ============ HEADER ============ -->
   <header class="site-header" id="top">
@@ -26,13 +62,51 @@
       </a>
 
       <nav class="main-nav" id="main-nav" aria-label="Primary">
-        <a href="#features">Features</a>
-        <a href="#modules">Modules</a>
-        <a href="#how">How it works</a>
-        <a href="#pricing">Pricing</a>
-        <a href="#faq">FAQ</a>
-        <a href="#demo" class="btn btn-sm btn-ghost nav-login">Log in</a>
-        <a href="#demo" class="btn btn-sm btn-primary">Book a demo</a>
+        <div class="nav-item has-mega">
+          <button class="nav-link" aria-expanded="false">Products <svg><use href="#i-chev"/></svg></button>
+          <div class="mega">
+            <div class="mega-grid">
+              <a href="#modules" class="mega-link"><span class="mi c1"><svg><use href="#i-crm"/></svg></span><span><b>Sales CRM</b><small>Capture, nurture and convert leads</small></span></a>
+              <a href="#design" class="mega-link"><span class="mi c2"><svg><use href="#i-design"/></svg></span><span><b>Solar Design</b><small>AI rooftop layouts &amp; shade analysis</small></span></a>
+              <a href="#proposals" class="mega-link"><span class="mi c3"><svg><use href="#i-doc"/></svg></span><span><b>Proposals</b><small>Branded quotes with savings &amp; ROI</small></span></a>
+              <a href="#projects" class="mega-link"><span class="mi c4"><svg><use href="#i-project"/></svg></span><span><b>Project Management</b><small>Survey to commissioning, on track</small></span></a>
+              <a href="#operate" class="mega-link"><span class="mi c5"><svg><use href="#i-box"/></svg></span><span><b>Procurement &amp; Inventory</b><small>Stock, POs and serial tracking</small></span></a>
+              <a href="#operate" class="mega-link"><span class="mi c6"><svg><use href="#i-wrench"/></svg></span><span><b>O&amp;M &amp; Service</b><small>Tickets, AMC and field technicians</small></span></a>
+              <a href="#operate" class="mega-link"><span class="mi c7"><svg><use href="#i-chart"/></svg></span><span><b>Plant Monitoring</b><small>Live generation from any inverter</small></span></a>
+              <a href="#operate" class="mega-link"><span class="mi c8"><svg><use href="#i-rupee"/></svg></span><span><b>Finance &amp; Billing</b><small>Invoices, payments, GST &amp; P&amp;L</small></span></a>
+            </div>
+            <div class="mega-side">
+              <span class="kicker">New</span>
+              <b>Field &amp; customer mobile apps</b>
+              <p>Give technicians and customers their own apps — included in every plan.</p>
+              <a href="#apps" class="text-link">Explore apps <svg><use href="#i-arrow"/></svg></a>
+            </div>
+          </div>
+        </div>
+        <div class="nav-item has-mega">
+          <button class="nav-link" aria-expanded="false">Solutions <svg><use href="#i-chev"/></svg></button>
+          <div class="mega mega-sm">
+            <a href="#who" class="mega-link"><span><b>Residential installers</b><small>High-volume rooftop sales &amp; installs</small></span></a>
+            <a href="#who" class="mega-link"><span><b>Commercial &amp; industrial</b><small>Complex C&amp;I projects and approvals</small></span></a>
+            <a href="#who" class="mega-link"><span><b>EPC contractors</b><small>Utility-scale execution &amp; BOQ</small></span></a>
+            <a href="#who" class="mega-link"><span><b>O&amp;M providers</b><small>SLA-driven service operations</small></span></a>
+            <a href="#financing" class="mega-link"><span><b>Solar financing</b><small>Customer loans &amp; working capital</small></span></a>
+          </div>
+        </div>
+        <div class="nav-item has-mega">
+          <button class="nav-link" aria-expanded="false">Resources <svg><use href="#i-chev"/></svg></button>
+          <div class="mega mega-sm">
+            <a href="#calculator" class="mega-link"><span><b>Solar ROI calculator</b><small>Estimate savings and payback</small></span></a>
+            <a href="#stories" class="mega-link"><span><b>Customer stories</b><small>How teams grow with Sygma</small></span></a>
+            <a href="#faq" class="mega-link"><span><b>Help &amp; FAQ</b><small>Answers to common questions</small></span></a>
+            <a href="#security" class="mega-link"><span><b>Security</b><small>How we protect your data</small></span></a>
+          </div>
+        </div>
+        <a href="#pricing" class="nav-link">Pricing</a>
+        <div class="nav-cta">
+          <a href="#demo" class="btn btn-sm btn-ghost">Log in</a>
+          <a href="#demo" class="btn btn-sm btn-primary">Book a demo</a>
+        </div>
       </nav>
 
       <button class="nav-toggle" id="nav-toggle" aria-label="Open menu" aria-expanded="false" aria-controls="main-nav">
@@ -44,22 +118,26 @@
   <main>
     <!-- ============ HERO ============ -->
     <section class="hero">
+      <div class="hero-bg" aria-hidden="true"></div>
       <div class="container hero-grid">
         <div class="hero-copy">
-          <span class="eyebrow"><span class="dot"></span> Built for solar EPCs, O&amp;M teams &amp; IPPs</span>
-          <h1>Run every solar plant, project and customer from <span class="grad">one platform</span>.</h1>
-          <p class="lead">Sygma Solar unifies real-time plant monitoring, project execution, O&amp;M, inventory and billing — so your team spends less time in spreadsheets and more time generating energy.</p>
-          <div class="hero-cta">
-            <a href="#demo" class="btn btn-primary btn-lg">Book a free demo</a>
-            <a href="#how" class="btn btn-outline btn-lg">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>
-              See how it works
-            </a>
-          </div>
+          <span class="eyebrow"><span class="dot"></span> All-in-one software for solar businesses</span>
+          <h1>Design, sell &amp; deliver solar projects <span class="grad">3× faster</span>.</h1>
+          <p class="lead">From the first enquiry to 25 years of service — Sygma Solar brings CRM, AI design, proposals, project execution, inventory, O&amp;M and billing into one simple platform.</p>
+
+          <form class="hero-form" id="hero-form" novalidate>
+            <label class="sr-only" for="hero-phone">Mobile number</label>
+            <input id="hero-phone" type="tel" name="phone" placeholder="Mobile number" autocomplete="tel" required>
+            <label class="sr-only" for="hero-email">Work email</label>
+            <input id="hero-email" type="email" name="email" placeholder="Work email" autocomplete="email" required>
+            <button type="submit" class="btn btn-primary">Get started free</button>
+          </form>
+          <p class="hero-form-msg" id="hero-form-msg" role="status" aria-live="polite"></p>
+
           <ul class="hero-points">
-            <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 16.2 4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4z"/></svg>14-day free trial</li>
-            <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 16.2 4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4z"/></svg>No credit card required</li>
-            <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 16.2 4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4z"/></svg>Works with 40+ inverter brands</li>
+            <li><svg><use href="#i-check"/></svg>14-day free trial</li>
+            <li><svg><use href="#i-check"/></svg>No credit card</li>
+            <li><svg><use href="#i-check"/></svg>Go live in 7 days</li>
           </ul>
         </div>
 
@@ -68,27 +146,27 @@
           <div class="mock">
             <div class="mock-bar">
               <i></i><i></i><i></i>
-              <span>app.sygmasolar.com / portfolio</span>
+              <span>app.sygmasolar.com / dashboard</span>
             </div>
             <div class="mock-body">
               <aside class="mock-side">
-                <b class="on"></b><b></b><b></b><b></b><b></b>
+                <b class="on"></b><b></b><b></b><b></b><b></b><b></b>
               </aside>
               <div class="mock-main">
                 <div class="kpis">
                   <div class="kpi">
-                    <small>Today's generation</small>
-                    <strong data-count="48.6" data-decimals="1">0</strong><em>MWh</em>
-                    <span class="up">▲ 6.2%</span>
+                    <small>Pipeline value</small>
+                    <strong>₹<span data-count="4.8" data-decimals="1">0</span></strong><em>Cr</em>
+                    <span class="up">▲ 18% MoM</span>
                   </div>
                   <div class="kpi">
-                    <small>Performance ratio</small>
-                    <strong data-count="82.4" data-decimals="1">0</strong><em>%</em>
-                    <span class="up">▲ 1.1%</span>
+                    <small>Projects live</small>
+                    <strong data-count="146">0</strong><em>sites</em>
+                    <span class="up">▲ 12 this week</span>
                   </div>
                   <div class="kpi">
-                    <small>Plants online</small>
-                    <strong data-count="127">0</strong><em>/ 128</em>
+                    <small>Generation today</small>
+                    <strong data-count="38.2" data-decimals="1">0</strong><em>MWh</em>
                     <span class="warn">1 alert</span>
                   </div>
                 </div>
@@ -114,114 +192,229 @@
                 </div>
                 <div class="mock-row">
                   <div class="mini-list">
-                    <div><span class="st ok"></span>Plant A · 5.2 MWp <em>98%</em></div>
-                    <div><span class="st ok"></span>Plant B · 2.8 MWp <em>96%</em></div>
-                    <div><span class="st bad"></span>Plant C · 1.5 MWp <em>Inverter fault</em></div>
+                    <div><span class="st ok"></span>Sharma Residence · 5 kW <em>Installed</em></div>
+                    <div><span class="st mid"></span>Patel Textiles · 120 kW <em>Net-metering</em></div>
+                    <div><span class="st bad"></span>Green Valley School · 60 kW <em>Inverter fault</em></div>
                   </div>
                   <div class="donut">
                     <svg viewBox="0 0 42 42" aria-hidden="true">
                       <circle cx="21" cy="21" r="15.9" fill="none" stroke="#e5e9f0" stroke-width="5"/>
-                      <circle cx="21" cy="21" r="15.9" fill="none" stroke="#10b981" stroke-width="5" stroke-dasharray="86 14" stroke-dashoffset="25" stroke-linecap="round"/>
+                      <circle cx="21" cy="21" r="15.9" fill="none" stroke="#10b981" stroke-width="5" stroke-dasharray="72 28" stroke-dashoffset="25" stroke-linecap="round"/>
                     </svg>
-                    <span>86%<small>Tickets closed</small></span>
+                    <span>72%<small>Win rate</small></span>
                   </div>
                 </div>
               </div>
             </div>
           </div>
           <div class="float-card fc-1">
-            <span class="fc-icon green">
-              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M17 8C8 10 5.9 16.2 3.8 21.3l1.9.7 1-2.3c.5.2 1 .3 1.3.3C19 20 22 3 22 3c-1 2-8 2.3-13 3.3S2 11.5 2 13.5s1.8 3.8 1.8 3.8C7 8 17 8 17 8z"/></svg>
-            </span>
-            <div><b>1,240 t</b><small>CO₂ avoided this year</small></div>
+            <span class="fc-icon green"><svg><use href="#i-doc"/></svg></span>
+            <div><b>Proposal accepted</b><small>Mehta Villa · 8 kW · ₹4.2 L</small></div>
           </div>
           <div class="float-card fc-2">
-            <span class="fc-icon amber">
-              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a7 7 0 0 0-7 7c0 5.25 7 13 7 13s7-7.75 7-13a7 7 0 0 0-7-7zm0 9.5A2.5 2.5 0 1 1 12 6.5a2.5 2.5 0 0 1 0 5z"/></svg>
-            </span>
-            <div><b>Technician assigned</b><small>Ticket #2318 · ETA 40 min</small></div>
+            <span class="fc-icon amber"><svg><use href="#i-design"/></svg></span>
+            <div><b>Design ready in 4 min</b><small>26 panels · 14.3 kWp</small></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Trust badges -->
+      <div class="container">
+        <div class="hero-badges">
+          <div><svg><use href="#i-play"/></svg><span><b>On-demand demo</b><small>Watch anytime</small></span></div>
+          <div><svg><use href="#i-cloud"/></svg><span><b>99.9% uptime</b><small>Enterprise cloud</small></span></div>
+          <div><svg><use href="#i-lock"/></svg><span><b>Bank-grade security</b><small>Encrypted &amp; backed up</small></span></div>
+          <div><svg><use href="#i-phone"/></svg><span><b>Android &amp; iOS apps</b><small>For field &amp; customers</small></span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ MARQUEE ============ -->
+    <section class="marquee-wrap" aria-label="Integrations and standards">
+      <p>Works with the tools and equipment you already use</p>
+      <div class="marquee">
+        <div class="marquee-track">
+          <span>Inverter cloud APIs</span><span>Modbus TCP/RTU</span><span>SunSpec</span><span>MQTT</span><span>Data loggers</span><span>Smart meters</span><span>Accounting software</span><span>Payment gateways</span><span>WhatsApp &amp; SMS</span><span>Google Maps</span><span>E-signature</span><span>REST API &amp; webhooks</span>
+          <span aria-hidden="true">Inverter cloud APIs</span><span aria-hidden="true">Modbus TCP/RTU</span><span aria-hidden="true">SunSpec</span><span aria-hidden="true">MQTT</span><span aria-hidden="true">Data loggers</span><span aria-hidden="true">Smart meters</span><span aria-hidden="true">Accounting software</span><span aria-hidden="true">Payment gateways</span><span aria-hidden="true">WhatsApp &amp; SMS</span><span aria-hidden="true">Google Maps</span><span aria-hidden="true">E-signature</span><span aria-hidden="true">REST API &amp; webhooks</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ ALL-IN-ONE MODULES ============ -->
+    <section class="section section-dark" id="modules">
+      <div class="container">
+        <div class="section-head light">
+          <span class="kicker">One platform</span>
+          <h2>Your entire solar business. <br class="hide-sm">One platform.</h2>
+          <p>Stop juggling spreadsheets, WhatsApp groups and five different apps. Every team works from the same live data.</p>
+        </div>
+        <div class="module-grid">
+          <a href="#design" class="module reveal"><span class="mi c1"><svg><use href="#i-crm"/></svg></span><h3>Sales CRM</h3><p>Capture leads from ads, website and referrals. Automate follow-ups and never lose a deal.</p><span class="explore">Explore <svg><use href="#i-arrow"/></svg></span></a>
+          <a href="#design" class="module reveal"><span class="mi c2"><svg><use href="#i-design"/></svg></span><h3>Solar Design</h3><p>AI-powered rooftop layouts, shade analysis and generation estimates in minutes.</p><span class="explore">Explore <svg><use href="#i-arrow"/></svg></span></a>
+          <a href="#proposals" class="module reveal"><span class="mi c3"><svg><use href="#i-doc"/></svg></span><h3>Proposals</h3><p>Beautiful branded proposals with savings, payback and financing — e-signed online.</p><span class="explore">Explore <svg><use href="#i-arrow"/></svg></span></a>
+          <a href="#projects" class="module reveal"><span class="mi c4"><svg><use href="#i-project"/></svg></span><h3>Project Management</h3><p>Milestones, tasks, documents and approvals from site survey to commissioning.</p><span class="explore">Explore <svg><use href="#i-arrow"/></svg></span></a>
+          <a href="#operate" class="module reveal"><span class="mi c5"><svg><use href="#i-box"/></svg></span><h3>Procurement &amp; Inventory</h3><p>Purchase orders, multi-warehouse stock, vendor rates and serial-number tracking.</p><span class="explore">Explore <svg><use href="#i-arrow"/></svg></span></a>
+          <a href="#operate" class="module reveal"><span class="mi c6"><svg><use href="#i-wrench"/></svg></span><h3>O&amp;M &amp; Service</h3><p>Auto-tickets from alarms, AMC contracts, cleaning schedules and technician dispatch.</p><span class="explore">Explore <svg><use href="#i-arrow"/></svg></span></a>
+          <a href="#operate" class="module reveal"><span class="mi c7"><svg><use href="#i-chart"/></svg></span><h3>Plant Monitoring</h3><p>Live generation, PR and alerts from any inverter brand — in one fleet dashboard.</p><span class="explore">Explore <svg><use href="#i-arrow"/></svg></span></a>
+          <a href="#operate" class="module reveal"><span class="mi c8"><svg><use href="#i-rupee"/></svg></span><h3>Finance &amp; Billing</h3><p>GST invoices, payment milestones, collections, expenses and project-wise P&amp;L.</p><span class="explore">Explore <svg><use href="#i-arrow"/></svg></span></a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ DEEP DIVE: DESIGN ============ -->
+    <section class="section" id="design">
+      <div class="container split">
+        <div class="split-copy reveal">
+          <span class="kicker">Solar design</span>
+          <h2>From satellite image to optimised layout in under 5 minutes</h2>
+          <p>Drop a pin on the customer's address. Sygma Solar maps the roof, detects obstructions, runs a year-long shade simulation and places panels for maximum generation — automatically.</p>
+          <ul class="checks">
+            <li>AI auto-layout with obstruction &amp; setback detection</li>
+            <li>Hour-by-hour shade analysis and solar access scores</li>
+            <li>Accurate generation estimates using local irradiance data</li>
+            <li>Auto-generated BOM, single-line diagram and structure drawings</li>
+          </ul>
+          <div class="mini-stats">
+            <div><b>&lt; 5 min</b><small>Average design time</small></div>
+            <div><b>±3%</b><small>Generation accuracy</small></div>
+          </div>
+        </div>
+        <div class="split-visual reveal">
+          <div class="design-card">
+            <div class="dc-toolbar">
+              <span class="chip on">Auto-layout</span><span class="chip">Shade</span><span class="chip">3D</span><span class="chip">BOM</span>
+              <span class="dc-ai"><svg><use href="#i-bolt"/></svg> AI optimised</span>
+            </div>
+            <svg class="roof" viewBox="0 0 480 320" role="img" aria-label="Rooftop with an automatically placed solar panel layout">
+              <defs>
+                <pattern id="sat" width="12" height="12" patternUnits="userSpaceOnUse">
+                  <rect width="12" height="12" fill="#5b6b52"/><circle cx="3" cy="4" r="2" fill="#4f5f47"/><circle cx="9" cy="9" r="2.5" fill="#66775c"/>
+                </pattern>
+                <linearGradient id="panel" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#1e3a8a"/><stop offset="1" stop-color="#1d4ed8"/></linearGradient>
+                <radialGradient id="shade"><stop offset="0" stop-color="#ef4444" stop-opacity=".55"/><stop offset="1" stop-color="#ef4444" stop-opacity="0"/></radialGradient>
+              </defs>
+              <rect width="480" height="320" fill="url(#sat)"/>
+              <rect x="20" y="250" width="440" height="40" fill="#8b8f86" opacity=".7"/>
+              <polygon points="60,40 420,40 420,230 60,230" fill="#c9c4b8"/>
+              <polygon points="60,40 420,40 420,230 60,230" fill="none" stroke="#a8a294" stroke-width="3"/>
+              <polygon points="386,66 412,92 412,124 386,106" fill="#000" opacity=".18"/>
+              <ellipse cx="368" cy="96" rx="62" ry="46" fill="url(#shade)"/>
+              <rect x="330" y="62" width="56" height="44" rx="4" fill="#e8e4da" stroke="#a8a294" stroke-width="2"/>
+              <g class="panels" fill="url(#panel)" stroke="#93c5fd" stroke-width="1">
+                <!-- rows generated via JS for animation; static fallback -->
+              </g>
+              <g font-family="Inter, sans-serif" font-size="11" font-weight="600">
+                <rect x="72" y="200" width="108" height="22" rx="11" fill="#fff"/>
+                <text x="84" y="215" fill="#0f172a">Setback 0.6 m</text>
+              </g>
+              <g transform="translate(440 280)">
+                <circle r="16" fill="#fff" opacity=".9"/><path d="M0,-11 L4,0 L0,-2 L-4,0Z" fill="#ef4444"/><text y="11" text-anchor="middle" font-size="8" font-weight="700" font-family="Inter">N</text>
+              </g>
+            </svg>
+            <div class="dc-stats">
+              <div><small>System size</small><b>14.3 kWp</b></div>
+              <div><small>Panels</small><b>26 × 550 W</b></div>
+              <div><small>Annual yield</small><b>21,450 kWh</b></div>
+              <div><small>Solar access</small><b class="ok">97%</b></div>
+            </div>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- ============ TRUST STRIP ============ -->
-    <section class="trust">
-      <div class="container">
-        <p>Connects to your equipment over industry-standard protocols</p>
-        <div class="trust-logos">
-          <span>Modbus TCP/RTU</span><span>SunSpec</span><span>MQTT</span><span>OPC UA</span><span>IEC 61850</span><span>REST API</span>
+    <!-- ============ DEEP DIVE: PROPOSALS ============ -->
+    <section class="section section-alt" id="proposals">
+      <div class="container split reverse">
+        <div class="split-copy reveal">
+          <span class="kicker">Proposals</span>
+          <h2>Proposals that close deals on the first visit</h2>
+          <p>Turn any design into a stunning, branded proposal with savings, payback, subsidy and EMI options. Share a link on WhatsApp, track when it's opened and collect an e-signature on the spot.</p>
+          <ul class="checks">
+            <li>Your logo, colours and templates — in English &amp; regional languages</li>
+            <li>Savings, payback, 25-year cash flow and CO₂ impact</li>
+            <li>Subsidy, financing and EMI comparisons built in</li>
+            <li>Real-time alerts when customers view or sign</li>
+          </ul>
+          <a href="#demo" class="text-link">See a sample proposal <svg><use href="#i-arrow"/></svg></a>
+        </div>
+        <div class="split-visual reveal">
+          <div class="proposal">
+            <div class="pr-head">
+              <div><span class="pr-logo"></span><b>Your Solar Co.</b></div>
+              <span class="pill green">Viewed 3×</span>
+            </div>
+            <div class="pr-title">
+              <small>Solar proposal for</small>
+              <h4>Mr. &amp; Mrs. Mehta · 8 kW rooftop</h4>
+            </div>
+            <div class="pr-kpis">
+              <div><small>Monthly savings</small><b>₹6,400</b></div>
+              <div><small>Payback</small><b>3.8 yrs</b></div>
+              <div><small>25-yr savings</small><b>₹21.6 L</b></div>
+            </div>
+            <div class="pr-chart" aria-hidden="true">
+              <small>Cumulative savings (₹ lakh)</small>
+              <div class="pr-bars">
+                <span style="--h:8%"></span><span style="--h:14%"></span><span style="--h:21%"></span><span style="--h:29%"></span><span style="--h:37%"></span><span style="--h:46%"></span><span style="--h:55%"></span><span style="--h:64%"></span><span style="--h:74%"></span><span style="--h:85%"></span><span style="--h:96%"></span>
+              </div>
+            </div>
+            <div class="pr-foot">
+              <div class="pr-emi"><small>EMI from</small><b>₹7,150/mo</b></div>
+              <button class="btn btn-primary btn-sm" type="button" tabindex="-1">Accept &amp; e-sign</button>
+            </div>
+          </div>
         </div>
       </div>
     </section>
 
-    <!-- ============ STATS ============ -->
-    <section class="stats">
-      <div class="container stats-grid">
-        <div><strong data-count="2.4" data-decimals="1" data-suffix=" GW">0</strong><span>Capacity under management</span></div>
-        <div><strong data-count="12000" data-suffix="+">0</strong><span>Sites monitored</span></div>
-        <div><strong data-count="35" data-suffix="%">0</strong><span>Faster fault resolution</span></div>
-        <div><strong data-count="99.9" data-decimals="1" data-suffix="%">0</strong><span>Platform uptime</span></div>
+    <!-- ============ DEEP DIVE: PROJECTS ============ -->
+    <section class="section" id="projects">
+      <div class="container split">
+        <div class="split-copy reveal">
+          <span class="kicker">Project management</span>
+          <h2>Every project on time, every document in place</h2>
+          <p>Standardise your installation process with templates. Assign tasks to your team and subcontractors, collect site photos, and track subsidy, DISCOM and net-metering paperwork without chasing anyone.</p>
+          <ul class="checks">
+            <li>Kanban &amp; Gantt views with stage-wise checklists</li>
+            <li>Subsidy, DISCOM and net-metering document tracking</li>
+            <li>Geo-tagged site photos and installation reports</li>
+            <li>Customer updates on WhatsApp at every milestone</li>
+          </ul>
+        </div>
+        <div class="split-visual reveal">
+          <div class="kanban">
+            <div class="kb-col">
+              <h5>Site survey <em>4</em></h5>
+              <div class="kb-card"><b>Iyer Residence</b><small>6 kW · Pune</small><span class="kb-tag t1">Survey today</span></div>
+              <div class="kb-card"><b>Shree Foods</b><small>75 kW · Nashik</small><span class="kb-tag t2">Scheduled</span></div>
+            </div>
+            <div class="kb-col">
+              <h5>Installation <em>6</em></h5>
+              <div class="kb-card"><b>Mehta Villa</b><small>8 kW · Thane</small><div class="kb-prog"><i style="--w:65%"></i></div></div>
+              <div class="kb-card"><b>Patel Textiles</b><small>120 kW · Surat</small><div class="kb-prog"><i style="--w:30%"></i></div></div>
+            </div>
+            <div class="kb-col">
+              <h5>Net-metering <em>3</em></h5>
+              <div class="kb-card"><b>Rao Clinic</b><small>10 kW · Hyderabad</small><span class="kb-tag t3">DISCOM approval</span></div>
+              <div class="kb-card done"><b>Joshi Home</b><small>4 kW · Nagpur</small><span class="kb-tag t4">Commissioned ✓</span></div>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
 
-    <!-- ============ FEATURES ============ -->
-    <section class="section" id="features">
+    <!-- ============ OPERATE (TABS) ============ -->
+    <section class="section section-alt" id="operate">
       <div class="container">
         <div class="section-head">
-          <span class="kicker">Why Sygma Solar</span>
-          <h2>Everything your solar business needs, nothing it doesn't</h2>
-          <p>Replace disconnected inverter portals, spreadsheets and WhatsApp groups with a single source of truth for your entire portfolio.</p>
+          <span class="kicker">Operate &amp; scale</span>
+          <h2>Run operations like a 1,000-person company</h2>
+          <p>After installation, Sygma Solar keeps your plants performing, your stock stocked and your cash flowing.</p>
         </div>
 
-        <div class="feature-grid">
-          <article class="feature reveal">
-            <span class="f-icon"><svg viewBox="0 0 24 24"><path d="M3 13h2v8H3zm4-6h2v14H7zm4 3h2v11h-2zm4-7h2v18h-2zm4 9h2v9h-2z"/></svg></span>
-            <h3>Real-time monitoring</h3>
-            <p>Live generation, irradiance, PR and CUF across every site. Data from inverters, meters, weather stations and SCADA, normalised automatically.</p>
-          </article>
-          <article class="feature reveal">
-            <span class="f-icon"><svg viewBox="0 0 24 24"><path d="M12 22a2 2 0 0 0 2-2h-4a2 2 0 0 0 2 2zm6-6V11c0-3.07-1.64-5.64-4.5-6.32V4a1.5 1.5 0 0 0-3 0v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1z"/></svg></span>
-            <h3>Smart alerts</h3>
-            <p>Detect under-performance, string failures, grid outages and communication loss instantly — with SMS, email and in-app escalation rules.</p>
-          </article>
-          <article class="feature reveal">
-            <span class="f-icon"><svg viewBox="0 0 24 24"><path d="M22.7 19 13.6 9.9c.9-2.3.4-5-1.5-6.9-2-2-5-2.4-7.4-1.3L9 6 6 9 1.6 4.7C.4 7.1.9 10.1 2.9 12.1c1.9 1.9 4.6 2.4 6.9 1.5l9.1 9.1c.4.4 1 .4 1.4 0l2.3-2.3c.5-.4.5-1.1.1-1.4z"/></svg></span>
-            <h3>O&amp;M &amp; field service</h3>
-            <p>Auto-create tickets from alarms, dispatch technicians with a mobile app, track SLAs, preventive maintenance schedules and module cleaning cycles.</p>
-          </article>
-          <article class="feature reveal">
-            <span class="f-icon"><svg viewBox="0 0 24 24"><path d="M19 3h-4.18C14.4 1.84 13.3 1 12 1s-2.4.84-2.82 2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2zm-7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm-2 14-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9z"/></svg></span>
-            <h3>Project &amp; EPC management</h3>
-            <p>From lead and site survey to design, procurement, installation, net-metering and commissioning — track every milestone, document and approval.</p>
-          </article>
-          <article class="feature reveal">
-            <span class="f-icon"><svg viewBox="0 0 24 24"><path d="M20 4H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2zm0 14H4v-6h16zm0-10H4V6h16z"/></svg></span>
-            <h3>Billing &amp; PPA invoicing</h3>
-            <p>Generate meter-based invoices for PPA, lease and RESCO models automatically. Taxes, tariffs, escalations and payment reminders built in.</p>
-          </article>
-          <article class="feature reveal">
-            <span class="f-icon"><svg viewBox="0 0 24 24"><path d="M3.5 18.5 9.5 12.5l4 4L22 6.9 20.6 5.5l-7.1 8-4-4L2 17z"/></svg></span>
-            <h3>Analytics &amp; reports</h3>
-            <p>Loss analysis, degradation tracking, forecast vs. actual and investor-ready monthly reports — scheduled and emailed in one click.</p>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <!-- ============ MODULES (TABS) ============ -->
-    <section class="section section-alt" id="modules">
-      <div class="container">
-        <div class="section-head">
-          <span class="kicker">Platform modules</span>
-          <h2>One platform, built for every team</h2>
-          <p>Switch on the modules you need today and add more as you grow.</p>
-        </div>
-
-        <div class="tabs" role="tablist" aria-label="Platform modules">
+        <div class="tabs" role="tablist" aria-label="Operations modules">
           <button role="tab" aria-selected="true" aria-controls="tab-monitor" id="t-monitor" class="tab active">Monitoring</button>
           <button role="tab" aria-selected="false" aria-controls="tab-om" id="t-om" class="tab" tabindex="-1">O&amp;M</button>
-          <button role="tab" aria-selected="false" aria-controls="tab-crm" id="t-crm" class="tab" tabindex="-1">Sales &amp; CRM</button>
           <button role="tab" aria-selected="false" aria-controls="tab-inv" id="t-inv" class="tab" tabindex="-1">Inventory</button>
           <button role="tab" aria-selected="false" aria-controls="tab-fin" id="t-fin" class="tab" tabindex="-1">Finance</button>
         </div>
@@ -229,19 +422,20 @@
         <div class="tab-panels">
           <div class="tab-panel active" role="tabpanel" id="tab-monitor" aria-labelledby="t-monitor">
             <div class="panel-copy">
-              <h3>Portfolio-wide visibility, down to the string</h3>
-              <p>Connect any inverter, data logger or meter and see your entire fleet on a live map. Drill down from portfolio to plant, inverter and string level in seconds.</p>
+              <h3>Your whole fleet, live, down to the string</h3>
+              <p>Connect any inverter or data logger and see every plant on one map. Spot under-performance before your customers do.</p>
               <ul class="checks">
-                <li>Vendor-agnostic data integration (Modbus, MQTT, APIs)</li>
+                <li>Vendor-agnostic: cloud APIs, Modbus, MQTT</li>
                 <li>Expected vs. actual using satellite irradiance</li>
-                <li>Heatmaps, single-line diagrams and live map view</li>
-                <li>Customer-facing generation portal &amp; mobile app</li>
+                <li>Instant alerts via app, SMS, email &amp; WhatsApp</li>
+                <li>Branded customer app with live generation</li>
               </ul>
             </div>
             <div class="panel-visual">
               <div class="pv-card">
-                <div class="pv-title">Inverter heatmap · Plant A</div>
+                <div class="pv-title">Inverter heatmap · Patel Textiles</div>
                 <div class="heatmap" id="heatmap" aria-hidden="true"></div>
+                <div class="heat-legend"><span><i style="background:#10b981"></i>Normal</span><span><i style="background:#f59e0b"></i>Low</span><span><i style="background:#ef4444"></i>Fault</span></div>
               </div>
             </div>
           </div>
@@ -249,65 +443,41 @@
           <div class="tab-panel" role="tabpanel" id="tab-om" aria-labelledby="t-om" hidden>
             <div class="panel-copy">
               <h3>Turn alarms into resolved tickets — automatically</h3>
-              <p>Every fault becomes a ticket with the right priority, assignee and SLA. Field technicians get checklists, photos and spare-part requests on their phone, even offline.</p>
+              <p>Every fault becomes a ticket with the right priority, technician and SLA. Technicians get checklists and photo capture on their phone, even offline.</p>
               <ul class="checks">
                 <li>Auto-ticketing from alarms with SLA timers</li>
-                <li>Preventive maintenance &amp; cleaning schedules</li>
-                <li>Offline-ready mobile app with GPS check-in</li>
-                <li>Root-cause and MTTR reporting</li>
+                <li>AMC contracts, cleaning &amp; preventive schedules</li>
+                <li>Offline-ready field app with GPS check-in</li>
+                <li>MTTR, root-cause and SLA reports</li>
               </ul>
             </div>
             <div class="panel-visual">
               <div class="pv-card">
                 <div class="pv-title">Open tickets</div>
-                <div class="ticket"><span class="pill red">High</span><div><b>Inverter INV-07 offline</b><small>Plant C · assigned to R. Kumar</small></div><em>00:42</em></div>
-                <div class="ticket"><span class="pill amber">Med</span><div><b>String 14 under-performing</b><small>Plant A · awaiting parts</small></div><em>03:15</em></div>
-                <div class="ticket"><span class="pill blue">PM</span><div><b>Quarterly module cleaning</b><small>Plant B · scheduled Fri</small></div><em>Plan</em></div>
-                <div class="ticket"><span class="pill green">Done</span><div><b>Meter communication restored</b><small>Plant D · closed by A. Shah</small></div><em>✓</em></div>
-              </div>
-            </div>
-          </div>
-
-          <div class="tab-panel" role="tabpanel" id="tab-crm" aria-labelledby="t-crm" hidden>
-            <div class="panel-copy">
-              <h3>Close more rooftop and C&amp;I deals</h3>
-              <p>Capture leads from your website and campaigns, generate instant solar proposals with savings and ROI, and follow every deal through to installation.</p>
-              <ul class="checks">
-                <li>Lead capture, pipeline and follow-up reminders</li>
-                <li>Instant proposals with system sizing &amp; payback</li>
-                <li>E-sign quotations and customer documents</li>
-                <li>Hand-off from sales to project in one click</li>
-              </ul>
-            </div>
-            <div class="panel-visual">
-              <div class="pv-card">
-                <div class="pv-title">Sales pipeline</div>
-                <div class="pipeline">
-                  <div><small>Leads</small><b>184</b><span style="--w:100%"></span></div>
-                  <div><small>Site survey</small><b>96</b><span style="--w:52%"></span></div>
-                  <div><small>Proposal sent</small><b>61</b><span style="--w:33%"></span></div>
-                  <div><small>Won</small><b>38</b><span style="--w:21%"></span></div>
-                </div>
+                <div class="ticket"><span class="pill red">High</span><div><b>Inverter INV-07 offline</b><small>Green Valley School · R. Kumar</small></div><em>00:42</em></div>
+                <div class="ticket"><span class="pill amber">Med</span><div><b>String 14 under-performing</b><small>Patel Textiles · awaiting parts</small></div><em>03:15</em></div>
+                <div class="ticket"><span class="pill blue">AMC</span><div><b>Quarterly module cleaning</b><small>Shree Foods · scheduled Fri</small></div><em>Plan</em></div>
+                <div class="ticket"><span class="pill green">Done</span><div><b>Meter communication restored</b><small>Rao Clinic · closed by A. Shah</small></div><em>✓</em></div>
               </div>
             </div>
           </div>
 
           <div class="tab-panel" role="tabpanel" id="tab-inv" aria-labelledby="t-inv" hidden>
             <div class="panel-copy">
-              <h3>Never wait on a spare part again</h3>
-              <p>Track modules, inverters, structures and spares across warehouses and sites. Serial-number traceability links every component to its plant and warranty.</p>
+              <h3>The right material at the right site, every time</h3>
+              <p>Track panels, inverters, structures and BOS across warehouses and sites. Every serial number is linked to its project and warranty.</p>
               <ul class="checks">
                 <li>Multi-warehouse stock with reorder alerts</li>
-                <li>Purchase orders, GRN and vendor management</li>
-                <li>Serial &amp; warranty tracking per component</li>
+                <li>Purchase orders, GRN and vendor price comparison</li>
+                <li>Serial-number &amp; warranty tracking</li>
                 <li>Material issue against projects and tickets</li>
               </ul>
             </div>
             <div class="panel-visual">
               <div class="pv-card">
-                <div class="pv-title">Stock levels</div>
-                <div class="stock"><span>Mono PERC 545W modules</span><div class="bar"><i style="--w:78%"></i></div><b>3,920</b></div>
-                <div class="stock"><span>String inverter 50 kW</span><div class="bar"><i style="--w:42%"></i></div><b>21</b></div>
+                <div class="pv-title">Stock levels · Main warehouse</div>
+                <div class="stock"><span>Mono PERC 550 W panels</span><div class="bar"><i style="--w:78%"></i></div><b>3,920</b></div>
+                <div class="stock"><span>On-grid inverter 10 kW</span><div class="bar"><i style="--w:42%"></i></div><b>21</b></div>
                 <div class="stock"><span>DC cable 4 sq.mm (m)</span><div class="bar"><i style="--w:64%"></i></div><b>12,400</b></div>
                 <div class="stock low"><span>MC4 connectors</span><div class="bar"><i style="--w:12%"></i></div><b>180</b></div>
               </div>
@@ -316,18 +486,18 @@
 
           <div class="tab-panel" role="tabpanel" id="tab-fin" aria-labelledby="t-fin" hidden>
             <div class="panel-copy">
-              <h3>Billing that runs itself</h3>
-              <p>Meter readings flow straight into invoices for PPA, lease and net-metering customers. Track receivables, payments and project profitability in real time.</p>
+              <h3>Know exactly where every rupee goes</h3>
+              <p>Raise GST-compliant invoices against payment milestones, track collections and expenses, and see real profit for every project.</p>
               <ul class="checks">
-                <li>Automated monthly PPA &amp; lease invoicing</li>
-                <li>Tariff escalation, taxes and multi-currency</li>
+                <li>Milestone-based invoicing with GST &amp; e-invoice</li>
                 <li>Online payments and automated reminders</li>
-                <li>Project costing and P&amp;L by site</li>
+                <li>Expense, vendor bill and petty-cash tracking</li>
+                <li>Project-wise costing and P&amp;L</li>
               </ul>
             </div>
             <div class="panel-visual">
               <div class="pv-card">
-                <div class="pv-title">Revenue · last 6 months</div>
+                <div class="pv-title">Collections · last 6 months</div>
                 <div class="bars" aria-hidden="true">
                   <span style="--h:52%"><i>Jun</i></span><span style="--h:61%"><i>Jul</i></span><span style="--h:58%"><i>Aug</i></span>
                   <span style="--h:70%"><i>Sep</i></span><span style="--h:78%"><i>Oct</i></span><span style="--h:92%" class="hi"><i>Nov</i></span>
@@ -339,62 +509,261 @@
       </div>
     </section>
 
-    <!-- ============ HOW IT WORKS ============ -->
+    <!-- ============ IMPACT STATS ============ -->
+    <section class="impact">
+      <div class="container impact-grid">
+        <div><strong data-count="1200" data-suffix="+">0</strong><span>Solar businesses</span></div>
+        <div><strong data-count="85000" data-suffix="+">0</strong><span>Projects managed</span></div>
+        <div><strong data-count="1.8" data-decimals="1" data-suffix=" GW">0</strong><span>Capacity designed</span></div>
+        <div><strong data-count="40" data-suffix="%">0</strong><span>Less admin time</span></div>
+      </div>
+    </section>
+
+    <!-- ============ HOW IT WORKS + VIDEO ============ -->
     <section class="section" id="how">
       <div class="container">
         <div class="section-head">
           <span class="kicker">How it works</span>
-          <h2>Live in days, not months</h2>
-          <p>Our onboarding team handles the heavy lifting so you see value from week one.</p>
+          <h2>Live in 7 days. Not 7 months.</h2>
+          <p>Our onboarding specialists set everything up with you, so your team sees value from week one.</p>
         </div>
+
+        <div class="video-card reveal">
+          <button class="video-btn" id="video-open" aria-label="Play product overview video">
+            <span class="play"><svg><use href="#i-play"/></svg></span>
+          </button>
+          <div class="video-copy">
+            <b>Watch the 2-minute product tour</b>
+            <small>See a lead become a commissioned plant — end to end.</small>
+          </div>
+        </div>
+
         <ol class="steps">
-          <li class="reveal"><span class="step-n">1</span><h3>Connect your plants</h3><p>Plug in inverters, loggers and meters via API or our plug-and-play gateway. We support 40+ OEMs out of the box.</p></li>
-          <li class="reveal"><span class="step-n">2</span><h3>Import your data</h3><p>Bring over customers, projects, assets and inventory from spreadsheets or your existing ERP in a guided import.</p></li>
-          <li class="reveal"><span class="step-n">3</span><h3>Configure workflows</h3><p>Set alert thresholds, SLAs, approval chains, invoice templates and user roles to match how your team works.</p></li>
-          <li class="reveal"><span class="step-n">4</span><h3>Optimise &amp; grow</h3><p>Use analytics to cut downtime, improve PR and scale your portfolio without adding headcount.</p></li>
+          <li class="reveal"><span class="step-n">1</span><h3>Sign up &amp; import</h3><p>Bring in leads, customers, projects and inventory from Excel or your old software.</p></li>
+          <li class="reveal"><span class="step-n">2</span><h3>Configure your way</h3><p>Set up your stages, proposal templates, price lists, roles and approvals.</p></li>
+          <li class="reveal"><span class="step-n">3</span><h3>Train your team</h3><p>Live training for sales, design, project and field teams — in your language.</p></li>
+          <li class="reveal"><span class="step-n">4</span><h3>Grow faster</h3><p>Close more deals and deliver more projects with the same team.</p></li>
         </ol>
       </div>
     </section>
 
-    <!-- ============ AUDIENCE ============ -->
-    <section class="section section-dark">
+    <!-- ============ ROI CALCULATOR ============ -->
+    <section class="section section-alt" id="calculator">
       <div class="container">
-        <div class="section-head light">
+        <div class="section-head">
+          <span class="kicker">Free tool</span>
+          <h2>Rooftop solar savings calculator</h2>
+          <p>The same engine that powers Sygma proposals. Try it with your own numbers.</p>
+        </div>
+        <div class="calc reveal">
+          <form class="calc-inputs" id="calc" onsubmit="return false">
+            <div class="calc-field">
+              <label for="c-bill">Monthly electricity bill <output id="o-bill">₹5,000</output></label>
+              <input type="range" id="c-bill" min="1000" max="100000" step="500" value="5000">
+            </div>
+            <div class="calc-field">
+              <label for="c-tariff">Electricity tariff <output id="o-tariff">₹8.0 / unit</output></label>
+              <input type="range" id="c-tariff" min="4" max="14" step="0.5" value="8">
+            </div>
+            <div class="calc-field">
+              <label for="c-cost">System cost <output id="o-cost">₹55,000 / kW</output></label>
+              <input type="range" id="c-cost" min="35000" max="80000" step="1000" value="55000">
+            </div>
+            <div class="calc-field">
+              <label for="c-sun">Generation <output id="o-sun">4.0 units / kW / day</output></label>
+              <input type="range" id="c-sun" min="3" max="5.5" step="0.1" value="4">
+            </div>
+            <label class="calc-check"><input type="checkbox" id="c-sub" checked> Include residential subsidy estimate</label>
+          </form>
+          <div class="calc-out" aria-live="polite">
+            <div class="co-main">
+              <small>Recommended system</small>
+              <b id="r-size">5.2 kW</b>
+            </div>
+            <div class="co-grid">
+              <div><small>Net cost</small><b id="r-cost">₹2.08 L</b></div>
+              <div><small>Annual savings</small><b id="r-save">₹60,000</b></div>
+              <div><small>Payback</small><b id="r-pay">3.5 yrs</b></div>
+              <div><small>25-year savings</small><b id="r-life">₹19.4 L</b></div>
+              <div><small>CO₂ avoided / yr</small><b id="r-co2">6.1 t</b></div>
+              <div><small>Trees equivalent</small><b id="r-trees">280</b></div>
+            </div>
+            <p class="calc-note">Estimates only. Subsidy shown is an indicative central-scheme amount for residential systems; actual savings depend on location, roof, tariff slab and net-metering rules.</p>
+            <a href="#demo" class="btn btn-primary btn-block">Create proposals like this for your customers</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ WHO IT'S FOR ============ -->
+    <section class="section" id="who">
+      <div class="container">
+        <div class="section-head">
           <span class="kicker">Who it's for</span>
-          <h2>Designed for the whole solar value chain</h2>
+          <h2>Built for every kind of solar business</h2>
         </div>
         <div class="aud-grid">
-          <div class="aud reveal"><h3>Rooftop installers</h3><p>Manage hundreds of residential and C&amp;I systems, automate proposals and give customers a branded monitoring app.</p></div>
-          <div class="aud reveal"><h3>EPC contractors</h3><p>Plan, procure and execute utility-scale projects with milestone tracking, BOQ and subcontractor management.</p></div>
-          <div class="aud reveal"><h3>O&amp;M service providers</h3><p>Hit every SLA with automated ticketing, technician dispatch and contract-level performance reports.</p></div>
-          <div class="aud reveal"><h3>IPPs &amp; asset owners</h3><p>Maximise yield and revenue across portfolios with investor-grade analytics and automated PPA billing.</p></div>
+          <div class="aud reveal">
+            <span class="aud-icon"><svg><use href="#i-sun"/></svg></span>
+            <h3>Residential installers</h3>
+            <p>Handle hundreds of rooftop enquiries, design and quote on the first visit, and track subsidy paperwork.</p>
+          </div>
+          <div class="aud reveal">
+            <span class="aud-icon"><svg><use href="#i-bolt"/></svg></span>
+            <h3>Commercial &amp; industrial</h3>
+            <p>Manage complex C&amp;I projects with detailed BOQs, approvals, procurement and milestone billing.</p>
+          </div>
+          <div class="aud reveal">
+            <span class="aud-icon"><svg><use href="#i-project"/></svg></span>
+            <h3>EPC contractors</h3>
+            <p>Plan and execute MW-scale projects with subcontractors, material planning and site reporting.</p>
+          </div>
+          <div class="aud reveal">
+            <span class="aud-icon"><svg><use href="#i-wrench"/></svg></span>
+            <h3>O&amp;M &amp; asset owners</h3>
+            <p>Monitor fleets, hit SLAs and send investor-ready performance reports automatically.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ FINANCING ============ -->
+    <section class="section section-dark" id="financing">
+      <div class="container">
+        <div class="section-head light">
+          <span class="kicker">Solar financing</span>
+          <h2>Help customers say yes — and keep your cash flowing</h2>
+          <p>Offer financing right inside your proposals through our lending partners.</p>
+        </div>
+        <div class="fin-grid">
+          <div class="fin reveal">
+            <span class="mi c3"><svg><use href="#i-sun"/></svg></span>
+            <h3>Customer solar loans</h3>
+            <p>Easy EMIs for homeowners and businesses, with quick digital approval inside the proposal.</p>
+            <ul class="checks light"><li>Paperless application</li><li>Approval in as little as 48 hours</li><li>Flexible tenures</li></ul>
+            <a href="#demo" class="btn btn-light btn-block">Offer EMIs</a>
+          </div>
+          <div class="fin featured reveal">
+            <span class="mi c8"><svg><use href="#i-rupee"/></svg></span>
+            <h3>Working capital for installers</h3>
+            <p>Fund material purchases and grow your order book without blocking cash.</p>
+            <ul class="checks light"><li>Credit line based on your project pipeline</li><li>Pay vendors on time, every time</li><li>Repay as customers pay you</li></ul>
+            <a href="#demo" class="btn btn-primary btn-block">Check eligibility</a>
+          </div>
+          <div class="fin reveal">
+            <span class="mi c5"><svg><use href="#i-box"/></svg></span>
+            <h3>Material procurement</h3>
+            <p>Source panels, inverters and BOS at competitive rates, delivered to your site.</p>
+            <ul class="checks light"><li>Compare quotes from verified vendors</li><li>Track orders and deliveries</li><li>Auto-sync to inventory</li></ul>
+            <a href="#demo" class="btn btn-light btn-block">Get quotes</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ MOBILE APPS ============ -->
+    <section class="section" id="apps">
+      <div class="container split">
+        <div class="split-copy reveal">
+          <span class="kicker">Mobile apps</span>
+          <h2>Your business in your pocket</h2>
+          <p>Sales reps, site engineers and technicians get everything they need on their phone. Your customers get a branded app to track their project and generation.</p>
+          <div class="app-feats">
+            <div><svg><use href="#i-crm"/></svg><span><b>Sales app</b><small>Leads, site visits, instant quotes</small></span></div>
+            <div><svg><use href="#i-wrench"/></svg><span><b>Field app</b><small>Tasks, checklists, photos — works offline</small></span></div>
+            <div><svg><use href="#i-sun"/></svg><span><b>Customer app</b><small>Project status, generation &amp; service requests</small></span></div>
+          </div>
+          <div class="store-btns">
+            <a href="#demo" class="store"><svg viewBox="0 0 24 24"><path d="M3.6 1.8c-.3.3-.4.7-.4 1.2v18c0 .5.1.9.4 1.2l.1.1L13.8 12v-.2L3.7 1.7l-.1.1zM17.2 15.4l-3.4-3.4v-.2l3.4-3.4.1.1 4 2.3c1.1.6 1.1 1.7 0 2.3l-4 2.3h-.1zM17.3 15.3 13.8 12 3.6 22.2c.4.4 1 .4 1.7.1l12-6.9M17.3 8.7l-12-6.9c-.7-.4-1.3-.3-1.7.1L13.8 12l3.5-3.3z"/></svg><span><small>Get it on</small><b>Google Play</b></span></a>
+            <a href="#demo" class="store"><svg viewBox="0 0 24 24"><path d="M18.7 19.5c-.8 1.2-1.7 2.5-3 2.5-1.4 0-1.8-.8-3.3-.8-1.6 0-2 .8-3.3.8-1.3.1-2.3-1.3-3.1-2.5C4.3 17 3 12.5 4.7 9.4c.9-1.5 2.4-2.5 4.1-2.5 1.3 0 2.5.9 3.3.9.8 0 2.2-1.1 3.8-.9.7 0 2.6.3 3.8 2.1-3.3 2-2.8 6.6.6 7.9-.4 1-.9 1.8-1.6 2.6zM13 3.5c.7-.8 1.9-1.5 2.9-1.5.1 1.2-.4 2.4-1 3.2-.7.8-1.8 1.5-2.9 1.4-.2-1.1.4-2.3 1-3.1z"/></svg><span><small>Download on the</small><b>App Store</b></span></a>
+          </div>
+        </div>
+        <div class="split-visual reveal">
+          <div class="phones">
+            <div class="phone p-back">
+              <div class="ph-notch"></div>
+              <div class="ph-screen">
+                <div class="ph-head"><b>Today's tasks</b><small>3 sites</small></div>
+                <div class="ph-task"><span class="st ok"></span><div><b>Panel mounting</b><small>Mehta Villa · 9:30 AM</small></div></div>
+                <div class="ph-task"><span class="st mid"></span><div><b>Inverter install</b><small>Iyer Residence · 1:00 PM</small></div></div>
+                <div class="ph-task"><span class="st bad"></span><div><b>Fault inspection</b><small>Green Valley · 4:00 PM</small></div></div>
+                <div class="ph-btn">Check in at site</div>
+              </div>
+            </div>
+            <div class="phone p-front">
+              <div class="ph-notch"></div>
+              <div class="ph-screen">
+                <div class="ph-head"><b>My Solar</b><small>8 kW · Thane</small></div>
+                <div class="ph-gauge">
+                  <svg viewBox="0 0 120 70" aria-hidden="true"><path d="M10 62a50 50 0 0 1 100 0" fill="none" stroke="#e5e9f0" stroke-width="10" stroke-linecap="round"/><path d="M10 62a50 50 0 0 1 82-38" fill="none" stroke="url(#gArea2)" stroke-width="10" stroke-linecap="round"/><defs><linearGradient id="gArea2"><stop offset="0" stop-color="#fbbf24"/><stop offset="1" stop-color="#f97316"/></linearGradient></defs></svg>
+                  <b>5.6 kW</b><small>Generating now</small>
+                </div>
+                <div class="ph-row"><div><small>Today</small><b>32 kWh</b></div><div><small>Saved</small><b>₹256</b></div></div>
+                <div class="ph-row"><div><small>This month</small><b>812 kWh</b></div><div><small>CO₂</small><b>0.6 t</b></div></div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </section>
 
     <!-- ============ TESTIMONIALS ============ -->
-    <section class="section">
+    <section class="section section-alt" id="stories">
       <div class="container">
-        <div class="section-head">
-          <span class="kicker">Customer stories</span>
-          <h2>Teams that switched never looked back</h2>
+        <div class="section-head with-nav">
+          <div>
+            <span class="kicker">Customer stories</span>
+            <h2>Loved by solar teams</h2>
+          </div>
+          <div class="car-nav">
+            <button class="car-btn" id="car-prev" aria-label="Previous testimonial"><svg style="transform:rotate(180deg)"><use href="#i-arrow"/></svg></button>
+            <button class="car-btn" id="car-next" aria-label="Next testimonial"><svg><use href="#i-arrow"/></svg></button>
+          </div>
         </div>
-        <div class="testi-grid">
-          <figure class="testi reveal">
+        <div class="carousel" id="carousel" tabindex="0" aria-label="Customer testimonials">
+          <figure class="testi">
             <div class="stars" aria-label="5 out of 5 stars">★★★★★</div>
-            <blockquote>“We cut our average fault-resolution time from two days to under six hours. Auto-ticketing alone paid for the subscription.”</blockquote>
-            <figcaption><span class="avatar">OM</span><div><b>Head of O&amp;M</b><small>Utility-scale service provider</small></div></figcaption>
+            <blockquote>“Our designers used to spend half a day per rooftop. Now sales reps design and quote on-site in minutes. Conversions are up significantly.”</blockquote>
+            <figcaption><span class="avatar">RK</span><div><b>Founder</b><small>Residential installer · Maharashtra</small></div></figcaption>
           </figure>
-          <figure class="testi reveal">
+          <figure class="testi">
             <div class="stars" aria-label="5 out of 5 stars">★★★★★</div>
-            <blockquote>“Proposals that used to take a day now take ten minutes. Our sales team closes more rooftop deals every month.”</blockquote>
-            <figcaption><span class="avatar">SD</span><div><b>Sales Director</b><small>Rooftop solar installer</small></div></figcaption>
+            <blockquote>“Net-metering and subsidy files were our biggest headache. Now every document and approval is tracked, and customers get automatic updates.”</blockquote>
+            <figcaption><span class="avatar">AP</span><div><b>Operations Head</b><small>Rooftop EPC · Gujarat</small></div></figcaption>
           </figure>
-          <figure class="testi reveal">
+          <figure class="testi">
             <div class="stars" aria-label="5 out of 5 stars">★★★★★</div>
-            <blockquote>“PPA invoicing went from a week of manual work to fully automatic. Our investors love the monthly reports.”</blockquote>
-            <figcaption><span class="avatar">FC</span><div><b>Finance Controller</b><small>Independent power producer</small></div></figcaption>
+            <blockquote>“Auto-ticketing from inverter alarms cut our response time from two days to a few hours. Our AMC renewals have never been higher.”</blockquote>
+            <figcaption><span class="avatar">SN</span><div><b>Head of O&amp;M</b><small>Service provider · Karnataka</small></div></figcaption>
           </figure>
+          <figure class="testi">
+            <div class="stars" aria-label="5 out of 5 stars">★★★★★</div>
+            <blockquote>“We finally know our real margin per project. Inventory, purchase and billing all talk to each other — no more Excel reconciliation.”</blockquote>
+            <figcaption><span class="avatar">VM</span><div><b>Finance Controller</b><small>C&amp;I EPC · Tamil Nadu</small></div></figcaption>
+          </figure>
+          <figure class="testi">
+            <div class="stars" aria-label="5 out of 5 stars">★★★★★</div>
+            <blockquote>“Onboarding took one week. The team trained our engineers in Hindi and Marathi, and everyone was using the field app from day one.”</blockquote>
+            <figcaption><span class="avatar">DJ</span><div><b>Managing Director</b><small>Solar EPC · Rajasthan</small></div></figcaption>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ SECURITY ============ -->
+    <section class="section" id="security">
+      <div class="container split">
+        <div class="split-copy reveal">
+          <span class="kicker">Enterprise-grade security</span>
+          <h2>Your data is safe with us</h2>
+          <p>Customer information, pricing and financials are your most valuable assets. We protect them with the same standards used by banks.</p>
+          <a href="#faq" class="text-link">Read our security FAQ <svg><use href="#i-arrow"/></svg></a>
+        </div>
+        <div class="sec-grid reveal">
+          <div class="sec"><svg><use href="#i-lock"/></svg><b>256-bit encryption</b><small>In transit and at rest</small></div>
+          <div class="sec"><svg><use href="#i-key"/></svg><b>Role-based access</b><small>Granular permissions &amp; 2FA</small></div>
+          <div class="sec"><svg><use href="#i-history"/></svg><b>Daily backups</b><small>Point-in-time recovery</small></div>
+          <div class="sec"><svg><use href="#i-shield"/></svg><b>Audit logs</b><small>Every change, tracked</small></div>
         </div>
       </div>
     </section>
@@ -404,8 +773,8 @@
       <div class="container">
         <div class="section-head">
           <span class="kicker">Pricing</span>
-          <h2>Simple pricing that scales with your portfolio</h2>
-          <p>All plans include unlimited users, mobile apps and onboarding support.</p>
+          <h2>Simple plans that grow with you</h2>
+          <p>Every plan includes mobile apps, onboarding and free updates. Prices exclude GST.</p>
         </div>
 
         <div class="billing-toggle" role="group" aria-label="Billing period">
@@ -417,33 +786,33 @@
         <div class="price-grid">
           <div class="price-card reveal">
             <h3>Starter</h3>
-            <p class="p-desc">For installers getting started with monitoring and O&amp;M.</p>
-            <div class="price"><span class="cur">$</span><span class="amt" data-monthly="99" data-yearly="79">99</span><span class="per">/mo</span></div>
-            <small class="p-note">Up to 5 MWp</small>
+            <p class="p-desc">For small installers getting organised.</p>
+            <div class="price"><span class="cur">₹</span><span class="amt" data-monthly="2,999" data-yearly="2,399">2,999</span><span class="per">/mo</span></div>
+            <small class="p-note">Up to 3 users</small>
             <a href="#demo" class="btn btn-outline btn-block">Start free trial</a>
             <ul class="checks">
-              <li>Real-time monitoring</li><li>Alerts via email &amp; SMS</li><li>Basic O&amp;M ticketing</li><li>Standard reports</li><li>Email support</li>
+              <li>Sales CRM &amp; lead capture</li><li>Proposals with savings &amp; ROI</li><li>Basic project tracking</li><li>Customer app</li><li>Email &amp; chat support</li>
             </ul>
           </div>
           <div class="price-card featured reveal">
             <span class="badge">Most popular</span>
-            <h3>Professional</h3>
-            <p class="p-desc">For growing EPCs and O&amp;M teams managing many sites.</p>
-            <div class="price"><span class="cur">$</span><span class="amt" data-monthly="299" data-yearly="239">299</span><span class="per">/mo</span></div>
-            <small class="p-note">Up to 50 MWp</small>
+            <h3>Growth</h3>
+            <p class="p-desc">For growing teams designing and installing every week.</p>
+            <div class="price"><span class="cur">₹</span><span class="amt" data-monthly="7,999" data-yearly="6,399">7,999</span><span class="per">/mo</span></div>
+            <small class="p-note">Up to 15 users</small>
             <a href="#demo" class="btn btn-primary btn-block">Start free trial</a>
             <ul class="checks">
-              <li>Everything in Starter</li><li>Project &amp; EPC management</li><li>Inventory &amp; procurement</li><li>Field technician mobile app</li><li>Sales CRM &amp; proposals</li><li>Priority support</li>
+              <li>Everything in Starter</li><li>AI solar design &amp; shade analysis</li><li>Full project management</li><li>Procurement &amp; inventory</li><li>Field technician app</li><li>Priority phone support</li>
             </ul>
           </div>
           <div class="price-card reveal">
             <h3>Enterprise</h3>
-            <p class="p-desc">For IPPs and large portfolios with custom needs.</p>
+            <p class="p-desc">For EPCs and O&amp;M companies at scale.</p>
             <div class="price"><span class="amt custom">Custom</span></div>
-            <small class="p-note">Unlimited capacity</small>
+            <small class="p-note">Unlimited users</small>
             <a href="#demo" class="btn btn-outline btn-block">Talk to sales</a>
             <ul class="checks">
-              <li>Everything in Professional</li><li>PPA &amp; lease billing</li><li>SCADA &amp; ERP integrations</li><li>White-label customer portal</li><li>SSO, audit logs &amp; SLA</li><li>Dedicated success manager</li>
+              <li>Everything in Growth</li><li>O&amp;M, AMC &amp; plant monitoring</li><li>Finance, billing &amp; P&amp;L</li><li>White-label apps</li><li>API, ERP &amp; SSO integrations</li><li>Dedicated success manager</li>
             </ul>
           </div>
         </div>
@@ -459,28 +828,32 @@
         </div>
         <div class="faq">
           <details open>
-            <summary>Which inverters and data loggers do you support?</summary>
-            <p>Sygma Solar integrates with 40+ inverter and logger manufacturers through cloud APIs, Modbus TCP/RTU and MQTT. If your device isn't listed, our gateway can usually connect it within a few days.</p>
+            <summary>Is Sygma Solar suitable for small installers?</summary>
+            <p>Yes. The Starter plan is built for small teams doing a handful of rooftop projects a month. You can switch on more modules — design, inventory, O&amp;M — as you grow.</p>
           </details>
           <details>
-            <summary>How long does onboarding take?</summary>
-            <p>Most customers are live within 1–2 weeks. Plant connections typically take a day; importing customers, projects and inventory is handled by our onboarding team.</p>
+            <summary>How long does it take to get started?</summary>
+            <p>Most customers are live within 7 days. Our onboarding team imports your existing data, configures your workflows and trains your team.</p>
+          </details>
+          <details>
+            <summary>Which inverters can I monitor?</summary>
+            <p>We integrate with most popular inverter and data-logger brands through their cloud APIs, as well as Modbus TCP/RTU and MQTT. If a device isn't supported yet, our team can usually add it quickly.</p>
+          </details>
+          <details>
+            <summary>Does it support subsidy and net-metering workflows?</summary>
+            <p>Yes. Project templates include stages and document checklists for subsidy applications, DISCOM approvals and net-metering, so nothing gets missed.</p>
           </details>
           <details>
             <summary>Is my data secure?</summary>
-            <p>Yes. Data is encrypted in transit and at rest, hosted on enterprise cloud infrastructure with daily backups, role-based access control and full audit logs.</p>
+            <p>Data is encrypted in transit and at rest, backed up daily, and protected by role-based access control, two-factor authentication and full audit logs.</p>
           </details>
           <details>
-            <summary>Can my customers see their own plant data?</summary>
-            <p>Absolutely. Every plan includes a customer portal and mobile app. Enterprise customers can white-label it with their own brand and domain.</p>
-          </details>
-          <details>
-            <summary>Can I integrate with my existing ERP or accounting software?</summary>
-            <p>Sygma Solar provides a REST API and webhooks, plus ready-made connectors for popular accounting and ERP tools. Our team can build custom integrations on Enterprise plans.</p>
+            <summary>Can I use it in my own brand?</summary>
+            <p>Proposals and customer apps carry your logo and colours on every plan. Enterprise customers can fully white-label the apps with their own name and domain.</p>
           </details>
           <details>
             <summary>What happens after the free trial?</summary>
-            <p>You can choose a plan that fits your portfolio. If you decide not to continue, you can export all your data — no lock-in.</p>
+            <p>Pick the plan that suits you. If you decide not to continue, you can export all of your data — there's no lock-in.</p>
           </details>
         </div>
       </div>
@@ -490,44 +863,53 @@
     <section class="section cta" id="demo">
       <div class="container cta-grid">
         <div class="cta-copy">
-          <h2>See Sygma Solar in action</h2>
-          <p>Get a personalised 30-minute walkthrough using your own plant types and workflows. Our solar specialists will show you exactly how much time and generation you can recover.</p>
+          <span class="kicker">Get started</span>
+          <h2>Ready to grow your solar business?</h2>
+          <p>Book a free, personalised 30-minute demo. We'll show you exactly how Sygma Solar fits the way your team works.</p>
           <ul class="checks light">
-            <li>Tailored demo for your business model</li>
-            <li>Free ROI and downtime assessment</li>
+            <li>Demo tailored to your business</li>
+            <li>Free workflow &amp; process review</li>
             <li>No obligation, no credit card</li>
           </ul>
+          <div class="cta-contact">
+            <a href="tel:+910000000000"><svg><use href="#i-phone"/></svg> +91 00000 00000</a>
+            <a href="#demo"><svg><use href="#i-globe"/></svg> Available Mon–Sat, 9 AM – 7 PM</a>
+          </div>
         </div>
         <form class="demo-form" id="demo-form" novalidate>
           <h3>Book your free demo</h3>
           <div class="field-row">
             <label>Full name<input type="text" name="name" autocomplete="name" required></label>
+            <label>Company<input type="text" name="company" autocomplete="organization" required></label>
+          </div>
+          <div class="field-row">
+            <label>Mobile number<input type="tel" name="phone" autocomplete="tel" required></label>
             <label>Work email<input type="email" name="email" autocomplete="email" required></label>
           </div>
           <div class="field-row">
-            <label>Company<input type="text" name="company" autocomplete="organization" required></label>
-            <label>Phone<input type="tel" name="phone" autocomplete="tel"></label>
+            <label>Business type
+              <select name="type" required>
+                <option value="">Select one…</option>
+                <option>Residential installer</option>
+                <option>C&amp;I installer</option>
+                <option>EPC contractor</option>
+                <option>O&amp;M provider</option>
+                <option>Distributor / OEM</option>
+                <option>Other</option>
+              </select>
+            </label>
+            <label>Projects per month
+              <select name="volume">
+                <option>1 – 10</option>
+                <option>11 – 50</option>
+                <option>51 – 200</option>
+                <option>200 +</option>
+              </select>
+            </label>
           </div>
-          <label>Business type
-            <select name="type" required>
-              <option value="">Select one…</option>
-              <option>Rooftop installer</option>
-              <option>EPC contractor</option>
-              <option>O&amp;M service provider</option>
-              <option>IPP / Asset owner</option>
-              <option>Other</option>
-            </select>
-          </label>
-          <label>Capacity managed
-            <select name="capacity">
-              <option>Under 5 MWp</option>
-              <option>5 – 50 MWp</option>
-              <option>50 – 500 MWp</option>
-              <option>500 MWp +</option>
-            </select>
-          </label>
-          <button type="submit" class="btn btn-primary btn-block btn-lg">Request demo</button>
+          <button type="submit" class="btn btn-primary btn-block btn-lg">Book my demo</button>
           <p class="form-msg" id="form-msg" role="status" aria-live="polite"></p>
+          <small class="form-fine">By submitting, you agree to be contacted about Sygma Solar. We never share your details.</small>
         </form>
       </div>
     </section>
@@ -535,25 +917,43 @@
 
   <!-- ============ FOOTER ============ -->
   <footer class="site-footer">
-    <div class="container foot-grid">
+    <div class="container foot-top">
       <div class="foot-brand">
         <a href="#top" class="brand light">
           <img src="assets/img/favicon.svg" alt="" width="30" height="30">
           <span>Sygma<b>Solar</b></span>
         </a>
-        <p>The all-in-one operating system for solar businesses — monitoring, projects, O&amp;M, inventory and billing.</p>
+        <p>The all-in-one operating system for solar businesses — design, sell, install and maintain from one platform.</p>
+        <form class="newsletter" id="newsletter" novalidate>
+          <label class="sr-only" for="nl-email">Email address</label>
+          <input id="nl-email" type="email" placeholder="Get solar business tips by email" required>
+          <button type="submit" class="btn btn-primary btn-sm">Subscribe</button>
+        </form>
+        <p class="nl-msg" id="nl-msg" role="status" aria-live="polite"></p>
+        <div class="socials">
+          <a href="#top" aria-label="LinkedIn"><svg viewBox="0 0 24 24"><path d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.06 2.06 0 1 1 0-4.13 2.06 2.06 0 0 1 0 4.13zM7.12 20.45H3.56V9h3.56v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.73v20.54C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.73V1.73C24 .77 23.2 0 22.22 0z"/></svg></a>
+          <a href="#top" aria-label="YouTube"><svg viewBox="0 0 24 24"><path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.6 12 3.6 12 3.6s-7.5 0-9.4.5A3 3 0 0 0 .5 6.2 31.4 31.4 0 0 0 0 12a31.4 31.4 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.9.5 9.4.5 9.4.5s7.5 0 9.4-.5a3 3 0 0 0 2.1-2.1A31.4 31.4 0 0 0 24 12a31.4 31.4 0 0 0-.5-5.8zM9.6 15.6V8.4l6.3 3.6-6.3 3.6z"/></svg></a>
+          <a href="#top" aria-label="Instagram"><svg viewBox="0 0 24 24"><path d="M12 2.2c3.2 0 3.6 0 4.8.1 3.3.1 4.8 1.7 4.9 4.9.1 1.3.1 1.6.1 4.8s0 3.6-.1 4.8c-.1 3.2-1.7 4.8-4.9 4.9-1.3.1-1.6.1-4.8.1s-3.6 0-4.8-.1c-3.3-.1-4.8-1.7-4.9-4.9C2.2 15.6 2.2 15.2 2.2 12s0-3.6.1-4.8C2.4 3.9 3.9 2.4 7.2 2.3 8.4 2.2 8.8 2.2 12 2.2zM12 0C8.7 0 8.3 0 7.1.1 2.7.3.3 2.7.1 7.1 0 8.3 0 8.7 0 12s0 3.7.1 4.9c.2 4.4 2.6 6.8 7 7 1.2.1 1.6.1 4.9.1s3.7 0 4.9-.1c4.4-.2 6.8-2.6 7-7 .1-1.2.1-1.6.1-4.9s0-3.7-.1-4.9c-.2-4.4-2.6-6.8-7-7C15.7 0 15.3 0 12 0zm0 5.8a6.2 6.2 0 1 0 0 12.4 6.2 6.2 0 0 0 0-12.4zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.4-11.8a1.4 1.4 0 1 0 0 2.9 1.4 1.4 0 0 0 0-2.9z"/></svg></a>
+          <a href="#top" aria-label="Facebook"><svg viewBox="0 0 24 24"><path d="M24 12.07C24 5.41 18.63 0 12 0S0 5.4 0 12.07C0 18.1 4.39 23.1 10.13 24v-8.44H7.08v-3.49h3.04V9.41c0-3.02 1.8-4.7 4.54-4.7 1.31 0 2.68.24 2.68.24v2.97h-1.5c-1.5 0-1.96.93-1.96 1.89v2.26h3.32l-.53 3.5h-2.8V24C19.62 23.1 24 18.1 24 12.07z"/></svg></a>
+        </div>
       </div>
-      <div>
-        <h4>Product</h4>
-        <a href="#features">Features</a><a href="#modules">Modules</a><a href="#pricing">Pricing</a><a href="#demo">Book a demo</a>
-      </div>
-      <div>
-        <h4>Solutions</h4>
-        <a href="#modules">Rooftop installers</a><a href="#modules">EPC contractors</a><a href="#modules">O&amp;M providers</a><a href="#modules">Asset owners</a>
-      </div>
-      <div>
-        <h4>Company</h4>
-        <a href="#faq">FAQ</a><a href="#demo">Contact</a><a href="#top">Privacy policy</a><a href="#top">Terms of service</a>
+      <div class="foot-cols">
+        <div>
+          <h4>Product</h4>
+          <a href="#modules">Sales CRM</a><a href="#design">Solar Design</a><a href="#proposals">Proposals</a><a href="#projects">Project Management</a><a href="#operate">Inventory</a><a href="#operate">O&amp;M &amp; Monitoring</a>
+        </div>
+        <div>
+          <h4>Solutions</h4>
+          <a href="#who">Residential</a><a href="#who">Commercial &amp; Industrial</a><a href="#who">EPC contractors</a><a href="#who">O&amp;M providers</a><a href="#financing">Financing</a>
+        </div>
+        <div>
+          <h4>Resources</h4>
+          <a href="#calculator">ROI calculator</a><a href="#stories">Customer stories</a><a href="#faq">Help &amp; FAQ</a><a href="#security">Security</a><a href="#pricing">Pricing</a>
+        </div>
+        <div>
+          <h4>Company</h4>
+          <a href="#demo">Contact us</a><a href="#demo">Book a demo</a><a href="#top">Privacy policy</a><a href="#top">Terms of service</a><a href="#top">Refund policy</a>
+        </div>
       </div>
     </div>
     <div class="container foot-bottom">
@@ -561,6 +961,23 @@
       <a href="#top" class="to-top">Back to top ↑</a>
     </div>
   </footer>
+
+  <!-- Video modal -->
+  <dialog class="video-modal" id="video-modal" aria-label="Product tour video">
+    <button class="vm-close" id="video-close" aria-label="Close video">×</button>
+    <!-- Set data-src to your YouTube embed URL, e.g. https://www.youtube.com/embed/VIDEO_ID -->
+    <div class="vm-frame" id="video-frame" data-src="">
+      <div class="vm-placeholder">
+        <svg><use href="#i-play"/></svg>
+        <b>Product tour coming soon</b>
+        <small>Book a live demo and we'll walk you through it personally.</small>
+        <a href="#demo" class="btn btn-primary btn-sm" id="video-demo">Book a demo</a>
+      </div>
+    </div>
+  </dialog>
+
+  <!-- Sticky mobile CTA -->
+  <a href="#demo" class="mobile-cta" id="mobile-cta">Book a free demo</a>
 
   <script src="assets/js/main.js" defer></script>
 </body>

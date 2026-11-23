@@ -1,5 +1,5 @@
 /* ==========================================================
-   Sygma Solar — Landing page styles
+   Sygma Solar Suite — Landing page styles
    ========================================================== */
 :root {
   --navy: #0b1f3a;
@@ -89,6 +89,8 @@ button { font: inherit; cursor: pointer; color: inherit; }
 .brand { display: inline-flex; align-items: center; gap: 10px; font-family: var(--font-head); font-weight: 700; font-size: 21px; color: var(--navy); letter-spacing: -.02em; }
 .brand b { font-weight: 800; background: var(--grad); -webkit-background-clip: text; background-clip: text; color: transparent; margin-left: 2px; }
 .brand.light { color: #fff; }
+.brand-suite { font-style: normal; font-weight: 600; margin-left: 6px; font-size: .62em; letter-spacing: .08em; text-transform: uppercase; padding: 3px 7px; border-radius: 6px; border: 1.5px solid currentColor; opacity: .85; position: relative; top: -2px; }
+@media (max-width: 360px) { .brand-suite { display: none; } }
 .main-nav { display: flex; align-items: center; gap: 4px; }
 .nav-item { position: relative; }
 .nav-link { display: inline-flex; align-items: center; gap: 4px; background: none; border: 0; padding: 10px 14px; font-size: 15px; font-weight: 500; color: var(--text); border-radius: 10px; transition: color .2s, background .2s; }

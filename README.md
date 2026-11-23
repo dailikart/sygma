@@ -1,6 +1,6 @@
-# Sygma Solar — Landing Page
+# Sygma Solar Suite — Landing Page
 
-Marketing landing page for **Sygma Solar**, an all-in-one software platform for solar businesses: CRM, AI rooftop design, proposals, project management, procurement & inventory, O&M, plant monitoring and finance/billing.
+Marketing landing page for **Sygma Solar Suite**, an all-in-one software platform for solar businesses: CRM, AI rooftop design, proposals, project management, procurement & inventory, O&M, plant monitoring and finance/billing.
 
 Plain HTML/CSS/JS — no build step, no dependencies (fonts from Google Fonts).
 

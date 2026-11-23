@@ -1,4 +1,4 @@
-/* Sygma Solar — landing page interactions (no dependencies) */
+/* Sygma Solar Suite — landing page interactions (no dependencies) */
 (function () {
   'use strict';
 
@@ -266,7 +266,7 @@
         iframe.src = src + (src.indexOf('?') > -1 ? '&' : '?') + 'autoplay=1';
         iframe.allow = 'autoplay; encrypted-media; picture-in-picture';
         iframe.allowFullscreen = true;
-        iframe.title = 'Sygma Solar product tour';
+        iframe.title = 'Sygma Solar Suite product tour';
         frame.innerHTML = '';
         frame.appendChild(iframe);
       }

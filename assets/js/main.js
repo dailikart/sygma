@@ -289,8 +289,10 @@
     labels.forEach(function (l) { l.classList.toggle('active', (l.dataset.period === 'yearly') === yearly); });
     $$('.amt[data-monthly]').forEach(function (el) { el.textContent = yearly ? el.dataset.yearly : el.dataset.monthly; });
   }
-  sw.addEventListener('click', function () { setBilling(sw.getAttribute('aria-checked') !== 'true'); });
-  labels.forEach(function (l) { l.addEventListener('click', function () { setBilling(l.dataset.period === 'yearly'); }); });
+  if (sw) {
+    sw.addEventListener('click', function () { setBilling(sw.getAttribute('aria-checked') !== 'true'); });
+    labels.forEach(function (l) { l.addEventListener('click', function () { setBilling(l.dataset.period === 'yearly'); }); });
+  }
 
   /* ---------- Form helpers ---------- */
   var emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;

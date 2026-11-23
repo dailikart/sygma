@@ -11,4 +11,14 @@
         <p class="mb-0 text-success"><i class="bi bi-check-circle"></i> The database is up to date.</p>
     <?php endif ?>
 </div>
+<?php if (\App\Filters\DemoGuard::enabled()): ?>
+<div class="card card-body mt-3 border-danger" style="max-width:760px">
+    <label class="form-label fw-semibold"><i class="bi bi-arrow-counterclockwise"></i> Reset demo data</label>
+    <p class="small mb-2">Deletes everything entered on this demo site (leads, invoices, projects, uploads, module choices…) and loads the original
+        sample data again. Logins keep your team password from <code>.env</code>. Use it before an important demo if the data has become messy.</p>
+    <form method="post" action="<?= site_url('admin/demo-data/reset') ?>"><?= csrf_field() ?>
+        <button class="btn btn-outline-danger" data-confirm="Delete all demo changes and load the original sample data again? This cannot be undone."><i class="bi bi-arrow-counterclockwise"></i> Reset demo data</button>
+    </form>
+</div>
+<?php endif ?>
 <?= $this->endSection() ?>

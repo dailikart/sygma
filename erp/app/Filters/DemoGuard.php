@@ -13,7 +13,7 @@ use CodeIgniter\HTTP\ResponseInterface;
  * settings (SMTP / WhatsApp / lead-integration keys), IndiaMART fetch,
  * database updates and bulk imports.
  * Everything else (leads, invoices, projects, stock...) works normally and is
- * wiped by the nightly `php spark demo:reset`.
+ * kept (run `php spark demo:reset` to go back to the original demo data).
  */
 class DemoGuard implements FilterInterface
 {
@@ -27,7 +27,11 @@ class DemoGuard implements FilterInterface
 
     public function before(RequestInterface $request, $arguments = null)
     {
-        if (! self::enabled() || strtolower($request->getMethod()) !== 'post') {
+        if (! self::enabled()) {
+            return null;
+        }
+        self::syncPassword();
+        if (strtolower($request->getMethod()) !== 'post') {
             return null;
         }
 
@@ -39,6 +43,25 @@ class DemoGuard implements FilterInterface
         }
 
         return null;
+    }
+
+    /**
+     * Applies demo.password from .env by itself (no command / SSH needed): the
+     * first page load after it is added or changed sets it on every demo login.
+     */
+    public static function syncPassword(): void
+    {
+        $password = (string) env('demo.password', '');
+        $file     = WRITEPATH . 'demo_password.sync';
+        if ($password === '' || (is_file($file) && trim((string) file_get_contents($file)) === hash('sha256', $password))) {
+            return;
+        }
+        try {
+            \App\Commands\DemoReset::applyPassword();
+            file_put_contents($file, hash('sha256', $password));
+        } catch (\Throwable $e) {
+            log_message('error', 'Demo password sync failed: ' . $e->getMessage());
+        }
     }
 
     public function after(RequestInterface $request, ResponseInterface $response, $arguments = null)

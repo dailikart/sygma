@@ -113,6 +113,6 @@ class Filters extends BaseFilters
      */
     public array $filters = [
         // Live-demo protection; does nothing unless demo.mode = true in .env.
-        'demoguard' => ['before' => ['admin/*']],
+        'demoguard' => ['before' => ['admin/*', 'login']],
     ];
 }

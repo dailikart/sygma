@@ -83,20 +83,18 @@ and make `erp/writable/` writable. Everything else (PHP version, extensions) is 
 
 ## 3. Demo mode (`demo.mode = true`)
 
-- **Private team password:** with `demo.password` set, every demo login uses it. Apply it now
-  with `php spark demo:password` (keeps the data); `demo:reset` applies it again every night.
+- **Private team password:** with `demo.password` set, every demo login uses it. It is applied
+  automatically on the next page load after you add or change it (no SSH or command needed),
+  and again after a demo reset. `php spark demo:password` does the same from the command line.
 - A "Demo company" banner is shown inside the ERP.
 - Visitors can try everything (leads, quotations, invoices, payments, projects, service
   complaints, stock, AMC, reports), but **profile/password, users, roles, settings,
   WhatsApp templates, IndiaMART fetch, bulk import and database updates are view-only**, so nobody can lock the demo or change server settings.
-- Nightly reset to the original data, so visitors' changes disappear:
-
-  ```bash
-  0 2 * * * cd /home/USER/public_html/erp && php spark demo:reset >> /dev/null 2>&1
-  ```
-
-  `demo:reset` refuses to run unless `demo.mode = true`. **Never set demo.mode on a
-  customer's server.**
+- **Demo data stays**: what your team enters is kept. To go back to the original sample data,
+  open **Administration → Database Updates → Reset demo data** (no SSH needed). It also clears
+  module choices and uploads, and keeps your team password. From the command line:
+  `php spark demo:reset`. Both refuse to run unless `demo.mode = true`. **Never set
+  demo.mode on a customer's server.**
 
 For a real customer installation leave `demo.mode` out and use `docs/database/solar_crm_schema.sql`
 (empty database, one admin) as described in [SETUP.md](SETUP.md).

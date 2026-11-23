@@ -545,8 +545,6 @@ input[type="range"]::-moz-range-thumb { width: 18px; height: 18px; border-radius
 .cta-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 56px; align-items: center; }
 .cta h2 { color: #fff; font-size: clamp(30px, 3.8vw, 46px); font-weight: 800; }
 .cta-copy p { font-size: 17.5px; }
-.cta-live { margin: 4px 0 22px; display: inline-flex; align-items: center; gap: 6px; }
-.cta-live svg { width: 18px; height: 18px; fill: currentColor; }
 .cta-contact { display: flex; flex-wrap: wrap; gap: 12px 28px; margin-top: 32px; padding-top: 24px; border-top: 1px solid rgba(255,255,255,.1); }
 .cta-contact a { display: inline-flex; align-items: center; gap: 8px; color: #e2e8f0; font-weight: 500; }
 .cta-contact svg { width: 18px; height: 18px; fill: #fbbf24; }

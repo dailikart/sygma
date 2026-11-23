@@ -3,7 +3,7 @@
 Marketing landing page for **Sygma Solar Suite**, an all-in-one software platform for solar businesses: CRM, AI rooftop design, proposals, project management, procurement & inventory, O&M, plant monitoring and finance/billing.
 
 The website is plain HTML/CSS/JS (no build step). The ERP behind **Log in** and
-**Live demo** is in [`erp/`](erp/) (CodeIgniter 4, PHP 8.2+, MySQL).
+**the team demo** is in [`erp/`](erp/) (CodeIgniter 4, PHP 8.2+, MySQL).
 
 ```
 erp/                  # the ERP, served at /erp/  → setup: erp/docs/DEMO_SETUP.md
@@ -29,12 +29,12 @@ python3 -m http.server 8080
 
 Then open http://localhost:8080 (or just open `index.html` directly).
 
-## Live demo / login
+## Login and team demo
 
-- **Log in** (header, footer) → `erp/login`
-- **Open live demo** (announcement bar), **Explore the live demo** (hero), **Try the live demo now** (demo section),
-  **Live demo** (footer) → `erp/login?demo=1`, which fills in `demo@sygmasolar.com` / `Demo@12345`.
-- Demo database: `erp/docs/database/sygma_demo.sql`. Full steps (database, `.env`, nightly reset cron):
+- **Log in** (header) and **Customer login** (footer) → `erp/login`.
+- The demo is for your team's walkthroughs only: no demo login is shown anywhere on the site.
+  Demo links on the page go to the **Book a demo** form.
+- Demo database and setup (`.env`, private team password, nightly reset):
   [erp/docs/DEMO_SETUP.md](erp/docs/DEMO_SETUP.md).
 
 Upload the whole repo to `public_html`: the website is served at `/` and the ERP at `/erp/`.

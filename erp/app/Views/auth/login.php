@@ -19,15 +19,7 @@
         <div class="alert alert-success py-2" role="alert"><?= esc(session('message')) ?></div>
     <?php endif ?>
 
-    <?php if (\App\Filters\DemoGuard::enabled()) : ?>
-        <div class="alert alert-warning py-2 small" role="note">
-            <b><i class="bi bi-stars"></i> Live demo</b> · sample data, reset nightly<br>
-            Email <code>demo@sygmasolar.com</code> · Password <code>Demo@12345</code>
-            <button type="button" class="btn btn-sm btn-dark w-100 mt-2" id="demo-fill">Use demo login</button>
-        </div>
-    <?php endif ?>
-
-    <form action="<?= url_to('login') ?>" method="post" id="login-form">
+    <form action="<?= url_to('login') ?>" method="post">
         <?= csrf_field() ?>
         <div class="mb-3">
             <label class="form-label" for="email">Email</label>
@@ -57,19 +49,3 @@
 </div>
 <?= $this->endSection() ?>
 
-<?php if (\App\Filters\DemoGuard::enabled()) : ?>
-<?= $this->section('pageScripts') ?>
-<script>
-(function () {
-    function fill(submit) {
-        document.getElementById('email').value = 'demo@sygmasolar.com';
-        document.getElementById('password').value = 'Demo@12345';
-        if (submit) document.getElementById('login-form').submit();
-    }
-    document.getElementById('demo-fill').addEventListener('click', function () { fill(true); });
-    // Arriving from the website's "Live demo" button (…/login?demo=1): fill the form.
-    if (new URLSearchParams(location.search).has('demo')) fill(false);
-})();
-</script>
-<?= $this->endSection() ?>
-<?php endif ?>

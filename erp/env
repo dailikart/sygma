@@ -71,8 +71,9 @@
 #--------------------------------------------------------------------
 # LIVE DEMO (Sygma Solar Suite website)
 #--------------------------------------------------------------------
-# true = public demo: shows the demo login on the sign-in page, makes
-# users / roles / settings view-only and allows `php spark demo:reset`
+# true = team demo: makes users / roles / settings view-only and allows `php spark demo:reset`
 # (which ERASES ALL DATA). Leave false / unset for a real customer.
 
 # demo.mode = true
+# Private password for all demo logins (applied by demo:password / demo:reset).
+# demo.password = ''

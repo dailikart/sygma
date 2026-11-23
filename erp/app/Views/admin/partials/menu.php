@@ -70,11 +70,18 @@ $menu = [
         ['WhatsApp Templates', 'admin/whatsapp-templates', ['settings.manage']],
         ['Message Log', 'admin/message-log', ['settings.manage']],
         ['Database Updates', 'admin/maintenance', ['settings.manage']],
+        ['Modules & Options', 'admin/features', ['settings.manage']],
     ]],
     ['User Manual', 'admin/manual', 'bi-book', []],
 ];
 
-$allowed = static function (array $perms): bool {
+$allowed = static function (array $perms, ?string $url = null): bool {
+    if ($url !== null && \App\Libraries\Features::blockedBy($url) !== null) {
+        return false; // module / option switched off for this company
+    }
+    if ($url === 'admin/features' && ! \App\Libraries\Features::manageable()) {
+        return false;
+    }
     if ($perms === []) {
         return true;
     }
@@ -91,14 +98,14 @@ $isActive = static fn (string $url) => $current === $url || ($url !== 'admin' &&
 ?>
 <ul class="nav flex-column sidebar-nav">
 <?php foreach ($menu as $i => $m): ?>
-    <?php if (! $allowed($m[3])) continue; ?>
+    <?php if (! $allowed($m[3], $m[1])) continue; ?>
     <?php if (empty($m[4])): ?>
         <li class="nav-item">
             <a class="nav-link <?= $isActive($m[1]) ? 'active' : '' ?>" href="<?= site_url($m[1]) ?>"><i class="bi <?= $m[2] ?>"></i> <?= esc($m[0]) ?></a>
         </li>
     <?php else: ?>
         <?php
-        $children = array_filter($m[4], static fn ($c) => $allowed($c[2]));
+        $children = array_filter($m[4], static fn ($c) => $allowed($c[2], $c[1]));
         if ($children === []) continue;
         $open = (bool) array_filter($children, static fn ($c) => $isActive($c[1]));
         ?>

@@ -5,7 +5,7 @@
 <form class="d-flex flex-wrap gap-2 mb-3" method="get">
     <input name="q" value="<?= esc($req->getGet('q')) ?>" class="form-control form-control-sm" style="max-width:220px" placeholder="Project / customer / phone">
     <select name="status" class="form-select form-select-sm" style="max-width:160px"><?= select_options(['active' => 'Active', 'on_hold' => 'On hold', 'completed' => 'Completed', 'cancelled' => 'Cancelled', 'all' => 'All'], $status) ?></select>
-    <select name="stage" class="form-select form-select-sm" style="max-width:200px"><?= select_options(array_map(static fn ($s) => $s['title'], $wf->stages), $req->getGet('stage'), 'Any stage') ?></select>
+    <select name="stage" class="form-select form-select-sm" style="max-width:200px"><?= select_options(array_map(static fn ($s) => $s['title'], \App\Libraries\Workflow::activeStages()), $req->getGet('stage'), 'Any stage') ?></select>
     <select name="subsidy" class="form-select form-select-sm" style="max-width:160px"><?= select_options(['subsidy' => 'Subsidy', 'non_subsidy' => 'Non-subsidy'], $req->getGet('subsidy'), 'All') ?></select>
     <button class="btn btn-sm btn-outline-secondary">Filter</button>
 </form>

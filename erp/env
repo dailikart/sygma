@@ -77,3 +77,11 @@
 # demo.mode = true
 # Private password for all demo logins (applied by demo:password / demo:reset).
 # demo.password = ''
+
+#--------------------------------------------------------------------
+# MODULES & OPTIONS (see docs/MODULES.md)
+#--------------------------------------------------------------------
+# true = Super Admin sees Administration → Modules & Options on this install.
+# Only on YOUR installs (demo, your own). Never on a customer's server.
+
+# features.manage = true

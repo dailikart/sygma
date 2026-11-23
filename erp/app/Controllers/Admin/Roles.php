@@ -14,7 +14,7 @@ class Roles extends AdminController
 
         return $this->render('roles/index', [
             'groups'      => setting('AuthGroups.groups'),
-            'permissions' => setting('AuthGroups.permissions'),
+            'permissions' => array_filter(setting('AuthGroups.permissions'), \App\Libraries\Features::permissionAllowed(...), ARRAY_FILTER_USE_KEY),
             'matrix'      => $this->expandedMatrix(),
         ]);
     }

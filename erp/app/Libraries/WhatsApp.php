@@ -15,7 +15,7 @@ class WhatsApp
 {
     public static function isEnabled(): bool
     {
-        return (bool) setting('Solar.whatsappEnabled')
+        return Features::on('whatsapp') && (bool) setting('Solar.whatsappEnabled')
             && setting('Solar.whatsappBaseUrl') && setting('Solar.whatsappVendorUid') && setting('Solar.whatsappApiToken');
     }
 

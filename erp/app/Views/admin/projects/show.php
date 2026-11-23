@@ -32,7 +32,7 @@ $v = static fn (array $s, string $k, $d = '') => esc((string) ($s['data'][$k] ??
     <a href="<?= site_url('admin/reports/project-profit') ?>" class="ms-auto">All projects</a>
 </div>
 <?php endif ?>
-<?php if (can('projects.view') || can('projects.manage') || can('invoices.view')): $statusUrl = \App\Libraries\StatusLink::url($pid); ?>
+<?php if (\App\Libraries\Features::on('projects.status_page') && (can('projects.view') || can('projects.manage') || can('invoices.view'))): $statusUrl = \App\Libraries\StatusLink::url($pid); ?>
 <div class="card card-body py-2 mb-3 small d-flex flex-row flex-wrap gap-2 align-items-center">
     <span class="fw-semibold"><i class="bi bi-phone"></i> Customer status page</span>
     <input class="form-control form-control-sm" style="max-width:360px" value="<?= esc($statusUrl) ?>" readonly id="statusUrl" onclick="this.select()">

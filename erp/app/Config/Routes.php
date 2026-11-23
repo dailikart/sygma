@@ -52,6 +52,8 @@ $routes->group('admin', ['filter' => 'session', 'namespace' => 'App\Controllers\
     $routes->get('user-log', 'UserLog::index');
     $routes->get('maintenance', 'Maintenance::index');
     $routes->post('maintenance/migrate', 'Maintenance::migrate');
+    $routes->get('features', 'Features::index');
+    $routes->post('features', 'Features::save');
     $routes->post('indiamart/pull', 'IndiaMartAdmin::pull');
 
     // User manual (every logged-in user).

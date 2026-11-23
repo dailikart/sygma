@@ -71,7 +71,11 @@ database.default.DBDriver = MySQLi
 database.default.port = 3306
 demo.mode = true
 demo.password = 'your-private-team-password'
+features.manage = true
 ```
+
+`features.manage = true` shows **Administration → Modules & Options**, so in a demo you can
+switch modules off to show a client exactly their package ([MODULES.md](MODULES.md)).
 
 Then install the PHP packages inside `erp/` (`composer install --no-dev`, or upload `vendor/`)
 and make `erp/writable/` writable. Everything else (PHP version, extensions) is as in

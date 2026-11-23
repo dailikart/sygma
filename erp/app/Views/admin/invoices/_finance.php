@@ -1,4 +1,4 @@
-<?php $modes = \App\Libraries\Finance::MODES; $canEdit = $financeEditable && (can('invoices.manage') || can('projects.manage') || can('payments.manage')); ?>
+<?php $modes = \App\Libraries\Finance::modes(); $canEdit = $financeEditable && (can('invoices.manage') || can('projects.manage') || can('payments.manage')); ?>
 <div class="card mb-3" id="loan">
     <div class="card-header bg-white d-flex flex-wrap align-items-center gap-2">
         <span class="fw-semibold"><i class="bi bi-wallet2"></i> Payment mode:</span>

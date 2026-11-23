@@ -28,6 +28,7 @@ class Filters extends BaseFilters
         'csrf'          => CSRF::class,
         'auditlog'      => \App\Filters\AuditLog::class,
         'demoguard'     => \App\Filters\DemoGuard::class,
+        'featureguard'  => \App\Filters\FeatureGuard::class,
         'toolbar'       => DebugToolbar::class,
         'honeypot'      => Honeypot::class,
         'invalidchars'  => InvalidChars::class,
@@ -76,6 +77,7 @@ class Filters extends BaseFilters
         'before' => [
             // 'honeypot',
             'csrf' => ['except' => ['indiamart/push/*', 'webhooks/*']], // IndiaMART server cannot send a form token; the secret address protects it
+            'featureguard', // modules / options switched off for this company
             // 'invalidchars',
         ],
         'after' => [

@@ -25,7 +25,7 @@
 <?php if (isset($invTotals)): $all = '&from=2000-01-01&to=' . date('Y-m-d'); $other = (int) ($clientsByMode[''] ?? 0); ?>
 <div class="card mb-4"><div class="card-header bg-white fw-semibold d-flex">Clients &amp; invoices <span class="ms-auto small text-muted fw-normal">all invoices, excluding cancelled</span></div><div class="card-body"><div class="row g-3">
     <?= $card('Cash clients', (int) ($clientsByMode['cash'] ?? 0), 'bi-cash-coin', 'admin/invoices?finance=cash' . $all, 'success') ?>
-    <?= $card('Bank loan clients', (int) ($clientsByMode['loan'] ?? 0), 'bi-bank', 'admin/invoices?finance=loan' . $all, 'primary') ?>
+    <?php if (\App\Libraries\Features::on('invoices.loan')): ?><?= $card('Bank loan clients', (int) ($clientsByMode['loan'] ?? 0), 'bi-bank', 'admin/invoices?finance=loan' . $all, 'primary') ?><?php endif ?>
     <?= $card('Total invoice value', money($invTotals['total']) . '<div class="text-muted fw-normal" style="font-size:.8rem">' . $invTotals['n'] . ' invoice(s)' . ($other ? ' · ' . $other . ' client(s) without cash/loan set' : '') . '</div>', 'bi-receipt', 'admin/invoices?x=1' . $all, 'secondary') ?>
     <div class="col-6 col-md-3"><div class="card stat-card h-100"><div class="card-body">
         <div class="text-muted small"><i class="bi bi-check2-circle text-success"></i> Paid</div><div class="value text-success"><?= money($invTotals['paid']) ?></div>
@@ -40,7 +40,7 @@
 <?php if (isset($stageCounts)): ?>
 <div class="card mb-4"><div class="card-header bg-white fw-semibold">Active projects by stage</div><div class="card-body">
     <div class="stage-steps">
-    <?php foreach (config('Workflow')->stages as $key => $s): ?>
+    <?php foreach (\App\Libraries\Workflow::activeStages() as $key => $s): ?>
         <a class="stage-step text-decoration-none text-reset" href="<?= site_url('admin/projects?stage=' . $key) ?>"><i class="bi <?= $s['icon'] ?>"></i> <?= esc($s['title']) ?><div class="fs-4 fw-bold"><?= (int) ($stageCounts[$key] ?? 0) ?></div></a>
     <?php endforeach ?>
     </div>

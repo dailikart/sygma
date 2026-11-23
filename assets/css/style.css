@@ -1,5 +1,5 @@
 /* ==========================================================
-   Sygma Solar — Landing page styles
+   Sygma Solar Suite — Landing page styles
    ========================================================== */
 :root {
   --navy: #0b1f3a;
@@ -89,6 +89,8 @@ button { font: inherit; cursor: pointer; color: inherit; }
 .brand { display: inline-flex; align-items: center; gap: 10px; font-family: var(--font-head); font-weight: 700; font-size: 21px; color: var(--navy); letter-spacing: -.02em; }
 .brand b { font-weight: 800; background: var(--grad); -webkit-background-clip: text; background-clip: text; color: transparent; margin-left: 2px; }
 .brand.light { color: #fff; }
+.brand-suite { font-style: normal; font-weight: 600; margin-left: 6px; font-size: .62em; letter-spacing: .08em; text-transform: uppercase; padding: 3px 7px; border-radius: 6px; border: 1.5px solid currentColor; opacity: .85; position: relative; top: -2px; }
+@media (max-width: 360px) { .brand-suite { display: none; } }
 .main-nav { display: flex; align-items: center; gap: 4px; }
 .nav-item { position: relative; }
 .nav-link { display: inline-flex; align-items: center; gap: 4px; background: none; border: 0; padding: 10px 14px; font-size: 15px; font-weight: 500; color: var(--text); border-radius: 10px; transition: color .2s, background .2s; }
@@ -166,6 +168,10 @@ button { font: inherit; cursor: pointer; color: inherit; }
 .hero-form input.invalid { outline: 2px solid var(--red); }
 .hero-form-msg { font-size: 14px; min-height: 1.3em; margin: 8px 0 0; }
 .hero-form-msg.ok { color: #15803d; } .hero-form-msg.err { color: var(--red); }
+.hero-demo { font-size: 15px; margin: 2px 0 0; color: var(--text); }
+.hero-demo a { font-weight: 600; color: #c2410c; display: inline-flex; align-items: center; gap: 4px; }
+.hero-demo a svg { width: 16px; height: 16px; fill: currentColor; }
+.hero-demo a:hover { text-decoration: underline; }
 .hero-points { list-style: none; padding: 0; margin: 6px 0 0; display: flex; flex-wrap: wrap; gap: 8px 22px; font-size: 14px; color: var(--muted); }
 .hero-points li { display: flex; align-items: center; gap: 6px; }
 .hero-points svg { width: 18px; height: 18px; fill: var(--green); }
@@ -539,6 +545,8 @@ input[type="range"]::-moz-range-thumb { width: 18px; height: 18px; border-radius
 .cta-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 56px; align-items: center; }
 .cta h2 { color: #fff; font-size: clamp(30px, 3.8vw, 46px); font-weight: 800; }
 .cta-copy p { font-size: 17.5px; }
+.cta-live { margin: 4px 0 22px; display: inline-flex; align-items: center; gap: 6px; }
+.cta-live svg { width: 18px; height: 18px; fill: currentColor; }
 .cta-contact { display: flex; flex-wrap: wrap; gap: 12px 28px; margin-top: 32px; padding-top: 24px; border-top: 1px solid rgba(255,255,255,.1); }
 .cta-contact a { display: inline-flex; align-items: center; gap: 8px; color: #e2e8f0; font-weight: 500; }
 .cta-contact svg { width: 18px; height: 18px; fill: #fbbf24; }

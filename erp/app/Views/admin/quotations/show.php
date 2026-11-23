@@ -16,7 +16,7 @@ $manage = can('quotations.manage'); $open = $q['status'] !== 'converted'; ?>
             <?php if ($open && can('invoices.manage')): ?><form method="post" action="<?= site_url('admin/quotations/' . $q['id'] . '/convert') ?>"><?= csrf_field() ?><button class="btn btn-success" data-confirm="Convert to an invoice?<?= $q['customer_id'] ? '' : ' A customer is created from these details first.' ?>"><i class="bi bi-receipt"></i> Convert to invoice</button></form><?php endif ?>
         <?php endif ?>
         <?php if ($invoice): ?><a href="<?= site_url('admin/invoices/' . $invoice['id']) ?>" class="btn btn-outline-primary"><i class="bi bi-receipt"></i> <?= esc($invoice['invoice_no']) ?> <?= status_badge($invoice['status']) ?></a><?php endif ?>
-        <?php if (can('entries.delete') || ($manage && $open)): ?><form method="post" action="<?= site_url('admin/quotations/' . $q['id'] . '/delete') ?>"><?= csrf_field() ?><button class="btn btn-outline-danger" data-confirm="Delete quotation <?= esc($q['quote_no']) ?>?"><i class="bi bi-trash"></i></button></form><?php endif ?>
+        <?php if (can('quotations.delete') && $q['status'] !== 'converted'): ?><form method="post" action="<?= site_url('admin/quotations/' . $q['id'] . '/delete') ?>"><?= csrf_field() ?><button class="btn btn-outline-danger" data-confirm="Delete quotation <?= esc($q['quote_no']) ?>?"><i class="bi bi-trash"></i></button></form><?php endif ?>
     </div>
 </div>
 <?php if ($manage): ?>

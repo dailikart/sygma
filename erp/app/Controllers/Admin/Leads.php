@@ -98,6 +98,9 @@ class Leads extends AdminController
     {
         $this->requirePermission('leads.view');
         $lead = $this->findOr404('leads', $id);
+        if ($lead['deleted_at']) {
+            throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
+        }
 
         return $this->render('leads/show', [
             'lead'      => $lead,
@@ -134,6 +137,23 @@ class Leads extends AdminController
     }
 
     /** Lead confirmed → becomes a customer (B2B / B2C). */
+    /** Leads: delete (permission leads.delete). A lead converted to a customer stays. */
+    public function delete($id)
+    {
+        $this->requirePermission('leads.delete');
+        $lead = $this->findOr404('leads', $id);
+        if ($lead['deleted_at']) {
+            return redirect()->to('admin/leads');
+        }
+        if ($lead['customer_id']) {
+            return $this->back('This lead is already a customer. Delete the customer instead, if needed.');
+        }
+        db_connect()->table('leads')->where('id', $lead['id'])->update(['deleted_at' => date('Y-m-d H:i:s')]);
+        \App\Libraries\Workflow::log('lead', (int) $lead['id'], 'deleted', 'Lead ' . $lead['name'] . ' (' . $lead['phone'] . ') deleted');
+
+        return redirect()->to('admin/leads')->with('message', 'Lead ' . $lead['name'] . ' deleted.');
+    }
+
     public function convert($id)
     {
         $this->requirePermission('leads.manage');

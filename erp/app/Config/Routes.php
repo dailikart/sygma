@@ -86,6 +86,7 @@ $routes->group('admin', ['filter' => 'session', 'namespace' => 'App\Controllers\
     $routes->get('leads/(:num)', 'Leads::show/$1');
     $routes->post('leads/(:num)/followup', 'Leads::followup/$1');
     $routes->post('leads/(:num)/convert', 'Leads::convert/$1');
+    $routes->post('leads/(:num)/delete', 'Leads::delete/$1');
     $routes->get('customers', 'Customers::index');
     $routes->get('customers/new', 'Customers::form');
     $routes->get('customers/(:num)/edit', 'Customers::form/$1');

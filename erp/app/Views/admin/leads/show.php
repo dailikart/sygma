@@ -21,6 +21,7 @@
         <div class="d-flex gap-2 mt-3">
             <?php if (can('leads.manage')): ?><a href="<?= site_url('admin/leads/' . $lead['id'] . '/edit') ?>" class="btn btn-sm btn-outline-primary">Edit</a><?php endif ?>
             <?php if ($lead['customer_id']): ?><a href="<?= site_url('admin/customers/' . $lead['customer_id']) ?>" class="btn btn-sm btn-success">Open customer</a><?php endif ?>
+            <?php if (can('leads.delete') && ! $lead['customer_id']): ?><form method="post" action="<?= site_url('admin/leads/' . $lead['id'] . '/delete') ?>" class="ms-auto"><?= csrf_field() ?><button class="btn btn-sm btn-outline-danger" data-confirm="Delete lead <?= esc($lead['name']) ?>? Its follow-ups go with it."><i class="bi bi-trash"></i> Delete</button></form><?php endif ?>
         </div>
     </div></div>
 

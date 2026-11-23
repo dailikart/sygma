@@ -47,12 +47,14 @@ class AuthGroups extends ShieldAuthGroups
         // Marketing
         'leads.view'          => 'Leads: view',
         'leads.manage'        => 'Leads: add, edit, follow-up, convert',
+        'leads.delete'        => 'Leads: delete (not leads already converted to a customer)',
         'customers.view'      => 'Customers: view',
         'customers.manage'    => 'Customers: add and edit',
         'documents.upload'    => 'Customer documents: upload (Aadhaar, EB bill… for PCR)',
         // Billing
         'quotations.view'     => 'Quotations: view',
         'quotations.manage'   => 'Quotations: create, edit, send, convert to invoice',
+        'quotations.delete'   => 'Quotations: delete (not quotations already converted to an invoice)',
         'invoices.view'       => 'Invoices: view',
         'invoices.manage'     => 'Invoices: create and cancel',
         'payments.manage'     => 'Customer payments: record receipts',
@@ -94,7 +96,7 @@ class AuthGroups extends ShieldAuthGroups
             'survey.*', 'dispatch.*', 'delivery.*', 'installation.*', 'eb.*', 'subsidy.*',
             'inventory.view', 'purchases.view', 'accounts.view', 'reports.*', 'documents.*', 'amc.*',
         ],
-        'marketing' => ['leads.*', 'customers.*', 'quotations.*', 'documents.upload', 'invoices.*', 'projects.view'],
+        'marketing' => ['leads.view', 'leads.manage', 'customers.*', 'quotations.view', 'quotations.manage', 'documents.upload', 'invoices.*', 'projects.view'],
         'accounts'  => [
             'customers.view', 'quotations.view', 'invoices.view', 'payments.manage', 'projects.view', 'purchases.view',
             'suppliers.manage', 'accounts.*', 'reports.view', 'tally.export',

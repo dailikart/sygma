@@ -132,9 +132,10 @@ class Quotations extends AdminController
 
     public function delete($id)
     {
+        $this->requirePermission('quotations.delete');
         $q = $this->findOr404('quotations', $id);
-        if (! can('entries.delete') && ! (can('quotations.manage') && $q['status'] !== 'converted')) {
-            throw new \App\Exceptions\ForbiddenException();
+        if ($q['status'] === 'converted') {
+            return $this->back('This quotation is already an invoice. Cancel or delete the invoice instead.');
         }
         $db = db_connect();
         $db->table('quotation_items')->where('quotation_id', $q['id'])->delete();

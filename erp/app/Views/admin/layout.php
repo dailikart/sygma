@@ -50,7 +50,7 @@
                 <div class="alert alert-warning"><i class="bi bi-database-exclamation"></i> <?= count($pend) ?> database update(s) are waiting. <a href="<?= site_url('admin/maintenance') ?>" class="alert-link">Run them now</a>.</div>
             <?php endif ?>
             <?php if (\App\Filters\DemoGuard::enabled()): ?>
-                <div class="alert alert-info py-2 small d-flex flex-wrap align-items-center gap-2"><i class="bi bi-stars"></i> <span><b>Demo company</b> with sample data. Changes are reset every night. Users, roles and settings are view-only.</span></div>
+                <div class="alert alert-info py-2 small d-flex flex-wrap align-items-center gap-2"><i class="bi bi-stars"></i> <span><b>Demo company</b> with sample data. Users, roles and settings are view-only.</span></div>
             <?php endif ?>
             <?php foreach (['message' => 'success', 'error' => 'danger', 'warning' => 'warning'] as $key => $cls): ?>
                 <?php if (session()->getFlashdata($key)): ?>

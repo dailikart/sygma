@@ -59,4 +59,20 @@ class Maintenance extends AdminController
 
         return redirect()->to('admin/maintenance')->with($ok ? 'message' : 'error', $ok ? 'Database is up to date.' : 'Some updates did not run. Check writable/logs.');
     }
+
+    /** Demo site only: back to the original demo data (same as `php spark demo:reset`). */
+    public function resetDemo()
+    {
+        $this->requirePermission('settings.manage');
+        if (! \App\Filters\DemoGuard::enabled()) {
+            throw new \App\Exceptions\ForbiddenException();
+        }
+        try {
+            \App\Commands\DemoReset::restore();
+        } catch (\Throwable $e) {
+            return redirect()->to('admin/maintenance')->with('error', 'Reset failed: ' . $e->getMessage());
+        }
+
+        return redirect()->to('admin')->with('message', 'Demo data reset to the original sample data.');
+    }
 }

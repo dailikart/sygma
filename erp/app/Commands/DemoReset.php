@@ -29,20 +29,37 @@ class DemoReset extends BaseCommand
             return EXIT_ERROR;
         }
 
-        $file = ROOTPATH . 'docs/database/sygma_demo.sql';
-        if (! is_file($file)) {
-            CLI::error("Missing {$file}");
+        try {
+            self::restore();
+        } catch (\RuntimeException $e) {
+            CLI::error($e->getMessage());
 
             return EXIT_ERROR;
+        }
+
+        $custom = self::applyPassword();
+        CLI::write('Demo data restored. Login: demo@sygmasolar.com / ' . ($custom ? '(demo.password from .env)' : 'Demo@12345'), 'green');
+
+        return EXIT_SUCCESS;
+    }
+
+    /**
+     * Wipes the database and reloads docs/database/sygma_demo.sql plus the demo
+     * photos / documents. Used by `php spark demo:reset` and by the
+     * "Reset demo data" button (Administration → Database Updates).
+     */
+    public static function restore(): void
+    {
+        $file = ROOTPATH . 'docs/database/sygma_demo.sql';
+        if (! is_file($file)) {
+            throw new \RuntimeException("Missing {$file}");
         }
 
         $db = db_connect();
         $db->initialize();
         $mysqli = $db->connID;
         if (! $mysqli instanceof \mysqli) {
-            CLI::error('demo:reset needs database.default.DBDriver = MySQLi');
-
-            return EXIT_ERROR;
+            throw new \RuntimeException('demo:reset needs database.default.DBDriver = MySQLi');
         }
 
         // Drop every table first so nothing created after the snapshot survives.
@@ -52,9 +69,7 @@ class DemoReset extends BaseCommand
         }
 
         if (! $mysqli->multi_query((string) file_get_contents($file))) {
-            CLI::error('Import failed: ' . $mysqli->error);
-
-            return EXIT_ERROR;
+            throw new \RuntimeException('Import failed: ' . $mysqli->error);
         }
         do {
             if ($res = $mysqli->store_result()) {
@@ -62,28 +77,23 @@ class DemoReset extends BaseCommand
             }
         } while ($mysqli->more_results() && $mysqli->next_result());
         if ($mysqli->errno) {
-            CLI::error('Import failed: ' . $mysqli->error);
-
-            return EXIT_ERROR;
+            throw new \RuntimeException('Import failed: ' . $mysqli->error);
         }
         $mysqli->query('SET FOREIGN_KEY_CHECKS = 1');
 
         // Uploaded files: remove visitors' uploads, restore the demo ones.
         $uploads = WRITEPATH . 'uploads/';
-        $this->emptyDir($uploads);
-        $this->copyDir(ROOTPATH . 'docs/database/demo_uploads/', $uploads);
+        self::emptyDir($uploads);
+        self::copyDir(ROOTPATH . 'docs/database/demo_uploads/', $uploads);
 
         cache()->clean();
 
-        $custom = self::applyPassword();
-        CLI::write('Demo data restored. Login: demo@sygmasolar.com / ' . ($custom ? '(demo.password from .env)' : 'Demo@12345'), 'green');
-
-        return EXIT_SUCCESS;
+        self::applyPassword();
     }
 
     /**
      * Sets every login's password to `demo.password` from .env (if set), so the
-     * team's demo password is private and survives each nightly reset.
+     * team's demo password is private and survives a demo:reset.
      */
     public static function applyPassword(): bool
     {
@@ -99,7 +109,7 @@ class DemoReset extends BaseCommand
         return true;
     }
 
-    private function emptyDir(string $dir): void
+    private static function emptyDir(string $dir): void
     {
         $it = new \RecursiveIteratorIterator(
             new \RecursiveDirectoryIterator($dir, \FilesystemIterator::SKIP_DOTS),
@@ -113,7 +123,7 @@ class DemoReset extends BaseCommand
         }
     }
 
-    private function copyDir(string $from, string $to): void
+    private static function copyDir(string $from, string $to): void
     {
         if (! is_dir($from)) {
             return;

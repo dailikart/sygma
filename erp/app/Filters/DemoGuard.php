@@ -13,7 +13,7 @@ use CodeIgniter\HTTP\ResponseInterface;
  * settings (SMTP / WhatsApp / lead-integration keys), IndiaMART fetch,
  * database updates and bulk imports.
  * Everything else (leads, invoices, projects, stock...) works normally and is
- * wiped by the nightly `php spark demo:reset`.
+ * kept (run `php spark demo:reset` to go back to the original demo data).
  */
 class DemoGuard implements FilterInterface
 {

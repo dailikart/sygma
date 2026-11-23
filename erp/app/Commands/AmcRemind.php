@@ -18,6 +18,11 @@ class AmcRemind extends BaseCommand
     public function run(array $params)
     {
         helper(['app', 'setting', 'url']);
+        if (! \App\Libraries\Features::on('amc')) {
+            CLI::write('AMC module is switched off for this company. Nothing to do.');
+
+            return;
+        }
         $r = Amc::sendReminders();
         CLI::write("Reminders sent: {$r['reminded']}. Contracts expired: {$r['expired']}.", 'green');
     }

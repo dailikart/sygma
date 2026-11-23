@@ -75,9 +75,28 @@ class DemoReset extends BaseCommand
 
         cache()->clean();
 
-        CLI::write('Demo data restored. Login: demo@sygmasolar.com / Demo@12345', 'green');
+        $custom = self::applyPassword();
+        CLI::write('Demo data restored. Login: demo@sygmasolar.com / ' . ($custom ? '(demo.password from .env)' : 'Demo@12345'), 'green');
 
         return EXIT_SUCCESS;
+    }
+
+    /**
+     * Sets every login's password to `demo.password` from .env (if set), so the
+     * team's demo password is private and survives each nightly reset.
+     */
+    public static function applyPassword(): bool
+    {
+        $password = (string) env('demo.password', '');
+        if ($password === '') {
+            return false;
+        }
+
+        db_connect()->table('auth_identities')
+            ->where('type', 'email_password')
+            ->update(['secret2' => service('passwords')->hash($password), 'force_reset' => 0]);
+
+        return true;
     }
 
     private function emptyDir(string $dir): void

@@ -19,6 +19,18 @@ abstract class AdminController extends BaseController
     public function initController(RequestInterface $request, ResponseInterface $response, LoggerInterface $logger)
     {
         parent::initController($request, $response, $logger);
+
+        // Options switched off for this company (Modules & Options) cannot be chosen.
+        if ($request->getMethod() === 'POST') {
+            $post = $request->getPost();
+            if (isset($post['subsidy_type']) && ! \App\Libraries\Features::on('projects.subsidy')) {
+                $post['subsidy_type'] = 'non_subsidy';
+            }
+            if (($post['finance_mode'] ?? '') === 'loan' && ! \App\Libraries\Features::on('invoices.loan')) {
+                $post['finance_mode'] = '';
+            }
+            $request->setGlobal('post', $post);
+        }
     }
 
     protected function render(string $view, array $data = []): string

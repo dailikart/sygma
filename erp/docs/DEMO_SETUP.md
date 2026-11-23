@@ -1,4 +1,4 @@
-# Sygma Solar Suite: live demo setup
+# Sygma Solar Suite: team demo setup
 
 The website (`../index.html`) and the ERP (this `erp/` folder) are deployed together:
 
@@ -12,8 +12,8 @@ public_html/            ← the sygma repo
     └── docs/database/sygma_demo.sql
 ```
 
-Website buttons: **Log in** → `erp/login`, **Open / Explore / Try the live demo** → `erp/login?demo=1`
-(the sign-in form is filled with the demo login).
+Website: **Log in** → `erp/login`. The demo is for **your team's walkthroughs**: no demo
+login is shown on the website or the sign-in page.
 
 ## 1. Database
 
@@ -26,7 +26,10 @@ Website buttons: **Log in** → `erp/login`, **Open / Explore / Try the live dem
 3. Copy `erp/docs/database/demo_uploads/*` into `erp/writable/uploads/` (project photos and
    customer documents). `php spark demo:reset` does this for you.
 
-### Demo logins (password for all: `Demo@12345`)
+### Demo logins
+
+Default password for all: `Demo@12345`. **Set your own team password** with `demo.password`
+(section 3) so the default stops working.
 
 | Email | Role |
 |---|---|
@@ -67,7 +70,12 @@ database.default.password = 'your-db-password'
 database.default.DBDriver = MySQLi
 database.default.port = 3306
 demo.mode = true
+demo.password = 'your-private-team-password'
+features.manage = true
 ```
+
+`features.manage = true` shows **Administration → Modules & Options**, so in a demo you can
+switch modules off to show a client exactly their package ([MODULES.md](MODULES.md)).
 
 Then install the PHP packages inside `erp/` (`composer install --no-dev`, or upload `vendor/`)
 and make `erp/writable/` writable. Everything else (PHP version, extensions) is as in
@@ -75,8 +83,9 @@ and make `erp/writable/` writable. Everything else (PHP version, extensions) is 
 
 ## 3. Demo mode (`demo.mode = true`)
 
-- The sign-in page shows the demo email / password and a **Use demo login** button.
-- A "Live demo" banner is shown inside the ERP.
+- **Private team password:** with `demo.password` set, every demo login uses it. Apply it now
+  with `php spark demo:password` (keeps the data); `demo:reset` applies it again every night.
+- A "Demo company" banner is shown inside the ERP.
 - Visitors can try everything (leads, quotations, invoices, payments, projects, service
   complaints, stock, AMC, reports), but **profile/password, users, roles, settings,
   WhatsApp templates, IndiaMART fetch, bulk import and database updates are view-only**, so nobody can lock the demo or change server settings.

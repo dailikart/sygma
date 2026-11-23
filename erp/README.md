@@ -10,7 +10,8 @@ Built with CodeIgniter 4.7 (PHP 8.2+), CodeIgniter Shield, MySQL.
 - **Setup guide:** [docs/SETUP.md](docs/SETUP.md)
 - **User guide (role by role):** [docs/USER_GUIDE.md](docs/USER_GUIDE.md)
 - **Product proposal & confirmed project flow:** [docs/PROPOSAL.md](docs/PROPOSAL.md)
-- **Live demo setup (with the website):** [docs/DEMO_SETUP.md](docs/DEMO_SETUP.md)
+- **Team demo setup (with the website):** [docs/DEMO_SETUP.md](docs/DEMO_SETUP.md)
+- **Modules & options per company:** [docs/MODULES.md](docs/MODULES.md)
 
 Quick start (details in the setup guide):
 

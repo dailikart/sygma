@@ -45,12 +45,14 @@ class Workflow extends BaseConfig
             'role'         => 'liaison',
             'icon'         => 'bi-patch-check',
             'subsidy_only' => true,
+            'option'       => 'projects.subsidy',
         ],
         'eb_process' => [
             'title'      => 'EB / Net Meter',
             'permission' => 'eb.update',
             'role'       => 'liaison',
             'icon'       => 'bi-lightning-charge',
+            'option'     => 'projects.eb',
         ],
         'subsidy' => [
             'title'        => 'Subsidy',
@@ -58,6 +60,7 @@ class Workflow extends BaseConfig
             'role'         => 'liaison',
             'icon'         => 'bi-bank',
             'subsidy_only' => true,
+            'option'       => 'projects.subsidy',
         ],
     ];
 

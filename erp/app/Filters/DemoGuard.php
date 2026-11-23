@@ -7,10 +7,9 @@ use CodeIgniter\HTTP\RequestInterface;
 use CodeIgniter\HTTP\ResponseInterface;
 
 /**
- * Public demo protection (only when `demo.mode = true` in .env).
+ * Demo-site protection (only when `demo.mode = true` in .env).
  *
- * Visitors share the published demo logins, so changes that would lock other
- * visitors out or touch the server are refused: passwords, users, roles,
+ * Several team members share the demo logins, so changes that would lock others out or touch the server are refused: passwords, users, roles,
  * settings (SMTP / WhatsApp / lead-integration keys), IndiaMART fetch,
  * database updates and bulk imports.
  * Everything else (leads, invoices, projects, stock...) works normally and is
@@ -35,7 +34,7 @@ class DemoGuard implements FilterInterface
         $path = trim(service('uri')->getRoutePath(), '/');
         foreach (self::LOCKED as $prefix) {
             if ($path === 'admin/' . $prefix || str_starts_with($path, 'admin/' . $prefix . '/')) {
-                return redirect()->back()->with('warning', 'This action is disabled in the live demo, so the demo stays usable for everyone. Book a demo to try it on your own copy.');
+                return redirect()->back()->with('warning', 'This is view-only on the demo site, so the demo keeps working for the whole team.');
             }
         }
 

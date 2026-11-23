@@ -36,6 +36,9 @@ class IndiaMart
      */
     public static function pull(bool $force = false): array
     {
+        if (! Features::on('leads.indiamart')) {
+            return ['added' => 0, 'merged' => 0, 'skipped' => 0, 'message' => 'IndiaMART import is not enabled for this company.'];
+        }
         $key = trim((string) setting('Solar.indiamartKey'));
         if (! setting('Solar.indiamartEnabled') || $key === '') {
             throw new RuntimeException('Switch on IndiaMART import and enter the CRM key in Settings first.');

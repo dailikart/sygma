@@ -25,6 +25,21 @@ class Workflow
     /**
      * Creates the project and its stages for an invoice and activates the first stage.
      */
+    /**
+     * Stages this company uses (options switched off in Modules & Options are
+     * left out). With $subsidyType, subsidy-only stages need a subsidy project.
+     */
+    public static function activeStages(?string $subsidyType = null): array
+    {
+        return array_filter(self::config()->stages, static function (array $s) use ($subsidyType): bool {
+            if (! empty($s['option']) && ! Features::on($s['option'])) {
+                return false;
+            }
+
+            return ! ($subsidyType !== null && ! empty($s['subsidy_only']) && $subsidyType !== 'subsidy');
+        });
+    }
+
     public static function createProject(int $invoiceId, ?int $kitId = null): int
     {
         $db       = db_connect();
@@ -59,10 +74,7 @@ class Workflow
         $db->table('invoices')->where('id', $invoiceId)->update(['project_id' => $projectId]);
 
         $seq = 0;
-        foreach (self::config()->stages as $key => $stage) {
-            if (! empty($stage['subsidy_only']) && $invoice['subsidy_type'] !== 'subsidy') {
-                continue;
-            }
+        foreach (self::activeStages((string) $invoice['subsidy_type']) as $key => $stage) {
             $db->table('project_stages')->insert([
                 'project_id' => $projectId,
                 'stage'      => $key,

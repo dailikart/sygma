@@ -18,8 +18,10 @@
             <div class="form-text">Not in the list? <a href="<?= site_url('admin/customers/new') ?>">Add customer</a></div></div>
         <div class="col-md-3"><label class="form-label">Invoice date *</label><input type="date" name="invoice_date" class="form-control" required value="<?= esc($val('invoice_date', date('Y-m-d'))) ?>"></div>
         <div class="col-md-3"><label class="form-label">Due date</label><input type="date" name="due_date" class="form-control" value="<?= esc((string) $val('due_date', $inv ? '' : date('Y-m-d', strtotime('+7 days')))) ?>"></div>
+        <?php if (\App\Libraries\Features::on('projects.subsidy')): ?>
         <div class="col-md-3"><label class="form-label">Subsidy type *</label>
             <select name="subsidy_type" class="form-select" required><?= select_options(['subsidy' => 'Subsidy customer (PM Surya Ghar)', 'non_subsidy' => 'Non-subsidy customer'], $val('subsidy_type', 'subsidy')) ?></select></div>
+        <?php else: ?><input type="hidden" name="subsidy_type" value="non_subsidy"><?php endif ?>
         <div class="col-md-3"><label class="form-label">Installation type</label>
             <select name="installation_type_id" class="form-select"><?= select_options($types, $val('installation_type_id'), '— Select —') ?></select></div>
         <div class="col-md-3"><label class="form-label">System capacity (kW) *</label><input type="number" step="0.01" min="0.1" name="capacity_kw" id="capacity_kw" class="form-control" required value="<?= esc(($inv || $pre) && $val('capacity_kw') !== '' ? qty($val('capacity_kw')) : old('capacity_kw')) ?>"></div>
@@ -39,7 +41,7 @@
             <select name="print_format" id="print_format" class="form-select"><?= select_options(\App\Libraries\InvoiceFormat::FORMATS, $val('print_format', 'cumulative')) ?></select>
             <div class="form-text">Set automatically from the customer type; you can change it.</div></div>
         <?php if (! $inv): ?><div class="col-md-4"><label class="form-label">Payment mode</label>
-            <select name="finance_mode" id="finance_mode" class="form-select"><?= select_options(\App\Libraries\Finance::MODES, old('finance_mode', '')) ?></select>
+            <select name="finance_mode" id="finance_mode" class="form-select"><?= select_options(\App\Libraries\Finance::modes(), old('finance_mode', '')) ?></select>
             <div class="form-text">Can be decided later, but must be set before material is dispatched.</div></div><?php endif ?>
         <div class="col-md-4"><label class="form-label">EB / meter charges paid by</label>
             <div class="input-group"><select name="eb_charges_by" id="eb_by" class="form-select"><?= select_options(eb_charges_options(), (string) $val('eb_charges_by', '')) ?></select>

@@ -12,6 +12,12 @@ class Finance
 {
     public const MODES = ['' => 'Not decided yet', 'cash' => 'Cash / self-funded', 'loan' => 'Bank loan'];
 
+    /** Modes this company can choose (no bank loan when that option is off). */
+    public static function modes(): array
+    {
+        return Features::on('invoices.loan') ? self::MODES : array_diff_key(self::MODES, ['loan' => 1]);
+    }
+
     /** Finance mode can change only until material is dispatched. */
     public static function editable(array $invoice): bool
     {

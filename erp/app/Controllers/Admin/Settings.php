@@ -67,7 +67,9 @@ class Settings extends AdminController
     {
         $this->requirePermission('settings.manage');
 
-        return $this->render('settings/index', ['fields' => $this->fields]);
+        $fields = array_diff_key($this->fields, array_flip(\App\Libraries\Features::hiddenSettings()));
+
+        return $this->render('settings/index', ['fields' => $fields]);
     }
 
     public function save()

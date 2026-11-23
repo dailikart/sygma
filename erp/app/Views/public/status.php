@@ -135,7 +135,7 @@ $due = $invoice ? round((float) $invoice['total'] - (float) $invoice['amount_pai
     </div>
     <?php endif ?>
 
-    <?php if (in_array($p['status'], ['active', 'completed', 'on_hold'], true) && ($p['commissioned_on'] || $tickets || ($contract))): $S = \App\Libraries\ServiceDesk::STATUSES; $C = \App\Libraries\ServiceDesk::CATEGORIES; ?>
+    <?php if (\App\Libraries\Features::on('amc') && in_array($p['status'], ['active', 'completed', 'on_hold'], true) && ($p['commissioned_on'] || $tickets || ($contract))): $S = \App\Libraries\ServiceDesk::STATUSES; $C = \App\Libraries\ServiceDesk::CATEGORIES; ?>
     <div class="cardx" id="service">
         <h2><i class="bi bi-tools"></i> Service &amp; complaints</h2>
         <?php if (session('complaint_ok')): ?><div class="alert alert-success py-2 small"><?= esc(session('complaint_ok')) ?></div><?php endif ?>

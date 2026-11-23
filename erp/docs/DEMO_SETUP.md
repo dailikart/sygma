@@ -83,8 +83,9 @@ and make `erp/writable/` writable. Everything else (PHP version, extensions) is 
 
 ## 3. Demo mode (`demo.mode = true`)
 
-- **Private team password:** with `demo.password` set, every demo login uses it. Apply it now
-  with `php spark demo:password` (keeps the data); `demo:reset` applies it again every night.
+- **Private team password:** with `demo.password` set, every demo login uses it. It is applied
+  automatically on the next page load after you add or change it (no SSH or command needed);
+  `demo:reset` applies it again every night. `php spark demo:password` does the same from the command line.
 - A "Demo company" banner is shown inside the ERP.
 - Visitors can try everything (leads, quotations, invoices, payments, projects, service
   complaints, stock, AMC, reports), but **profile/password, users, roles, settings,

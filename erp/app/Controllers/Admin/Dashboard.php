@@ -33,6 +33,10 @@ class Dashboard extends AdminController
                 ->where('status', 'active')->groupBy('current_stage')->get()->getResultArray(), 'n', 'current_stage');
             $data['onHold'] = $db->table('projects')->where('status', 'on_hold')->countAllResults();
         }
+        if (can('amc.view') || can('amc.manage')) {
+            $data['openComplaints'] = $db->table('service_tickets')->whereIn('status', ['open', 'assigned', 'in_progress'])->countAllResults();
+            $data['urgentComplaints'] = $db->table('service_tickets')->whereIn('status', ['open', 'assigned', 'in_progress'])->groupStart()->where('priority', 'urgent')->orWhere('assigned_to', null)->groupEnd()->countAllResults();
+        }
         if (can('inventory.view')) {
             $bal = Stock::balances();
             $low = [];

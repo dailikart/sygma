@@ -26,6 +26,7 @@ PASS=0; FAIL=0; FAILS=()
 ok()   { PASS=$((PASS+1)); printf '  \e[32m✓\e[0m %s\n' "$1"; }
 bad()  { FAIL=$((FAIL+1)); FAILS+=("$1"); printf '  \e[31m✗ %s\e[0m\n' "$1"; }
 eq()   { [ "$2" == "$3" ] && ok "$1" || bad "$1 (expected '$3', got '$2')"; }
+hasnt() { if grep -qF -- "$3" <<<"$2"; then FAIL=$((FAIL+1)); FAILS+=("$1"); printf '  \e[31m✗ %s\e[0m\n' "$1"; else PASS=$((PASS+1)); printf '  \e[32m✓\e[0m %s\n' "$1"; fi; }
 has()  { [[ "$2" == *"$3"* ]] && ok "$1" || bad "$1 (expected to contain '$3', got '${2:0:200}')"; }
 section() { printf '\n\e[1m== %s\e[0m\n' "$1"; }
 q()    { mysql -N -B -u"$DBUSER" -p"$DBPASS" "$DB" -e "$1" 2>/dev/null | tr '\t' '|' | sed -E 's/([0-9])\.00([^0-9]|$)/\1\2/g; s/([0-9])\.00([^0-9]|$)/\1\2/g'; }
@@ -54,7 +55,7 @@ database.default.DBDriver = MySQLi
 admin.email = admin@e2e.test
 admin.password = 'Admin#2026x'
 EOF
-restore() { pkill -f "spark serve --port $PORT" 2>/dev/null; pkill -f "aiosmtpd -n -l 127.0.0.1:1026" 2>/dev/null; [ -f "$W/env.backup" ] && cp "$W/env.backup" .env || rm -f .env; }
+restore() { pkill -f "spark serve --port $PORT" 2>/dev/null; pkill -f -- "-S localhost:$PORT" 2>/dev/null; pkill -f "http.server 8097" 2>/dev/null; pkill -f "aiosmtpd -n -l 127.0.0.1:1026" 2>/dev/null; [ -f "$W/env.backup" ] && cp "$W/env.backup" .env || rm -f .env; }
 trap restore EXIT
 php spark migrate --all >/dev/null && php spark db:seed AdminSeeder >/dev/null && ok "migrations + admin seed" || bad "migrations"
 (python3 -m aiosmtpd -n -l 127.0.0.1:1026 > "$W/smtp.log" 2>&1 &)
@@ -483,6 +484,186 @@ has "Help on a purchase return opens the Purchase chapter" "$(curl -s -b "$A" "$
 eq "delivery staff can read the manual too" "$(code "$W/driver1" admin/manual/delivery)" "200"
 eq "unknown chapter is 404" "$(code "$A" admin/manual/nope)" "404"
 
+# ── quotations ────────────────────────────────────────────────────────────
+section "Quotation: lead → quotation → share → convert to invoice"
+lead "Quote Lead Kumar" 9555500001 qlead@e2e.test Salem b2c 3
+QL=$(q "select id from leads where phone='9555500001'")
+has "lead page offers a quotation" "$(curl -s -b "$M" "$B/admin/leads/$QL")" "admin/quotations/new?lead=$QL"
+has "new quotation is filled from the lead" "$(curl -s -b "$M" "$B/admin/quotations/new?lead=$QL")" 'value="Quote Lead Kumar"'
+post "$M" "admin/quotations/new?lead=$QL" admin/quotations -F lead_id=$QL -F party_name="Quote Lead Kumar" -F party_phone=9555500001 -F party_email=qlead@e2e.test -F party_city=Salem -F party_state="Tamil Nadu" \
+  -F customer_type=b2c -F quote_date="$D" -F valid_until="$D" -F subsidy_type=subsidy -F installation_type_id=1 -F capacity_kw=3 -F kit_id=1 -F print_format=cumulative \
+  -F subsidy_amount=78000 -F eb_charges_by=customer -F eb_charges_amount=5000 -F units_per_kw_day=4 -F tariff=6.5 -F notes="50% advance" \
+  -F 'items[0][description]=Supply of 3 kW On-grid Solar Power System' -F 'items[0][hsn]=8541' -F 'items[0][qty]=1' -F 'items[0][rate]=160000' -F 'items[0][tax_percent]=12' \
+  -F 'items[1][description]=Installation & commissioning service' -F 'items[1][hsn]=9954' -F 'items[1][qty]=1' -F 'items[1][rate]=10000' -F 'items[1][tax_percent]=18' >/dev/null
+QQ=$(q "select max(id) from quotations")
+# 160000 + 19200 GST + 10000 + 1800 GST = 191000
+eq "quotation saved: number, totals, status" "$(q "select concat(quote_no,' ',total+0,' ',status) from quotations where id=$QQ")" "QT/$(php -r 'echo (date("n")>=4?date("Y"):date("Y")-1)."-".substr((date("n")>=4?date("Y"):date("Y")-1)+1,2);')/0001 191000 draft"
+QS=$(curl -s -b "$M" "$B/admin/quotations/$QQ")
+# 3 kW × 4 × 365 = 4380 units × 6.5 = 28470/yr; net = 191000 + 5000 − 78000 = 118000; payback 4.1 yrs; 25 yrs = 711750
+has "savings: units per year" "$QS" "4,380 units"
+has "…net cost after subsidy (+ meter charges)" "$QS" "₹1,18,000.00"
+has "…payback" "$QS" "4.1 years"
+has "…25-year savings" "$QS" "₹7,11,750.00"
+eq "quotation PDF" "$(curl -s -b "$M" -o "$W/quote.pdf" -w '%{content_type}' "$B/admin/quotations/$QQ/pdf" | cut -d';' -f1)" "application/pdf"
+has "PDF shows payback and net cost" "$(pdftotext "$W/quote.pdf" - 2>/dev/null | tr -s ' \n' ' ')" "Payback 4.1 years"
+QT=$(q "select share_token from quotations where id=$QQ")
+eq "share link opens the PDF without login" "$(curl -s -o /dev/null -w '%{http_code} %{content_type}' "$B/quote/$QT" | cut -d';' -f1)" "200 application/pdf"
+eq "…and records that the customer opened it" "$(q "select viewed_at is not null from quotations where id=$QQ")" "1"
+eq "wrong share link is 404" "$(curl -s -o /dev/null -w '%{http_code}' "$B/quote/0123456789abcdef0123456789abcdef")" "404"
+eq "WhatsApp button opens wa.me with the link" "$(curl -s -b "$M" -o /dev/null -w '%{redirect_url}' "$B/admin/quotations/$QQ/whatsapp" | grep -o '^https://wa.me/919555500001?text=.*quote%2F'$QT | wc -l)" "1"
+eq "…and marks it sent" "$(q "select status from quotations where id=$QQ")" "sent"
+post "$M" admin/quotations/$QQ admin/quotations/$QQ/email -F to=qlead@e2e.test >/dev/null; has "quotation emailed with PDF" "$(flash "$M" admin/quotations/$QQ)" "Email sent"
+eq "store user cannot open quotations" "$(code "$W/store1" admin/quotations)" "403"
+post "$M" admin/quotations/$QQ admin/quotations/$QQ/status -F status=accepted >/dev/null
+r=$(post "$M" admin/quotations/$QQ admin/quotations/$QQ/convert)
+QC=$(q "select customer_id from quotations where id=$QQ")
+eq "convert: customer created from the lead, lead confirmed" "$(q "select concat(c.name,'/',c.eb_charges_by,'/',l.status,'/',l.customer_id=c.id) from customers c join leads l on l.id=$QL where c.id=$QC")" "Quote Lead Kumar/customer/confirmed/1"
+IF=$(curl -s -b "$M" "$B/admin/invoices/new?quotation=$QQ")
+has "invoice form filled from the quotation" "$IF" 'value="Supply of 3 kW On-grid Solar Power System"'
+has "…with the quotation link" "$IF" "name=\"quotation_id\" value=\"$QQ\""
+post "$M" "admin/invoices/new?quotation=$QQ" admin/invoices -F quotation_id=$QQ -F customer_id=$QC -F invoice_date="$D" -F subsidy_type=subsidy -F installation_type_id=1 -F capacity_kw=3 -F kit_id=1 -F print_format=cumulative \
+  -F eb_charges_by=customer -F eb_charges_amount=5000 \
+  -F 'items[0][description]=Supply of 3 kW On-grid Solar Power System' -F 'items[0][hsn]=8541' -F 'items[0][qty]=1' -F 'items[0][rate]=160000' -F 'items[0][tax_percent]=12' \
+  -F 'items[1][description]=Installation & commissioning service' -F 'items[1][hsn]=9954' -F 'items[1][qty]=1' -F 'items[1][rate]=10000' -F 'items[1][tax_percent]=18' >/dev/null
+QI=$(q "select max(id) from invoices")
+eq "invoice saved, quotation converted and linked" "$(q "select concat(i.total+0,'/',q.status,'/',q.invoice_id=i.id) from invoices i join quotations q on q.id=$QQ where i.id=$QI")" "191000/converted/1"
+hasnt "converted quotation cannot be edited" "$(curl -s -b "$M" "$B/admin/quotations/$QQ")" "/edit\""
+post "$A" admin/invoices/$QI admin/invoices/$QI/delete >/dev/null
+eq "deleting the invoice puts the quotation back to accepted" "$(q "select concat(status,'/',ifnull(invoice_id,'none')) from quotations where id=$QQ")" "accepted/none"
+
+# ── customer status page ──────────────────────────────────────────────────
+section "Customer status page (private link, no login)"
+has "project page shows the customer status link" "$(curl -s -b "$A" "$B/admin/projects/1")" "/track/"
+ST=$(q "select status_token from projects where id=1")
+SP1=$(curl -s "$B/track/$ST")
+has "opens without login: project and system" "$SP1" "$(q "select project_no from projects where id=1")"
+has "…progress timeline" "$SP1" "Site Survey &amp; Approval"
+has "…payments: fully paid" "$SP1" "Fully paid"
+has "…AMC cover" "$SP1" "Covered until"
+has "…contact buttons" "$SP1" "wa.me/"
+hasnt "…does not show the customer's phone number" "$SP1" "9876543210"
+eq "customer view is recorded" "$(q "select status_viewed_at is not null from projects where id=1")" "1"
+eq "wrong link is 404" "$(curl -s -o /dev/null -w '%{http_code}' "$B/track/0123456789abcdef0123456789abcdef")" "404"
+eq "WhatsApp button sends the link" "$(curl -s -b "$A" -o /dev/null -w '%{redirect_url}' "$B/admin/projects/1/status-link/whatsapp" | grep -c "track%2F$ST")" "1"
+post "$A" admin/projects/1 admin/projects/1/status-link/reset >/dev/null
+eq "reset: old link stops working" "$(curl -s -o /dev/null -w '%{http_code}' "$B/track/$ST")" "404"
+eq "…new link works" "$(curl -s -o /dev/null -w '%{http_code}' "$B/track/$(q "select status_token from projects where id=1")")" "200"
+has "stage emails to the customer include the link" "$(cat "$W/smtp.log")" "Follow your project:"
+SP2=$(curl -s "$B/track/$(q "select status_token from projects where id=2")")
+has "loan project shows disbursements" "$SP2" "Disbursement 1"
+
+# ── service complaints ────────────────────────────────────────────────────
+section "Service complaints: register → assign → update → resolve → close"
+post "$A" "admin/service/new?customer=1&project=1" admin/service -F customer_id=1 -F project_id=1 -F category=no_generation -F priority=urgent -F reported_via=phone -F description="Inverter shows grid fault since morning" >/dev/null
+TK=$(q "select max(id) from service_tickets")
+eq "complaint registered: number, AMC cover, status" "$(q "select concat(ticket_no,' ',under_amc,' ',status,' ',priority) from service_tickets where id=$TK")" "SRV/$(php -r 'echo (date("n")>=4?date("Y"):date("Y")-1)."-".substr((date("n")>=4?date("Y"):date("Y")-1)+1,2);')/0001 1 open urgent"
+eq "service team notified" "$(q "select count(*) from notifications n join auth_groups_users g on g.user_id=n.user_id and g.group='service' where n.link='admin/service/$TK'")" "1"
+sleep 1; TKNO=$(q "select ticket_no from service_tickets where id=$TK"); eq "customer gets an acknowledgement email (with the number)" "$(grep -c "registered your complaint $TKNO" "$W/smtp.log")" "1"
+has "dashboard shows open complaints" "$(curl -s -b "$A" "$B/admin")" "Open complaints"
+SV=$(q "select id from users where username='service1'")
+post "$A" admin/service/$TK admin/service/$TK/assign -F assigned_to=$SV -F scheduled_date="$D" >/dev/null
+eq "assigned to technician with visit date" "$(q "select concat(status,'/',assigned_to=$SV,'/',scheduled_date='$D') from service_tickets where id=$TK")" "assigned/1/1"
+has "technician sees it in My Tasks" "$(curl -s -b "$W/service1" "$B/admin/tasks")" "admin/service/$TK"
+eq "installer (not assigned, no service role) cannot open it" "$(code "$W/fitter1" admin/service/$TK)" "403"
+post "$W/service1" admin/service/$TK admin/service/$TK/update -F note="Reached site, checking" -F status=in_progress -F "photo=@$W/photo.jpg" >/dev/null
+eq "technician update with photo, in progress" "$(q "select concat(t.status,'/',(select count(*) from service_ticket_updates u where u.ticket_id=t.id and u.photo_path is not null)) from service_tickets t where id=$TK")" "in_progress/1"
+post "$W/service1" admin/service/$TK admin/service/$TK/resolve -F resolution="Reset inverter, tightened AC connector" -F charge_amount=0 >/dev/null
+eq "resolved by the technician" "$(q "select concat(status,'/',resolved_by=$SV,'/',chargeable) from service_tickets where id=$TK")" "resolved/1/0"
+sleep 1; eq "customer told it is resolved" "$(grep -c "complaint $TKNO has been resolved" "$W/smtp.log")" "1"
+post "$A" admin/service/$TK admin/service/$TK/close -F action=close -F note="Customer confirmed" >/dev/null
+eq "closed by the office" "$(q "select status from service_tickets where id=$TK")" "closed"
+post "$A" admin/service/$TK admin/service/$TK/close -F action=reopen -F note="Fault again" >/dev/null
+eq "reopened goes back to the technician" "$(q "select status from service_tickets where id=$TK")" "assigned"
+has "complaints list shows it" "$(curl -s -b "$A" "$B/admin/service")" "admin/service/$TK"
+ST1=$(q "select status_token from projects where id=1")
+TOKP=$(curl -s -c "$W/pub" -b "$W/pub" "$B/track/$ST1" | grep -o 'name="csrf_test_name" value="[^"]*"' | head -1 | sed 's/.*value="//;s/"//')
+curl -s -b "$W/pub" -c "$W/pub" -o /dev/null --data-urlencode "csrf_test_name=$TOKP" --data-urlencode category=low_generation --data-urlencode "description=Generation dropped to half this week" "$B/track/$ST1/complaint"
+eq "customer can report a problem from the status page" "$(q "select concat(reported_via,'/',category,'/',created_by is null) from service_tickets order by id desc limit 1")" "status_page/low_generation/1"
+has "…and sees it there with its number" "$(curl -s -b "$W/pub" "$B/track/$ST1")" "$(q "select ticket_no from service_tickets order by id desc limit 1")"
+for i in 1 2; do TOKP=$(curl -s -c "$W/pub" -b "$W/pub" "$B/track/$ST1" | grep -o 'name="csrf_test_name" value="[^"]*"' | head -1 | sed 's/.*value="//;s/"//'); curl -s -b "$W/pub" -c "$W/pub" -o /dev/null --data-urlencode "csrf_test_name=$TOKP" --data-urlencode category=other --data-urlencode "description=Another problem $i" "$B/track/$ST1/complaint"; done
+eq "no more than 3 open complaints from the page" "$(q "select count(*) from service_tickets where project_id=1 and status in ('open','assigned','in_progress')")" "3"
+post "$A" admin/service/$TK admin/service/$TK/delete >/dev/null
+eq "admin can delete a complaint" "$(q "select count(*) from service_tickets where id=$TK")" "0"
+
+# ── IndiaMART lead import ─────────────────────────────────────────────────
+section "IndiaMART: push (instant) and pull (CRM key) into Leads"
+post "$A" admin/settings admin/settings -F indiamartEnabled=1 -F indiamartKey=TESTKEY123 >/dev/null
+has "settings show the push address" "$(curl -s -b "$A" "$B/admin/settings")" "/indiamart/push/"
+IMT=$(q "select value from settings where \`key\`='indiamartPushToken'")
+cat > "$W/im1.json" <<'J'
+{"CODE":200,"STATUS":"SUCCESS","RESPONSE":{"UNIQUE_QUERY_ID":"2873001","QUERY_TYPE":"W","QUERY_TIME":"2026-11-23 10:15:00","SENDER_NAME":"Rajesh Kannan","SENDER_MOBILE":"+91-9443300111","SENDER_EMAIL":"rajesh@example.com","SUBJECT":"Requirement for On Grid Solar System","SENDER_COMPANY":"","SENDER_ADDRESS":"4, Anna Nagar","SENDER_CITY":"Tiruppur","SENDER_STATE":"Tamil Nadu","QUERY_PRODUCT_NAME":"5 kW On Grid Solar Power Plant","QUERY_MESSAGE":"Need 5 kw rooftop system for my house.<br>Monthly bill 4000"}}
+J
+eq "push accepted" "$(curl -s -H 'Content-Type: application/json' --data-binary @"$W/im1.json" "$B/indiamart/push/$IMT" | tr -d ' \n')" '{"code":200,"status":"Success"}'
+eq "lead created: source, ref, phone, kW, type" "$(q "select concat(name,'/',source,'/',external_ref,'/',phone,'/',required_kw+0,'/',customer_type,'/',city) from leads where external_ref='IM-2873001'")" "Rajesh Kannan/IndiaMART/IM-2873001/9443300111/5/b2c/Tiruppur"
+eq "marketing team notified" "$(q "select count(*) from notifications where title like 'New IndiaMART lead%'")" "$(q "select count(*) from auth_groups_users where \`group\`='marketing'")"
+curl -s -H 'Content-Type: application/json' --data-binary @"$W/im1.json" "$B/indiamart/push/$IMT" >/dev/null
+eq "same enquiry pushed again is not duplicated" "$(q "select count(*) from leads where external_ref='IM-2873001'")" "1"
+sed 's/2873001/2873002/; s/Need 5 kw rooftop system for my house./Please call back today./' "$W/im1.json" > "$W/im2.json"
+curl -s -H 'Content-Type: application/json' --data-binary @"$W/im2.json" "$B/indiamart/push/$IMT" >/dev/null
+eq "repeat enquiry from the same phone becomes a follow-up on that lead" "$(q "select concat((select count(*) from leads where phone='9443300111'),'/',(select count(*) from lead_followups f join leads l on l.id=f.lead_id where l.phone='9443300111' and f.note like '%IM-2873002%'))")" "1/1"
+eq "wrong push address is refused" "$(curl -s -o /dev/null -w '%{http_code}' -H 'Content-Type: application/json' --data-binary @"$W/im1.json" "$B/indiamart/push/0123456789abcdef0123456789abcdef")" "404"
+mkdir -p "$W/imstub"; cat > "$W/imstub/crm.json" <<'J'
+{"CODE":200,"STATUS":"SUCCESS","MESSAGE":"","TOTAL_RECORDS":2,"RESPONSE":[{"UNIQUE_QUERY_ID":"2873101","QUERY_TYPE":"B","SENDER_NAME":"Lakshmi Textiles","SENDER_MOBILE":"9500011223","SENDER_EMAIL":"buy@lakshmitex.test","SENDER_COMPANY":"Lakshmi Textiles Pvt Ltd","SENDER_CITY":"Erode","QUERY_PRODUCT_NAME":"50 KW Solar Power Plant","QUERY_MESSAGE":"Factory rooftop"},{"UNIQUE_QUERY_ID":"2873001","SENDER_NAME":"Rajesh Kannan","SENDER_MOBILE":"9443300111","QUERY_PRODUCT_NAME":"5 kW On Grid Solar Power Plant"}]}
+J
+(cd "$W/imstub" && python3 -m http.server 8097 --bind 127.0.0.1 >/dev/null 2>&1 &); sleep 1
+q "insert into settings (class, \`key\`, value, type, context, created_at, updated_at) values ('Config\\\\Solar','indiamartApiUrl','http://127.0.0.1:8097/crm.json','string',NULL,now(),now())" >/dev/null
+post "$A" admin/settings admin/indiamart/pull >/dev/null; has "Fetch now imports new enquiries and skips known ones" "$(flash "$A" admin/settings)" "1 new lead(s), 0 added to existing leads, 1 already imported"
+eq "B2B lead from the company name, 50 kW" "$(q "select concat(customer_type,'/',required_kw+0,'/',source) from leads where external_ref='IM-2873101'")" "b2b/50/IndiaMART"
+post "$A" admin/settings admin/indiamart/pull >/dev/null; has "IndiaMART's 5-minute limit is respected" "$(flash "$A" admin/settings)" "one check every 5 minutes"
+has "cron command runs (and respects the limit)" "$(php spark indiamart:pull 2>&1)" "one check every 5 minutes"
+has "leads list filters by source" "$(curl -s -b "$M" "$B/admin/leads?source=IndiaMART")" "Lakshmi Textiles"
+pkill -f "http.server 8097" 2>/dev/null
+
+# ── Meta Lead Ads + Google Ads lead forms ──────────────────────────────────
+section "Meta (Facebook / Instagram) and Google Ads leads"
+post "$A" admin/settings admin/settings -F metaEnabled=1 -F metaPageToken=PAGETOKEN -F metaAppSecret=appsecret123 -F googleEnabled=1 >/dev/null
+SETP=$(curl -s -b "$A" "$B/admin/settings")
+has "settings show the Meta callback URL and Google key" "$SETP" "webhooks/google"
+MVT=$(q "select value from settings where \`key\`='metaVerifyToken'"); GK=$(q "select value from settings where \`key\`='googleKey'")
+eq "Meta subscription check answers with the challenge" "$(curl -s "$B/webhooks/meta?hub.mode=subscribe&hub.verify_token=$MVT&hub.challenge=4242")" "4242"
+eq "…wrong verify token refused" "$(curl -s -o /dev/null -w '%{http_code}' "$B/webhooks/meta?hub.mode=subscribe&hub.verify_token=nope&hub.challenge=1")" "403"
+mkdir -p "$W/graph"; cat > "$W/graph/444555666" <<'J'
+{"id":"444555666","created_time":"2026-11-23T05:10:00+0000","ad_name":"3 kW rooftop offer","campaign_name":"Erode Nov","platform":"ig","field_data":[{"name":"full_name","values":["Priya S"]},{"name":"phone_number","values":["+919786012345"]},{"name":"email","values":["priya@example.com"]},{"name":"city","values":["Erode"]},{"name":"monthly_electricity_bill","values":["3000-5000"]}]}
+J
+(cd "$W/graph" && python3 -m http.server 8097 --bind 127.0.0.1 >/dev/null 2>&1 &); sleep 1
+q "insert into settings (class, \`key\`, value, type, context, created_at, updated_at) values ('Config\\\\Solar','metaGraphUrl','http://127.0.0.1:8097/','string',NULL,now(),now())" >/dev/null
+MB='{"object":"page","entry":[{"id":"111","time":1700000000,"changes":[{"field":"leadgen","value":{"leadgen_id":"444555666","page_id":"111","form_id":"22"}}]}]}'
+SIG="sha256=$(printf '%s' "$MB" | openssl dgst -sha256 -hmac appsecret123 | sed 's/^.* //')"
+eq "Meta call with a bad signature is refused" "$(curl -s -o /dev/null -w '%{http_code}' -H 'Content-Type: application/json' -H 'X-Hub-Signature-256: sha256=bad' --data-binary "$MB" "$B/webhooks/meta")" "403"
+eq "signed Meta lead accepted" "$(curl -s -o /dev/null -w '%{http_code}' -H 'Content-Type: application/json' -H "X-Hub-Signature-256: $SIG" --data-binary "$MB" "$B/webhooks/meta")" "200"
+eq "Meta lead created from the Graph API answers" "$(q "select concat(name,'/',phone,'/',email,'/',city,'/',source,'/',required_kw+0) from leads where external_ref='FB-444555666'")" "Priya S/9786012345/priya@example.com/Erode/Facebook / Instagram/3"
+has "…with custom answers, campaign and platform in the notes" "$(q "select notes from leads where external_ref='FB-444555666'")" "Monthly electricity bill: 3000-5000"
+curl -s -o /dev/null -H 'Content-Type: application/json' -H "X-Hub-Signature-256: $SIG" --data-binary "$MB" "$B/webhooks/meta"
+eq "same Meta lead again is not duplicated" "$(q "select count(*) from leads where external_ref='FB-444555666'")" "1"
+MB2='{"object":"page","entry":[{"id":"111","changes":[{"field":"leadgen","value":{"leadgen_id":"999000999"}}]}]}'
+SIG2="sha256=$(printf '%s' "$MB2" | openssl dgst -sha256 -hmac appsecret123 | sed 's/^.* //')"
+curl -s -o /dev/null -H 'Content-Type: application/json' -H "X-Hub-Signature-256: $SIG2" --data-binary "$MB2" "$B/webhooks/meta"
+has "if Meta details cannot be read the lead is still saved with the reason" "$(q "select concat(name,' | ',notes) from leads where external_ref='FB-999000999'")" "Facebook lead 999000999 | Details could not be read"
+pkill -f "http.server 8097" 2>/dev/null
+GB='{"lead_id":"TeSter-123","user_column_data":[{"column_name":"Full Name","string_value":"Senthil Kumar","column_id":"FULL_NAME"},{"column_name":"User Phone","string_value":"+91 98940 55667","column_id":"PHONE_NUMBER"},{"column_name":"City","string_value":"Karur","column_id":"CITY"},{"column_name":"System size needed","string_value":"5 kW","column_id":"Q1"}],"api_version":"1.0","form_id":40000,"campaign_id":12345,"google_key":"'$GK'","is_test":false}'
+eq "Google lead with a wrong key is refused" "$(curl -s -o /dev/null -w '%{http_code}' -H 'Content-Type: application/json' --data-binary "${GB/$GK/wrongkey}" "$B/webhooks/google")" "403"
+eq "Google lead accepted" "$(curl -s -o /dev/null -w '%{http_code}' -H 'Content-Type: application/json' --data-binary "$GB" "$B/webhooks/google")" "200"
+eq "Google lead created (name, phone, city, kW from the answer)" "$(q "select concat(name,'/',phone,'/',city,'/',source,'/',required_kw+0) from leads where external_ref='GA-TeSter-123'")" "Senthil Kumar/9894055667/Karur/Google Ads/5"
+curl -s -o /dev/null -H 'Content-Type: application/json' --data-binary "$GB" "$B/webhooks/google"
+eq "same Google lead again is not duplicated" "$(q "select count(*) from leads where external_ref='GA-TeSter-123'")" "1"
+curl -s -o /dev/null -H 'Content-Type: application/json' --data-binary "${GB/TeSter-123/test-2}" "$B/webhooks/google" ; true
+eq "repeat from the same phone becomes a follow-up" "$(q "select count(*) from lead_followups where note like '%[GA-test-2]%'")" "1"
+GT=$(echo "$GB" | sed 's/TeSter-123/T-9/; s/"is_test":false/"is_test":true/; s/98940 55667/90000 11111/')
+curl -s -o /dev/null -H 'Content-Type: application/json' --data-binary "$GT" "$B/webhooks/google"
+eq "Google 'send test data' shows as a test lead" "$(q "select name from leads where external_ref='GA-T-9'")" "Senthil Kumar (Google test lead)"
+eq "marketing notified about Meta and Google leads" "$(q "select count(distinct title) from notifications where title like 'New Facebook%' or title like 'New Google Ads%'")" "4"
+has "lead form offers Google Ads as a source" "$(curl -s -b "$M" "$B/admin/leads/new")" "Google Ads"
+
+# ── project profit ─────────────────────────────────────────────────────────
+section "Project profit report"
+EXP_P1=$(q "select round(i.subtotal - ifnull((select sum(di.qty * ifnull((select sum(pi.qty*pi.rate)/sum(pi.qty) from purchase_items pi where pi.item_id=di.item_id), it.purchase_price)) from dispatch_items di join dispatches d on d.id=di.dispatch_id join items it on it.id=di.item_id where d.project_id=p.id and d.status in ('dispatched','delivered')),0) - ifnull((select sum(amount) from expenses where project_id=p.id),0), 2) from projects p join invoices i on i.id=p.invoice_id where p.id=1")
+PR=$(curl -s -b "$A" "$B/admin/reports/project-profit?from=2000-01-01&to=$D")
+has "report lists project 1" "$PR" "admin/projects/1\""
+has "project 1 profit = invoice before GST − material − expenses (₹$EXP_P1)" "$PR" "$(q "select format($EXP_P1,2,'en_IN')")"
+has "project page shows the same profit" "$(curl -s -b "$A" "$B/admin/projects/1")" "$(q "select format($EXP_P1,2,'en_IN')")"
+eq "Project Profit Excel export" "$(curl -s -b "$A" -o /dev/null -w '%{content_type}' "$B/admin/reports/project-profit?export=excel" | cut -d';' -f1)" "application/vnd.ms-excel"
+eq "store user cannot open the profit report" "$(code "$W/store1" admin/reports/project-profit)" "403"
+
 # ── EB / meter charges ─────────────────────────────────────────────────────
 section "EB / meter charges: paid by company (–) or customer (extra)"
 eq "customer defaults saved" "$(q "select group_concat(concat(id,':',ifnull(eb_charges_by,''),':',ifnull(eb_charges_amount+0,'')) order by id) from customers where id in (1,2)")" "1:customer:5000,2:company:"
@@ -511,7 +692,6 @@ XPAY=$(q "select max(id) from payments where invoice_id=$XI")
 eq "accounts user cannot edit invoices" "$(code "$W/acct1" admin/invoices/$XI/edit)" "403"
 eq "manager (Admin role) can edit invoices" "$(code "$W/mgr" admin/invoices/$XI/edit)" "200"
 has "invoice page shows Edit and Delete for admin" "$(curl -s -b "$A" "$B/admin/invoices/$XI")" "admin/invoices/$XI/delete"
-hasnt() { if grep -qF -- "$3" <<<"$2"; then FAIL=$((FAIL+1)); FAILS+=("$1"); printf '  \e[31m✗ %s\e[0m\n' "$1"; else PASS=$((PASS+1)); printf '  \e[32m✓\e[0m %s\n' "$1"; fi; }
 hasnt "…but not for the accounts user" "$(curl -s -b "$W/acct1" "$B/admin/invoices/$XI")" "/delete"
 has "edit form is prefilled with the lines" "$(curl -s -b "$A" "$B/admin/invoices/$XI/edit")" 'value="Edit test system"'
 r=$(post "$A" admin/invoices/$XI/edit admin/invoices/$XI/update -F customer_id=1 -F invoice_date="$D" -F subsidy_type=non_subsidy -F capacity_kw=2 -F 'items[0][description]=Too small' -F 'items[0][qty]=1' -F 'items[0][rate]=1000' -F 'items[0][tax_percent]=12')
@@ -572,6 +752,26 @@ eq "item with zero stock deleted (hidden, history kept)" "$(q "select concat(del
 eq "books still balance after purchase deletes" "$(q "select round(sum(debit)-sum(credit),2)+0 from voucher_entries")" "0"
 eq "accounts user cannot delete purchases (permission)" "$(post "$W/acct1" admin/expenses/new admin/purchases/1/delete | cut -d' ' -f1)" "403"
 eq "…and the purchase is still there" "$(q "select count(*) from purchases where id=1")" "1"
+
+# ── install on phone (PWA) ────────────────────────────────────────────────
+section "Install on phone (manifest, icons, service worker)"
+MF=$(curl -s "$B/manifest.webmanifest")
+eq "manifest served as a web app manifest" "$(curl -s -o /dev/null -w '%{content_type}' "$B/manifest.webmanifest" | cut -d';' -f1)" "application/manifest+json"
+eq "manifest: company name, standalone, start page, 3 icons" "$(php -r '$m=json_decode($argv[1],true); echo $m["name"],"|",$m["display"],"|",parse_url($m["start_url"],PHP_URL_PATH),"|",count($m["icons"]);' "$MF")" "Sun Power Solutions|standalone|/admin|3"
+for sz in 192 512; do eq "icon ${sz}×${sz} PNG (from the logo)" "$(curl -s "$B/app-icon/$sz.png" | php -r '$i=getimagesizefromstring(stream_get_contents(STDIN)); echo $i[0],"x",$i[1]," ",$i["mime"];')" "${sz}x${sz} image/png"; done
+eq "maskable icon" "$(curl -s -o /dev/null -w '%{http_code} %{content_type}' "$B/app-icon/512-maskable.png")" "200 image/png"
+eq "bad icon name is 404" "$(curl -s -o /dev/null -w '%{http_code}' "$B/app-icon/../../.env")" "404"
+eq "service worker and offline page are served" "$(curl -s -o /dev/null -w '%{http_code}' "$B/sw.js") $(curl -s -o /dev/null -w '%{http_code}' "$B/offline.html")" "200 200"
+has "login page links the manifest" "$(curl -s "$B/login")" 'rel="manifest"'
+has "menu offers Install app" "$(curl -s -b "$A" "$B/admin")" "Install app on this device"
+
+# ── browser: type-to-search dropdowns ─────────────────────────────────────
+section "Type-to-search dropdowns (real browser)"
+if node -e "require('playwright')" 2>/dev/null; then
+  while IFS= read -r line; do
+    case "$line" in PASS\ *) ok "${line#PASS }";; FAIL\ *) bad "${line#FAIL }";; esac
+  done < <(node tests/e2e/browser_search.js "http://$B")
+else echo "  (playwright not installed – browser checks skipped)"; fi
 
 # ── permissions ────────────────────────────────────────────────────────────
 section "Role access (allowed = 200, blocked = 403)"

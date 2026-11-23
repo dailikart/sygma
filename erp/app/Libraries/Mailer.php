@@ -35,7 +35,8 @@ class Mailer
             $email->setFrom($fromEmail, $fromName);
             $email->setTo($to);
             $email->setSubject($subject);
-            $email->setMessage(nl2br(esc($body)));
+            // Plain text → HTML, with links clickable.
+            $email->setMessage(preg_replace('~(https?://[^\s<]+)~', '<a href="$1">$1</a>', nl2br(esc($body))));
             foreach ($attachments as $a) {
                 if (is_file($a['path'])) {
                     $email->attach($a['path'], 'attachment', $a['name']);

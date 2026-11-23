@@ -88,6 +88,7 @@ class Removal
             self::deleteProject((int) $pr['id']);
         }
         Ledger::unpost('invoice', $invoiceId);
+        $db->table('quotations')->where('invoice_id', $invoiceId)->update(['invoice_id' => null, 'status' => 'accepted']);
         $db->table('invoice_items')->where('invoice_id', $invoiceId)->delete();
         $db->table('invoices')->where('id', $invoiceId)->delete();
 

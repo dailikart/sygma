@@ -11,6 +11,7 @@ $v = static fn (array $s, string $k, $d = '') => esc((string) ($s['data'][$k] ??
     <span class="text-muted small"><?= qty($p['capacity_kw']) ?> kW <?= $type ? '· ' . esc($type['name']) : '' ?> <?= $kit ? '· Kit: ' . esc($kit['name']) : '' ?></span>
     <div class="ms-auto d-flex gap-2">
         <?php if (can('entries.delete')): ?><form method="post" action="<?= site_url('admin/projects/' . $pid . '/delete') ?>"><?= csrf_field() ?><button class="btn btn-sm btn-outline-danger" data-confirm="Delete project <?= esc($p['project_no']) ?> permanently? Its stages, photos, dispatches (stock goes back to the store) and AMC visits are deleted. The invoice is kept."><i class="bi bi-trash"></i> Delete</button></form><?php endif ?>
+        <?php if (can('amc.manage') || can('customers.manage')): ?><a href="<?= site_url('admin/service/new?customer=' . $p['customer_id'] . '&project=' . $pid) ?>" class="btn btn-sm btn-outline-danger"><i class="bi bi-tools"></i> Complaint</a><?php endif ?>
         <?php if ($invoice): ?><a href="<?= site_url('admin/invoices/' . $invoice['id']) ?>" class="btn btn-sm btn-outline-secondary"><i class="bi bi-receipt"></i> <?= esc($invoice['invoice_no']) ?> <?= status_badge($invoice['status']) ?></a><?php endif ?>
         <?php if (can('projects.manage') && in_array($p['status'], ['active', 'on_hold'], true)): ?>
             <form method="post" action="<?= site_url('admin/projects/' . $pid . '/status') ?>" class="d-flex gap-1"><?= csrf_field() ?>
@@ -20,6 +21,28 @@ $v = static fn (array $s, string $k, $d = '') => esc((string) ($s['data'][$k] ??
     </div>
 </div>
 
+<?php if (! empty($profit) && $profit['revenue'] > 0): ?>
+<div class="card card-body py-2 mb-3 small d-flex flex-row flex-wrap gap-3 align-items-center">
+    <span class="fw-semibold"><i class="bi bi-graph-up-arrow"></i> Profit</span>
+    <span>Invoice before GST <strong><?= money($profit['revenue']) ?></strong></span>
+    <span>− Material <strong><?= money($profit['material']) ?></strong></span>
+    <span>− Expenses <strong><?= money($profit['expenses']) ?></strong></span>
+    <?php if ($profit['eb'] > 0): ?><span>− EB charges <strong><?= money($profit['eb']) ?></strong></span><?php endif ?>
+    <span>= <strong class="<?= $profit['profit'] < 0 ? 'text-danger' : 'text-success' ?>"><?= money($profit['profit']) ?></strong><?= $profit['margin'] !== null ? ' (' . $profit['margin'] . '%)' : '' ?></span>
+    <a href="<?= site_url('admin/reports/project-profit') ?>" class="ms-auto">All projects</a>
+</div>
+<?php endif ?>
+<?php if (can('projects.view') || can('projects.manage') || can('invoices.view')): $statusUrl = \App\Libraries\StatusLink::url($pid); ?>
+<div class="card card-body py-2 mb-3 small d-flex flex-row flex-wrap gap-2 align-items-center">
+    <span class="fw-semibold"><i class="bi bi-phone"></i> Customer status page</span>
+    <input class="form-control form-control-sm" style="max-width:360px" value="<?= esc($statusUrl) ?>" readonly id="statusUrl" onclick="this.select()">
+    <button type="button" class="btn btn-sm btn-outline-secondary" onclick="navigator.clipboard.writeText(document.getElementById('statusUrl').value).then(() => { this.innerHTML = '<i class=&quot;bi bi-check2&quot;></i> Copied'; })"><i class="bi bi-clipboard"></i> Copy</button>
+    <a href="<?= site_url('admin/projects/' . $pid . '/status-link/whatsapp') ?>" target="_blank" class="btn btn-sm btn-outline-success"><i class="bi bi-whatsapp"></i> Send on WhatsApp</a>
+    <a href="<?= esc($statusUrl) ?>" target="_blank" class="btn btn-sm btn-outline-primary"><i class="bi bi-box-arrow-up-right"></i> Open</a>
+    <span class="text-muted"><?= $p['status_viewed_at'] ? '<i class="bi bi-eye text-success"></i> Customer last opened ' . fdate($p['status_viewed_at'], true) : 'Not opened by the customer yet' ?></span>
+    <?php if (can('projects.manage')): ?><form method="post" action="<?= site_url('admin/projects/' . $pid . '/status-link/reset') ?>" class="ms-auto"><?= csrf_field() ?><button class="btn btn-sm btn-link text-danger p-0" data-confirm="Create a new link? The old link stops working (use this if it was sent to the wrong person).">Reset link</button></form><?php endif ?>
+</div>
+<?php endif ?>
 <div class="stage-steps mb-3">
 <?php foreach ($stages as $s): ?>
     <a href="#stage-<?= $s['stage'] ?>" class="stage-step text-decoration-none text-reset <?= $s['status'] ?>">

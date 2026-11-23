@@ -220,7 +220,7 @@ class Dispatches extends AdminController
 
         $p = $db->table('projects')->where('id', $d['project_id'])->get()->getRowArray();
         $c = $db->table('customers')->where('id', $p['customer_id'])->get()->getRowArray();
-        Messenger::customer('material_dispatched', $c, ['project_no' => $p['project_no'], 'dispatch_no' => $d['dispatch_no'], 'vehicle_no' => (string) $this->request->getPost('vehicle_no')],
+        Messenger::customer('material_dispatched', $c, ['project_no' => $p['project_no'], 'dispatch_no' => $d['dispatch_no'], 'vehicle_no' => (string) $this->request->getPost('vehicle_no'), 'status_link' => \App\Libraries\StatusLink::url((int) $p['id'])],
             'Material dispatched – ' . $p['project_no'], "Dear {$c['name']},\n\nThe material for your solar system has been dispatched today and will reach your site soon.");
 
         return redirect()->back()->with('message', 'Dispatched. Stock reduced and shown as in transit. The delivery team has been notified.');
@@ -272,7 +272,7 @@ class Dispatches extends AdminController
 
         $p = $db->table('projects')->where('id', $d['project_id'])->get()->getRowArray();
         $c = $db->table('customers')->where('id', $p['customer_id'])->get()->getRowArray();
-        Messenger::customer('material_delivered', $c, ['project_no' => $p['project_no'], 'dispatch_no' => $d['dispatch_no']],
+        Messenger::customer('material_delivered', $c, ['project_no' => $p['project_no'], 'dispatch_no' => $d['dispatch_no'], 'status_link' => \App\Libraries\StatusLink::url((int) $p['id'])],
             'Material delivered – ' . $p['project_no'], "Dear {$c['name']},\n\nThe material for your solar system has been delivered at your site. Our installation team will contact you.");
 
         return redirect()->to('admin/dispatches/' . $d['id'])->with('message', 'Marked as delivered. The installation team has been notified.');

@@ -64,7 +64,7 @@ post "$M" admin/leads/$L admin/leads/$L/followup -F note="Owner asked for paybac
 
 echo "Customers for the active projects"
 custlead() { L=$(lead "$1" "$2" "$3" "$4" Referral "$5" "$6" 3500); post "$M" admin/leads/$L admin/leads/$L/convert -F type="$5" >/dev/null; q "select id from customers where lead_id=$L"; }
-C1=$(custlead "Lakshmi Textiles" 9840055667 lakshmi.tex@example.com Erode b2b 10); step "customer $C1 Lakshmi Textiles"
+C1=$(custlead "Sri Murugan Spinning Mills" 9840055667 smsm@example.com Erode b2b 10); step "customer $C1 Sri Murugan Spinning Mills"
 C2=$(custlead "Karthik Ramasamy" 9840066778 karthik.r@example.com Namakkal b2c 3); step "customer $C2 Karthik Ramasamy"
 C3=$(q "select id from customers where name='Imported One'")       # → Priya Natarajan in the build step
 C4=$(q "select id from customers where name='Imported Two Pvt Ltd'") # → Annai Foods Pvt Ltd
@@ -97,7 +97,7 @@ W$1-5
 W$1-6" >/dev/null; }
 
 echo "Active projects"
-I=$(invoice "$C1" non_subsidy 10 "" 520000); pay "$I" 100000; step "$(q "select project_no from projects where id=$(proj $I)") Lakshmi Textiles – survey"
+I=$(invoice "$C1" non_subsidy 10 "" 520000); pay "$I" 100000; step "$(q "select project_no from projects where id=$(proj $I)") Sri Murugan Spinning Mills – survey"
 I=$(invoice "$C3" subsidy 3 1 185000); pay "$I" 25000; P=$(proj "$I"); survey "$P" 3; step "$(q "select project_no from projects where id=$P") Priya – $(q "select current_stage from projects where id=$P")"
 I=$(invoice "$C4" non_subsidy 3 1 175000); pay "$I" 90000; P=$(proj "$I"); survey "$P" 3; dispatch "$P" "$I"; step "$(q "select project_no from projects where id=$P") Annai Foods – $(q "select current_stage from projects where id=$P")"
 I=$(invoice "$C2" subsidy 3 1 190000); pay "$I" 190000; P=$(proj "$I"); survey "$P" 3; dispatch "$P" "$I"; install "$P"; step "$(q "select project_no from projects where id=$P") Karthik – $(q "select current_stage from projects where id=$P")"

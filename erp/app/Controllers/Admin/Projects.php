@@ -61,6 +61,7 @@ class Projects extends AdminController
             'p'          => $project,
             'customer'   => $db->table('customers')->where('id', $project['customer_id'])->get()->getRowArray(),
             'invoice'    => $project['invoice_id'] ? $db->table('invoices')->where('id', $project['invoice_id'])->get()->getRowArray() : null,
+            'profit'     => can('reports.view') ? (\App\Libraries\ProjectProfit::forProjects([(int) $project['id']])[(int) $project['id']] ?? null) : null,
             'stages'     => $stages,
             'files'      => $files,
             'kit'        => $project['kit_id'] ? $db->table('kits')->where('id', $project['kit_id'])->get()->getRowArray() : null,
@@ -196,7 +197,7 @@ class Projects extends AdminController
     {
         $db       = db_connect();
         $customer = $db->table('customers')->where('id', $project['customer_id'])->get()->getRowArray();
-        $vars     = ['project_no' => $project['project_no'], 'capacity_kw' => qty($project['capacity_kw'])];
+        $vars     = ['project_no' => $project['project_no'], 'capacity_kw' => qty($project['capacity_kw']), 'status_link' => \App\Libraries\StatusLink::url((int) $project['id'])];
 
         if ($stage === 'survey') {
             Messenger::customer('survey_approved', $customer, $vars, 'Site survey approved – ' . $project['project_no'],
@@ -323,5 +324,31 @@ class Projects extends AdminController
         Workflow::log('project', (int) $p['id'], 'deleted', 'Project ' . $p['project_no'] . ' deleted');
 
         return redirect()->to('admin/projects')->with('message', 'Project ' . $p['project_no'] . ' deleted. Its invoice is kept.');
+    }
+
+    /** Opens WhatsApp with the customer's status link. */
+    public function statusWhatsapp($id)
+    {
+        $this->requirePermission('projects.view', 'projects.manage', 'invoices.view');
+        $p     = $this->findOr404('projects', $id);
+        $c     = db_connect()->table('customers')->select('name, phone')->where('id', $p['customer_id'])->get()->getRowArray();
+        $phone = preg_replace('/\D/', '', (string) $c['phone']);
+        $phone = strlen($phone) === 10 ? '91' . $phone : $phone;
+        $text  = sprintf("Dear %s, follow the progress of your %s kW solar system (%s) here: %s\n– %s",
+            $c['name'], qty($p['capacity_kw']), $p['project_no'], \App\Libraries\StatusLink::url((int) $p['id']), setting('Solar.companyName'));
+        Workflow::log('project', (int) $p['id'], 'status_link', 'Status link shared on WhatsApp');
+
+        return redirect()->to('https://wa.me/' . $phone . '?text=' . rawurlencode($text));
+    }
+
+    /** New link; the old one stops working (e.g. shared with the wrong person). */
+    public function statusReset($id)
+    {
+        $this->requirePermission('projects.manage');
+        $p = $this->findOr404('projects', $id);
+        \App\Libraries\StatusLink::reset((int) $p['id']);
+        Workflow::log('project', (int) $p['id'], 'status_link', 'Customer status link reset');
+
+        return redirect()->back()->with('message', 'A new status link was created. The old link no longer works.');
     }
 }

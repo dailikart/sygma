@@ -10,13 +10,15 @@ $menu = [
         ['Leads', 'admin/leads', ['leads.view']],
         ['Customers', 'admin/customers', ['customers.view']],
     ]],
-    ['Sales', null, 'bi-receipt', ['invoices.view', 'payments.manage'], [
+    ['Sales', null, 'bi-receipt', ['invoices.view', 'payments.manage', 'quotations.view', 'quotations.manage'], [
+        ['Quotations', 'admin/quotations', ['quotations.view', 'quotations.manage']],
         ['Invoices', 'admin/invoices', ['invoices.view']],
         ['Payments', 'admin/payments', ['invoices.view', 'payments.manage']],
     ]],
     ['Projects', 'admin/projects', 'bi-kanban', ['projects.view', 'survey.update', 'dispatch.manage', 'delivery.update', 'installation.update', 'eb.update', 'subsidy.update']],
     ['Dispatch', 'admin/dispatches', 'bi-truck', ['dispatch.manage', 'delivery.update']],
-    ['AMC / Service', null, 'bi-wrench-adjustable', ['amc.view', 'amc.manage'], [
+    ['AMC / Service', null, 'bi-wrench-adjustable', ['amc.view', 'amc.manage', 'customers.manage'], [
+        ['Complaints', 'admin/service', ['amc.view', 'amc.manage', 'customers.manage']],
         ['Service Visits', 'admin/amc', ['amc.view', 'amc.manage']],
         ['AMC Plans', 'admin/amc-plans', ['amc.manage']],
     ]],
@@ -53,6 +55,7 @@ $menu = [
         ['Inventory Usage (B2B/B2C)', 'admin/reports/usage', ['reports.view']],
         ['Supplier Summary', 'admin/reports/suppliers', ['reports.view']],
         ['Project Status', 'admin/reports/projects', ['reports.view']],
+        ['Project Profit', 'admin/reports/project-profit', ['reports.view']],
         ['Subsidy Status', 'admin/reports/subsidy', ['reports.view']],
         ['Customers: Cash / Loan', 'admin/reports/finance', ['reports.view']],
         ['Profit & Loss', 'admin/accounts/profit-loss', ['reports.view']],

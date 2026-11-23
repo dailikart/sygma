@@ -16,5 +16,7 @@
     <li>Each completed stage notifies the next team (bell + My Tasks), and the customer gets a message at key points (dispatched, delivered, commissioned) if email / WhatsApp is set up.</li>
     <li><span class="btnname">Put on hold</span> / <span class="btnname">Resume</span>: pause a project (e.g. customer not ready). <span class="btnname">Open in Maps</span> opens the site address.</li>
 </ul>
+<h4>Customer status page</h4>
+<p>Every project has a private link the customer can open on their phone to follow the work. See <a href="<?= site_url('admin/manual/status-page') ?>">Customer status page</a>.</p>
 <h4>Finding projects</h4>
 <p><span class="path">Projects</span> lists all projects with filters by stage and status. The dashboard's <strong>Active projects by stage</strong> boxes open the list for that stage. <span class="path">Reports → Project Status</span> shows days in each stage.</p>

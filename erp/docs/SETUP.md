@@ -263,3 +263,4 @@ app/Database/Migrations/*   the full schema
    - every minute: `/usr/bin/php /home/u000000000/public_html/spark queue:work emails --stop-when-empty`
    - every minute: `/usr/bin/php /home/u000000000/public_html/spark queue:work whatsapp --stop-when-empty`
    - daily 08:00: `/usr/bin/php /home/u000000000/public_html/spark amc:remind`
+   - every 10 minutes (only if IndiaMART import is on): `/usr/bin/php /home/u000000000/public_html/spark indiamart:pull`

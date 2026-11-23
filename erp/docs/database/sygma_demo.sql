@@ -62,8 +62,8 @@ CREATE TABLE `accounts` (
 LOCK TABLES `accounts` WRITE;
 /*!40000 ALTER TABLE `accounts` DISABLE KEYS */;
 INSERT INTO `accounts` VALUES
-(1,'HDFC Bank','bank','50100123','HDFC0001',500000.00,1,1,'2026-11-23 10:51:02','2026-11-23 10:51:02'),
-(2,'Cash','cash',NULL,NULL,20000.00,1,1,'2026-11-23 10:51:02','2026-11-23 10:51:02');
+(1,'HDFC Bank','bank','50100123','HDFC0001',500000.00,1,1,'2026-11-23 11:23:17','2026-11-23 11:23:17'),
+(2,'Cash','cash',NULL,NULL,20000.00,1,1,'2026-11-23 11:23:17','2026-11-23 11:23:17');
 /*!40000 ALTER TABLE `accounts` ENABLE KEYS */;
 UNLOCK TABLES;
 DROP TABLE IF EXISTS `activity_log`;
@@ -114,8 +114,8 @@ CREATE TABLE `amc_contracts` (
 LOCK TABLES `amc_contracts` WRITE;
 /*!40000 ALTER TABLE `amc_contracts` DISABLE KEYS */;
 INSERT INTO `amc_contracts` VALUES
-(1,'AMC/2026-27/0001',1,1,1,'2026-11-23','2031-11-22',0.00,'active',NULL,7,'2026-11-23 10:51:22','2026-11-23 10:51:22'),
-(2,'AMC/2026-27/0002',2,2,2,'2026-11-23','2027-11-22',3000.00,'active',NULL,7,'2026-11-23 10:51:25','2026-11-23 10:51:25');
+(1,'AMC/2026-27/0001',1,1,1,'2026-11-23','2031-11-22',0.00,'active',NULL,7,'2026-11-23 11:23:38','2026-11-23 11:23:38'),
+(2,'AMC/2026-27/0002',2,2,2,'2026-11-23','2027-11-22',3000.00,'active',NULL,7,'2026-11-23 11:23:41','2026-11-23 11:23:41');
 /*!40000 ALTER TABLE `amc_contracts` ENABLE KEYS */;
 UNLOCK TABLES;
 DROP TABLE IF EXISTS `amc_plans`;
@@ -141,8 +141,8 @@ CREATE TABLE `amc_plans` (
 LOCK TABLES `amc_plans` WRITE;
 /*!40000 ALTER TABLE `amc_plans` DISABLE KEYS */;
 INSERT INTO `amc_plans` VALUES
-(1,'Free 5-year AMC',60,6,1,0.00,NULL,1,1,1,'2026-11-23 10:51:03','2026-11-23 10:51:03'),
-(2,'Paid 1-year AMC',12,3,0,3000.00,NULL,0,1,1,'2026-11-23 10:51:03','2026-11-23 10:51:03');
+(1,'Free 5-year AMC',60,6,1,0.00,NULL,1,1,1,'2026-11-23 11:23:19','2026-11-23 11:23:19'),
+(2,'Paid 1-year AMC',12,3,0,3000.00,NULL,0,1,1,'2026-11-23 11:23:19','2026-11-23 11:23:19');
 /*!40000 ALTER TABLE `amc_plans` ENABLE KEYS */;
 UNLOCK TABLES;
 DROP TABLE IF EXISTS `amc_visits`;
@@ -172,20 +172,20 @@ CREATE TABLE `amc_visits` (
 LOCK TABLES `amc_visits` WRITE;
 /*!40000 ALTER TABLE `amc_visits` DISABLE KEYS */;
 INSERT INTO `amc_visits` VALUES
-(1,1,1,'2026-11-26','done',NULL,'2026-11-23',9,'Panels cleaned, generation normal','amc/1795411285_39e50148cbe0f40c79c0.jpg','2026-11-23 10:51:25',NULL,'2026-11-23 10:51:22','2026-11-23 10:51:22'),
-(2,1,2,'2027-11-23','scheduled',NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2026-11-23 10:51:22','2026-11-23 10:51:22'),
-(3,1,3,'2028-05-23','scheduled',NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2026-11-23 10:51:22','2026-11-23 10:51:22'),
-(4,1,4,'2028-11-23','scheduled',NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2026-11-23 10:51:22','2026-11-23 10:51:22'),
-(5,1,5,'2029-05-23','scheduled',NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2026-11-23 10:51:22','2026-11-23 10:51:22'),
-(6,1,6,'2029-11-23','scheduled',NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2026-11-23 10:51:22','2026-11-23 10:51:22'),
-(7,1,7,'2030-05-23','scheduled',NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2026-11-23 10:51:22','2026-11-23 10:51:22'),
-(8,1,8,'2030-11-23','scheduled',NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2026-11-23 10:51:22','2026-11-23 10:51:22'),
-(9,1,9,'2031-05-23','scheduled',NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2026-11-23 10:51:22','2026-11-23 10:51:22'),
-(10,1,10,'2031-11-22','scheduled',NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2026-11-23 10:51:22','2026-11-23 10:51:22'),
-(11,2,1,'2026-11-26','scheduled',NULL,NULL,NULL,NULL,NULL,'2026-11-23 10:51:25',NULL,'2026-11-23 10:51:25','2026-11-23 10:51:25'),
-(12,2,2,'2027-05-23','scheduled',NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2026-11-23 10:51:25','2026-11-23 10:51:25'),
-(13,2,3,'2027-08-23','scheduled',NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2026-11-23 10:51:25','2026-11-23 10:51:25'),
-(14,2,4,'2027-11-22','scheduled',NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2026-11-23 10:51:25','2026-11-23 10:51:25');
+(1,1,1,'2026-11-26','done',NULL,'2026-11-23',9,'Panels cleaned, generation normal','amc/1795413221_afbc0ceaf0f194f8a552.jpg','2026-11-23 11:23:41',NULL,'2026-11-23 11:23:38','2026-11-23 11:23:38'),
+(2,1,2,'2027-11-23','scheduled',NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2026-11-23 11:23:38','2026-11-23 11:23:38'),
+(3,1,3,'2028-05-23','scheduled',NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2026-11-23 11:23:38','2026-11-23 11:23:38'),
+(4,1,4,'2028-11-23','scheduled',NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2026-11-23 11:23:38','2026-11-23 11:23:38'),
+(5,1,5,'2029-05-23','scheduled',NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2026-11-23 11:23:38','2026-11-23 11:23:38'),
+(6,1,6,'2029-11-23','scheduled',NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2026-11-23 11:23:38','2026-11-23 11:23:38'),
+(7,1,7,'2030-05-23','scheduled',NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2026-11-23 11:23:38','2026-11-23 11:23:38'),
+(8,1,8,'2030-11-23','scheduled',NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2026-11-23 11:23:38','2026-11-23 11:23:38'),
+(9,1,9,'2031-05-23','scheduled',NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2026-11-23 11:23:38','2026-11-23 11:23:38'),
+(10,1,10,'2031-11-22','scheduled',NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2026-11-23 11:23:38','2026-11-23 11:23:38'),
+(11,2,1,'2026-11-26','scheduled',NULL,NULL,NULL,NULL,NULL,'2026-11-23 11:23:41',NULL,'2026-11-23 11:23:41','2026-11-23 11:23:41'),
+(12,2,2,'2027-05-23','scheduled',NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2026-11-23 11:23:41','2026-11-23 11:23:41'),
+(13,2,3,'2027-08-23','scheduled',NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2026-11-23 11:23:41','2026-11-23 11:23:41'),
+(14,2,4,'2027-11-22','scheduled',NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2026-11-23 11:23:41','2026-11-23 11:23:41');
 /*!40000 ALTER TABLE `amc_visits` ENABLE KEYS */;
 UNLOCK TABLES;
 DROP TABLE IF EXISTS `auth_groups_users`;
@@ -205,18 +205,18 @@ CREATE TABLE `auth_groups_users` (
 LOCK TABLES `auth_groups_users` WRITE;
 /*!40000 ALTER TABLE `auth_groups_users` DISABLE KEYS */;
 INSERT INTO `auth_groups_users` VALUES
-(1,1,'superadmin','2026-11-23 10:51:00'),
-(2,2,'marketing','2026-11-23 10:51:03'),
-(3,3,'surveyor','2026-11-23 10:51:04'),
-(4,4,'store','2026-11-23 10:51:05'),
-(5,5,'delivery','2026-11-23 10:51:05'),
-(6,6,'installer','2026-11-23 10:51:06'),
-(7,7,'liaison','2026-11-23 10:51:06'),
-(8,8,'accounts','2026-11-23 10:51:07'),
-(9,9,'service','2026-11-23 10:51:07'),
-(10,10,'admin','2026-11-23 10:51:08'),
-(11,11,'store','2026-11-23 10:51:08'),
-(12,11,'delivery','2026-11-23 10:51:08');
+(1,1,'superadmin','2026-11-23 11:23:15'),
+(2,2,'marketing','2026-11-23 11:23:19'),
+(3,3,'surveyor','2026-11-23 11:23:20'),
+(4,4,'store','2026-11-23 11:23:20'),
+(5,5,'delivery','2026-11-23 11:23:21'),
+(6,6,'installer','2026-11-23 11:23:21'),
+(7,7,'liaison','2026-11-23 11:23:22'),
+(8,8,'accounts','2026-11-23 11:23:23'),
+(9,9,'service','2026-11-23 11:23:23'),
+(10,10,'admin','2026-11-23 11:23:24'),
+(11,11,'store','2026-11-23 11:23:24'),
+(12,11,'delivery','2026-11-23 11:23:24');
 /*!40000 ALTER TABLE `auth_groups_users` ENABLE KEYS */;
 UNLOCK TABLES;
 DROP TABLE IF EXISTS `auth_identities`;
@@ -245,17 +245,17 @@ CREATE TABLE `auth_identities` (
 LOCK TABLES `auth_identities` WRITE;
 /*!40000 ALTER TABLE `auth_identities` DISABLE KEYS */;
 INSERT INTO `auth_identities` VALUES
-(1,1,'email_password',NULL,'demo@sygmasolar.com','$2y$12$ndMjRV/PdxduxjUnI.iqzOV22KN8bKS4SUT5uNMcZow3rNIPigR6O',NULL,NULL,0,'2026-11-23 10:51:36','2026-11-23 10:51:00','2026-11-23 10:51:36'),
-(2,2,'email_password',NULL,'ravi@demo.sygmasolar.com','$2y$12$ndMjRV/PdxduxjUnI.iqzOV22KN8bKS4SUT5uNMcZow3rNIPigR6O',NULL,NULL,0,'2026-11-23 10:51:37','2026-11-23 10:51:03','2026-11-23 10:51:37'),
-(3,3,'email_password',NULL,'suresh@demo.sygmasolar.com','$2y$12$ndMjRV/PdxduxjUnI.iqzOV22KN8bKS4SUT5uNMcZow3rNIPigR6O',NULL,NULL,0,'2026-11-23 10:51:37','2026-11-23 10:51:04','2026-11-23 10:51:37'),
-(4,4,'email_password',NULL,'store1@demo.sygmasolar.com','$2y$12$ndMjRV/PdxduxjUnI.iqzOV22KN8bKS4SUT5uNMcZow3rNIPigR6O',NULL,NULL,0,'2026-11-23 10:51:37','2026-11-23 10:51:04','2026-11-23 10:51:37'),
-(5,5,'email_password',NULL,'driver1@demo.sygmasolar.com','$2y$12$ndMjRV/PdxduxjUnI.iqzOV22KN8bKS4SUT5uNMcZow3rNIPigR6O',NULL,NULL,0,'2026-11-23 10:51:37','2026-11-23 10:51:05','2026-11-23 10:51:37'),
-(6,6,'email_password',NULL,'fitter1@demo.sygmasolar.com','$2y$12$ndMjRV/PdxduxjUnI.iqzOV22KN8bKS4SUT5uNMcZow3rNIPigR6O',NULL,NULL,0,'2026-11-23 10:51:38','2026-11-23 10:51:05','2026-11-23 10:51:38'),
-(7,7,'email_password',NULL,'eb1@demo.sygmasolar.com','$2y$12$ndMjRV/PdxduxjUnI.iqzOV22KN8bKS4SUT5uNMcZow3rNIPigR6O',NULL,NULL,0,'2026-11-23 10:51:38','2026-11-23 10:51:06','2026-11-23 10:51:38'),
-(8,8,'email_password',NULL,'acct1@demo.sygmasolar.com','$2y$12$ndMjRV/PdxduxjUnI.iqzOV22KN8bKS4SUT5uNMcZow3rNIPigR6O',NULL,NULL,0,'2026-11-23 10:51:38','2026-11-23 10:51:06','2026-11-23 10:51:38'),
-(9,9,'email_password',NULL,'service1@demo.sygmasolar.com','$2y$12$ndMjRV/PdxduxjUnI.iqzOV22KN8bKS4SUT5uNMcZow3rNIPigR6O',NULL,NULL,0,'2026-11-23 10:51:11','2026-11-23 10:51:07','2026-11-23 10:51:11'),
-(10,10,'email_password',NULL,'mgr@demo.sygmasolar.com','$2y$12$ndMjRV/PdxduxjUnI.iqzOV22KN8bKS4SUT5uNMcZow3rNIPigR6O',NULL,NULL,0,'2026-11-23 10:51:11','2026-11-23 10:51:08','2026-11-23 10:51:11'),
-(11,11,'email_password',NULL,'kumar@demo.sygmasolar.com','$2y$12$ndMjRV/PdxduxjUnI.iqzOV22KN8bKS4SUT5uNMcZow3rNIPigR6O',NULL,NULL,0,'2026-11-23 10:51:11','2026-11-23 10:51:08','2026-11-23 10:51:11');
+(1,1,'email_password',NULL,'demo@sygmasolar.com','$2y$12$ndMjRV/PdxduxjUnI.iqzOV22KN8bKS4SUT5uNMcZow3rNIPigR6O',NULL,NULL,0,'2026-11-23 11:24:05','2026-11-23 11:23:15','2026-11-23 11:24:05'),
+(2,2,'email_password',NULL,'ravi@demo.sygmasolar.com','$2y$12$ndMjRV/PdxduxjUnI.iqzOV22KN8bKS4SUT5uNMcZow3rNIPigR6O',NULL,NULL,0,'2026-11-23 11:24:05','2026-11-23 11:23:19','2026-11-23 11:24:05'),
+(3,3,'email_password',NULL,'suresh@demo.sygmasolar.com','$2y$12$ndMjRV/PdxduxjUnI.iqzOV22KN8bKS4SUT5uNMcZow3rNIPigR6O',NULL,NULL,0,'2026-11-23 11:24:06','2026-11-23 11:23:20','2026-11-23 11:24:06'),
+(4,4,'email_password',NULL,'store1@demo.sygmasolar.com','$2y$12$ndMjRV/PdxduxjUnI.iqzOV22KN8bKS4SUT5uNMcZow3rNIPigR6O',NULL,NULL,0,'2026-11-23 11:24:06','2026-11-23 11:23:20','2026-11-23 11:24:06'),
+(5,5,'email_password',NULL,'driver1@demo.sygmasolar.com','$2y$12$ndMjRV/PdxduxjUnI.iqzOV22KN8bKS4SUT5uNMcZow3rNIPigR6O',NULL,NULL,0,'2026-11-23 11:24:06','2026-11-23 11:23:21','2026-11-23 11:24:06'),
+(6,6,'email_password',NULL,'fitter1@demo.sygmasolar.com','$2y$12$ndMjRV/PdxduxjUnI.iqzOV22KN8bKS4SUT5uNMcZow3rNIPigR6O',NULL,NULL,0,'2026-11-23 11:24:07','2026-11-23 11:23:21','2026-11-23 11:24:07'),
+(7,7,'email_password',NULL,'eb1@demo.sygmasolar.com','$2y$12$ndMjRV/PdxduxjUnI.iqzOV22KN8bKS4SUT5uNMcZow3rNIPigR6O',NULL,NULL,0,'2026-11-23 11:24:07','2026-11-23 11:23:22','2026-11-23 11:24:07'),
+(8,8,'email_password',NULL,'acct1@demo.sygmasolar.com','$2y$12$ndMjRV/PdxduxjUnI.iqzOV22KN8bKS4SUT5uNMcZow3rNIPigR6O',NULL,NULL,0,'2026-11-23 11:24:07','2026-11-23 11:23:22','2026-11-23 11:24:07'),
+(9,9,'email_password',NULL,'service1@demo.sygmasolar.com','$2y$12$ndMjRV/PdxduxjUnI.iqzOV22KN8bKS4SUT5uNMcZow3rNIPigR6O',NULL,NULL,0,'2026-11-23 11:23:27','2026-11-23 11:23:23','2026-11-23 11:23:27'),
+(10,10,'email_password',NULL,'mgr@demo.sygmasolar.com','$2y$12$ndMjRV/PdxduxjUnI.iqzOV22KN8bKS4SUT5uNMcZow3rNIPigR6O',NULL,NULL,0,'2026-11-23 11:23:27','2026-11-23 11:23:23','2026-11-23 11:23:27'),
+(11,11,'email_password',NULL,'kumar@demo.sygmasolar.com','$2y$12$ndMjRV/PdxduxjUnI.iqzOV22KN8bKS4SUT5uNMcZow3rNIPigR6O',NULL,NULL,0,'2026-11-23 11:23:27','2026-11-23 11:23:24','2026-11-23 11:23:27');
 /*!40000 ALTER TABLE `auth_identities` ENABLE KEYS */;
 UNLOCK TABLES;
 DROP TABLE IF EXISTS `auth_logins`;
@@ -364,18 +364,18 @@ CREATE TABLE `customer_documents` (
 LOCK TABLES `customer_documents` WRITE;
 /*!40000 ALTER TABLE `customer_documents` DISABLE KEYS */;
 INSERT INTO `customer_documents` VALUES
-(1,1,1,1,'Aadhaar card','customers/1/Aadhaar-card-17954112810.pdf','doc.pdf',7,'2026-11-23 10:51:21'),
-(2,1,1,2,'EB bill','customers/1/EB-bill-17954112811.jpg','photo.jpg',7,'2026-11-23 10:51:21'),
-(3,1,1,NULL,'Ownership proof','customers/1/Ownership-proof-17954112820.pdf','doc.pdf',7,'2026-11-23 10:51:22'),
-(4,1,1,3,'Property tax receipt','customers/1/Property-tax-receipt-17954112821.pdf','doc.pdf',7,'2026-11-23 10:51:22'),
-(5,1,1,4,'Bank passbook / cancelled cheque','customers/1/Bank-passbook-cancelled-cheque-17954112822.pdf','doc.pdf',7,'2026-11-23 10:51:22'),
-(6,1,1,5,'Passport size photo','customers/1/Passport-size-photo-17954112823.jpg','photo.jpg',7,'2026-11-23 10:51:22'),
-(7,2,2,NULL,'GST certificate','customers/2/GST-certificate-17954112840.pdf','doc.pdf',7,'2026-11-23 10:51:24'),
-(8,2,2,1,'Aadhaar card','customers/2/Aadhaar-card-17954112841.pdf','doc.pdf',7,'2026-11-23 10:51:24'),
-(9,2,2,2,'EB bill','customers/2/EB-bill-17954112842.pdf','doc.pdf',7,'2026-11-23 10:51:24'),
-(10,2,2,3,'Property tax receipt','customers/2/Property-tax-receipt-17954112843.pdf','doc.pdf',7,'2026-11-23 10:51:24'),
-(11,2,2,4,'Bank passbook / cancelled cheque','customers/2/Bank-passbook-cancelled-cheque-17954112844.pdf','doc.pdf',7,'2026-11-23 10:51:24'),
-(12,2,2,5,'Passport size photo','customers/2/Passport-size-photo-17954112845.jpg','photo.jpg',7,'2026-11-23 10:51:24');
+(1,1,1,1,'Aadhaar card','customers/1/Aadhaar-card-17954132170.pdf','doc.pdf',7,'2026-11-23 11:23:37'),
+(2,1,1,2,'EB bill','customers/1/EB-bill-17954132171.jpg','photo.jpg',7,'2026-11-23 11:23:37'),
+(3,1,1,NULL,'Ownership proof','customers/1/Ownership-proof-17954132180.pdf','doc.pdf',7,'2026-11-23 11:23:38'),
+(4,1,1,3,'Property tax receipt','customers/1/Property-tax-receipt-17954132181.pdf','doc.pdf',7,'2026-11-23 11:23:38'),
+(5,1,1,4,'Bank passbook / cancelled cheque','customers/1/Bank-passbook-cancelled-cheque-17954132182.pdf','doc.pdf',7,'2026-11-23 11:23:38'),
+(6,1,1,5,'Passport size photo','customers/1/Passport-size-photo-17954132183.jpg','photo.jpg',7,'2026-11-23 11:23:38'),
+(7,2,2,NULL,'GST certificate','customers/2/GST-certificate-17954132210.pdf','doc.pdf',7,'2026-11-23 11:23:41'),
+(8,2,2,1,'Aadhaar card','customers/2/Aadhaar-card-17954132211.pdf','doc.pdf',7,'2026-11-23 11:23:41'),
+(9,2,2,2,'EB bill','customers/2/EB-bill-17954132212.pdf','doc.pdf',7,'2026-11-23 11:23:41'),
+(10,2,2,3,'Property tax receipt','customers/2/Property-tax-receipt-17954132213.pdf','doc.pdf',7,'2026-11-23 11:23:41'),
+(11,2,2,4,'Bank passbook / cancelled cheque','customers/2/Bank-passbook-cancelled-cheque-17954132214.pdf','doc.pdf',7,'2026-11-23 11:23:41'),
+(12,2,2,5,'Passport size photo','customers/2/Passport-size-photo-17954132215.jpg','photo.jpg',7,'2026-11-23 11:23:41');
 /*!40000 ALTER TABLE `customer_documents` ENABLE KEYS */;
 UNLOCK TABLES;
 DROP TABLE IF EXISTS `customers`;
@@ -405,19 +405,20 @@ CREATE TABLE `customers` (
   PRIMARY KEY (`id`),
   KEY `type` (`type`),
   KEY `phone` (`phone`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 LOCK TABLES `customers` WRITE;
 /*!40000 ALTER TABLE `customers` DISABLE KEYS */;
 INSERT INTO `customers` VALUES
-(1,'b2c','Murugan S',NULL,NULL,'9876543210','murugan@example.com','12, Gandhi Nagar','Erode','Tamil Nadu','638001','04-123-456','customer',5000.00,1,NULL,2,'2026-11-23 10:51:13','2026-11-23 10:51:13',NULL),
-(2,'b2b','KMC School','KMC Educational Trust','29KMCST1234A1Z9','9876543211','accounts@example.com','5, MG Road','Bengaluru','Karnataka','560001',NULL,'company',NULL,2,NULL,2,'2026-11-23 10:51:13','2026-11-23 10:51:13',NULL),
-(3,'b2c','Priya Natarajan',NULL,NULL,'9000000001',NULL,'4, Anna Street','Salem','Tamil Nadu','637001','05-221-3','customer',4500.00,NULL,NULL,1,'2026-11-23 10:51:29','2026-11-23 10:51:29',NULL),
-(4,'b2b','Annai Foods Pvt Ltd','Annai Foods Pvt Ltd',NULL,'9000000002',NULL,'SIDCO Industrial Estate','Bengaluru','Karnataka','638001',NULL,'company',NULL,NULL,NULL,1,'2026-11-23 10:51:29','2026-11-23 10:51:29',NULL),
-(5,'b2c','Senthil Kumar',NULL,NULL,'9000000099',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,'2026-11-23 10:51:31','2026-11-23 10:51:31','2026-11-23 10:51:31'),
-(6,'b2b','Lakshmi Textiles',NULL,NULL,'9840055667','lakshmi.tex@example.com','SIDCO Industrial Estate','Erode','Tamil Nadu','638001',NULL,'company',NULL,8,NULL,2,'2026-11-23 10:51:39','2026-11-23 10:51:39',NULL),
-(7,'b2c','Karthik Ramasamy',NULL,NULL,'9840066778','karthik.r@example.com','4, Anna Street','Namakkal','Tamil Nadu','637001','05-221-7','customer',4500.00,9,NULL,2,'2026-11-23 10:51:39','2026-11-23 10:51:39',NULL);
+(1,'b2c','Murugan S',NULL,NULL,'9876543210','murugan@example.com','12, Gandhi Nagar','Erode','Tamil Nadu','638001','04-123-456','customer',5000.00,1,NULL,2,'2026-11-23 11:23:29','2026-11-23 11:23:29',NULL),
+(2,'b2b','KMC School','KMC Educational Trust','29KMCST1234A1Z9','9876543211','accounts@example.com','5, MG Road','Bengaluru','Karnataka','560001',NULL,'company',NULL,2,NULL,2,'2026-11-23 11:23:29','2026-11-23 11:23:29',NULL),
+(3,'b2c','Priya Natarajan',NULL,NULL,'9000000001',NULL,'4, Anna Street','Salem','Tamil Nadu','637001','05-221-3','customer',4500.00,NULL,NULL,1,'2026-11-23 11:23:45','2026-11-23 11:23:45',NULL),
+(4,'b2b','Annai Foods Pvt Ltd','Annai Foods Pvt Ltd',NULL,'9000000002',NULL,'SIDCO Industrial Estate','Bengaluru','Karnataka','638001',NULL,'company',NULL,NULL,NULL,1,'2026-11-23 11:23:45','2026-11-23 11:23:45',NULL),
+(5,'b2c','Vignesh Kumar',NULL,NULL,'9555500001','vignesh.k@example.com',NULL,'Salem','Tamil Nadu',NULL,NULL,'customer',5000.00,4,NULL,2,'2026-11-23 11:23:47','2026-11-23 11:23:47',NULL),
+(6,'b2c','Ganesh P',NULL,NULL,'9000000099',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,'2026-11-23 11:23:56','2026-11-23 11:23:56','2026-11-23 11:23:56'),
+(7,'b2b','Sri Murugan Spinning Mills',NULL,NULL,'9840055667','smsm@example.com','SIDCO Industrial Estate','Erode','Tamil Nadu','638001',NULL,'company',NULL,15,NULL,2,'2026-11-23 11:24:08','2026-11-23 11:24:08',NULL),
+(8,'b2c','Karthik Ramasamy',NULL,NULL,'9840066778','karthik.r@example.com','4, Anna Street','Namakkal','Tamil Nadu','637001','05-221-8','customer',4500.00,16,NULL,2,'2026-11-23 11:24:08','2026-11-23 11:24:08',NULL);
 /*!40000 ALTER TABLE `customers` ENABLE KEYS */;
 UNLOCK TABLES;
 DROP TABLE IF EXISTS `dispatch_items`;
@@ -489,12 +490,12 @@ CREATE TABLE `dispatches` (
 LOCK TABLES `dispatches` WRITE;
 /*!40000 ALTER TABLE `dispatches` DISABLE KEYS */;
 INSERT INTO `dispatches` VALUES
-(2,'DSP/2026-27/0001',1,1,'delivered','TN33AB1234','Kannan','AUTO','ERODE','Door delivery','2026-11-23 10:51:19',4,'2026-11-23 10:51:19',5,'Received by Murugan',4,'2026-11-23 10:51:19','2026-11-23 10:51:19'),
-(3,'DSP/2026-27/0002',2,1,'delivered','TN33X1','Ravi',NULL,NULL,NULL,'2026-11-23 10:51:23',11,'2026-11-23 10:51:24',11,NULL,11,'2026-11-23 10:51:23','2026-11-23 10:51:23'),
-(4,'DSP/2026-27/0003',2,2,'delivered','KA01Y2','Ravi',NULL,NULL,NULL,'2026-11-23 10:51:23',11,'2026-11-23 10:51:24',11,NULL,11,'2026-11-23 10:51:23','2026-11-23 10:51:23'),
-(5,'DSP/2026-27/0004',2,1,'draft',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,11,'2026-11-23 10:51:24','2026-11-23 10:51:24'),
-(6,'DSP/2026-27/0005',8,1,'delivered','TN33CD4455','Kannan','TEMPO','SITE','Door delivery','2026-11-23 10:51:40',4,'2026-11-23 10:51:40',5,'Received at site',4,'2026-11-23 10:51:40','2026-11-23 10:51:40'),
-(7,'DSP/2026-27/0006',9,1,'delivered','TN33CD4455','Kannan','TEMPO','SITE','Door delivery','2026-11-23 10:51:41',4,'2026-11-23 10:51:41',5,'Received at site',4,'2026-11-23 10:51:40','2026-11-23 10:51:40');
+(2,'DSP/2026-27/0001',1,1,'delivered','TN33AB1234','Kannan','AUTO','ERODE','Door delivery','2026-11-23 11:23:35',4,'2026-11-23 11:23:35',5,'Received by Murugan',4,'2026-11-23 11:23:35','2026-11-23 11:23:35'),
+(3,'DSP/2026-27/0002',2,1,'delivered','TN33X1','Ravi',NULL,NULL,NULL,'2026-11-23 11:23:39',11,'2026-11-23 11:23:40',11,NULL,11,'2026-11-23 11:23:39','2026-11-23 11:23:39'),
+(4,'DSP/2026-27/0003',2,2,'delivered','KA01Y2','Ravi',NULL,NULL,NULL,'2026-11-23 11:23:40',11,'2026-11-23 11:23:40',11,NULL,11,'2026-11-23 11:23:40','2026-11-23 11:23:40'),
+(5,'DSP/2026-27/0004',2,1,'draft',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,11,'2026-11-23 11:23:40','2026-11-23 11:23:40'),
+(6,'DSP/2026-27/0005',8,1,'delivered','TN33CD4455','Kannan','TEMPO','SITE','Door delivery','2026-11-23 11:24:09',4,'2026-11-23 11:24:09',5,'Received at site',4,'2026-11-23 11:24:09','2026-11-23 11:24:09'),
+(7,'DSP/2026-27/0006',9,1,'delivered','TN33CD4455','Kannan','TEMPO','SITE','Door delivery','2026-11-23 11:24:09',4,'2026-11-23 11:24:10',5,'Received at site',4,'2026-11-23 11:24:09','2026-11-23 11:24:09');
 /*!40000 ALTER TABLE `dispatches` ENABLE KEYS */;
 UNLOCK TABLES;
 DROP TABLE IF EXISTS `document_types`;
@@ -516,14 +517,14 @@ CREATE TABLE `document_types` (
 LOCK TABLES `document_types` WRITE;
 /*!40000 ALTER TABLE `document_types` DISABLE KEYS */;
 INSERT INTO `document_types` VALUES
-(1,'Aadhaar card',1,1,1,NULL,'2026-11-23 10:51:00','2026-11-23 10:51:00'),
-(2,'EB bill',1,2,1,NULL,'2026-11-23 10:51:00','2026-11-23 10:51:00'),
-(3,'Property tax receipt',1,3,1,NULL,'2026-11-23 10:51:00','2026-11-23 10:51:00'),
-(4,'Bank passbook / cancelled cheque',1,4,1,NULL,'2026-11-23 10:51:00','2026-11-23 10:51:00'),
-(5,'Passport size photo',1,5,1,NULL,'2026-11-23 10:51:00','2026-11-23 10:51:00'),
-(6,'PAN card',0,6,1,NULL,'2026-11-23 10:51:00','2026-11-23 10:51:00'),
-(7,'Site photo',0,7,1,NULL,'2026-11-23 10:51:00','2026-11-23 10:51:00'),
-(8,'Signed agreement',0,8,1,NULL,'2026-11-23 10:51:00','2026-11-23 10:51:00');
+(1,'Aadhaar card',1,1,1,NULL,'2026-11-23 11:23:14','2026-11-23 11:23:14'),
+(2,'EB bill',1,2,1,NULL,'2026-11-23 11:23:14','2026-11-23 11:23:14'),
+(3,'Property tax receipt',1,3,1,NULL,'2026-11-23 11:23:14','2026-11-23 11:23:14'),
+(4,'Bank passbook / cancelled cheque',1,4,1,NULL,'2026-11-23 11:23:14','2026-11-23 11:23:14'),
+(5,'Passport size photo',1,5,1,NULL,'2026-11-23 11:23:14','2026-11-23 11:23:14'),
+(6,'PAN card',0,6,1,NULL,'2026-11-23 11:23:14','2026-11-23 11:23:14'),
+(7,'Site photo',0,7,1,NULL,'2026-11-23 11:23:14','2026-11-23 11:23:14'),
+(8,'Signed agreement',0,8,1,NULL,'2026-11-23 11:23:14','2026-11-23 11:23:14');
 /*!40000 ALTER TABLE `document_types` ENABLE KEYS */;
 UNLOCK TABLES;
 DROP TABLE IF EXISTS `expense_heads`;
@@ -544,10 +545,10 @@ CREATE TABLE `expense_heads` (
 LOCK TABLES `expense_heads` WRITE;
 /*!40000 ALTER TABLE `expense_heads` DISABLE KEYS */;
 INSERT INTO `expense_heads` VALUES
-(1,'Fuel Expenses',NULL,1,1,'2026-11-23 10:51:02','2026-11-23 10:51:02'),
-(2,'Salary',NULL,1,1,'2026-11-23 10:51:02','2026-11-23 10:51:02'),
-(3,'Office Rent',NULL,1,1,'2026-11-23 10:51:02','2026-11-23 10:51:02'),
-(4,'Travel',NULL,1,1,'2026-11-23 10:51:29','2026-11-23 10:51:29');
+(1,'Fuel Expenses',NULL,1,1,'2026-11-23 11:23:17','2026-11-23 11:23:17'),
+(2,'Salary',NULL,1,1,'2026-11-23 11:23:17','2026-11-23 11:23:17'),
+(3,'Office Rent',NULL,1,1,'2026-11-23 11:23:17','2026-11-23 11:23:17'),
+(4,'Travel',NULL,1,1,'2026-11-23 11:23:45','2026-11-23 11:23:45');
 /*!40000 ALTER TABLE `expense_heads` ENABLE KEYS */;
 UNLOCK TABLES;
 DROP TABLE IF EXISTS `expenses`;
@@ -578,8 +579,8 @@ CREATE TABLE `expenses` (
 LOCK TABLES `expenses` WRITE;
 /*!40000 ALTER TABLE `expenses` DISABLE KEYS */;
 INSERT INTO `expenses` VALUES
-(1,'EXP/2026-27/0001',1,2,1,'2026-11-23',1500.00,'Indian Oil',NULL,'expenses/1795411285_b0a51fa57dff3a4971c0.jpg','Van diesel',8,'2026-11-23 10:51:25','2026-11-23 10:51:25'),
-(2,'EXP/2026-27/0002',2,1,NULL,'2026-11-23',45000.00,'Staff',NULL,NULL,'Salary',8,'2026-11-23 10:51:25','2026-11-23 10:51:25');
+(1,'EXP/2026-27/0001',1,2,1,'2026-11-23',1500.00,'Indian Oil',NULL,'expenses/1795413221_058f0cd16907ecf26239.jpg','Van diesel',8,'2026-11-23 11:23:41','2026-11-23 11:23:41'),
+(2,'EXP/2026-27/0002',2,1,NULL,'2026-11-23',45000.00,'Staff',NULL,NULL,'Salary',8,'2026-11-23 11:23:42','2026-11-23 11:23:42');
 /*!40000 ALTER TABLE `expenses` ENABLE KEYS */;
 UNLOCK TABLES;
 DROP TABLE IF EXISTS `income_heads`;
@@ -600,9 +601,9 @@ CREATE TABLE `income_heads` (
 LOCK TABLES `income_heads` WRITE;
 /*!40000 ALTER TABLE `income_heads` DISABLE KEYS */;
 INSERT INTO `income_heads` VALUES
-(1,'Scrap Sale',NULL,1,1,'2026-11-23 10:51:02','2026-11-23 10:51:02'),
-(2,'Service Charges',NULL,1,1,'2026-11-23 10:51:02','2026-11-23 10:51:02'),
-(3,'Commission','Dealer commission',1,1,'2026-11-23 10:51:29','2026-11-23 10:51:29');
+(1,'Scrap Sale',NULL,1,1,'2026-11-23 11:23:18','2026-11-23 11:23:18'),
+(2,'Service Charges',NULL,1,1,'2026-11-23 11:23:18','2026-11-23 11:23:18'),
+(3,'Commission','Dealer commission',1,1,'2026-11-23 11:23:45','2026-11-23 11:23:45');
 /*!40000 ALTER TABLE `income_heads` ENABLE KEYS */;
 UNLOCK TABLES;
 DROP TABLE IF EXISTS `incomes`;
@@ -630,7 +631,7 @@ CREATE TABLE `incomes` (
 LOCK TABLES `incomes` WRITE;
 /*!40000 ALTER TABLE `incomes` DISABLE KEYS */;
 INSERT INTO `incomes` VALUES
-(1,'INC/2026-27/0001',1,2,'2026-11-23',2500.00,'Scrap dealer',NULL,NULL,8,'2026-11-23 10:51:25','2026-11-23 10:51:25');
+(1,'INC/2026-27/0001',1,2,'2026-11-23',2500.00,'Scrap dealer',NULL,NULL,8,'2026-11-23 11:23:42','2026-11-23 11:23:42');
 /*!40000 ALTER TABLE `incomes` ENABLE KEYS */;
 UNLOCK TABLES;
 DROP TABLE IF EXISTS `installation_types`;
@@ -651,9 +652,9 @@ CREATE TABLE `installation_types` (
 LOCK TABLES `installation_types` WRITE;
 /*!40000 ALTER TABLE `installation_types` DISABLE KEYS */;
 INSERT INTO `installation_types` VALUES
-(1,'On-grid',NULL,1,1,'2026-11-23 10:51:02','2026-11-23 10:51:02'),
-(2,'Off-grid',NULL,1,1,'2026-11-23 10:51:02','2026-11-23 10:51:02'),
-(3,'Hybrid',NULL,1,1,'2026-11-23 10:51:29','2026-11-23 10:51:29');
+(1,'On-grid',NULL,1,1,'2026-11-23 11:23:18','2026-11-23 11:23:18'),
+(2,'Off-grid',NULL,1,1,'2026-11-23 11:23:18','2026-11-23 11:23:18'),
+(3,'Hybrid',NULL,1,1,'2026-11-23 11:23:45','2026-11-23 11:23:45');
 /*!40000 ALTER TABLE `installation_types` ENABLE KEYS */;
 UNLOCK TABLES;
 DROP TABLE IF EXISTS `invoice_items`;
@@ -672,7 +673,7 @@ CREATE TABLE `invoice_items` (
   `amount` decimal(14,2) NOT NULL DEFAULT 0.00,
   PRIMARY KEY (`id`),
   KEY `invoice_id` (`invoice_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 LOCK TABLES `invoice_items` WRITE;
@@ -685,10 +686,10 @@ INSERT INTO `invoice_items` VALUES
 (5,3,NULL,'Wrong invoice',NULL,1.00,1000.00,12.00,120.00,1000.00),
 (6,4,NULL,'Supply of 3 kW On-grid Solar Power System','8541',1.00,150000.00,12.00,18000.00,150000.00),
 (7,4,NULL,'Installation & commissioning service','9954',1.00,15000.00,18.00,2700.00,15000.00),
-(10,6,NULL,'10 kW On-grid Solar Power System – supply and installation','8541',1.00,520000.00,12.00,62400.00,520000.00),
-(11,7,NULL,'3 kW On-grid Solar Power System – supply and installation','8541',1.00,185000.00,12.00,22200.00,185000.00),
-(12,8,NULL,'3 kW On-grid Solar Power System – supply and installation','8541',1.00,175000.00,12.00,21000.00,175000.00),
-(13,9,NULL,'3 kW On-grid Solar Power System – supply and installation','8541',1.00,190000.00,12.00,22800.00,190000.00);
+(12,7,NULL,'10 kW On-grid Solar Power System – supply and installation','8541',1.00,520000.00,12.00,62400.00,520000.00),
+(13,8,NULL,'3 kW On-grid Solar Power System – supply and installation','8541',1.00,185000.00,12.00,22200.00,185000.00),
+(14,9,NULL,'3 kW On-grid Solar Power System – supply and installation','8541',1.00,175000.00,12.00,21000.00,175000.00),
+(15,10,NULL,'3 kW On-grid Solar Power System – supply and installation','8541',1.00,190000.00,12.00,22800.00,190000.00);
 /*!40000 ALTER TABLE `invoice_items` ENABLE KEYS */;
 UNLOCK TABLES;
 DROP TABLE IF EXISTS `invoices`;
@@ -726,20 +727,20 @@ CREATE TABLE `invoices` (
   KEY `customer_id` (`customer_id`),
   KEY `invoice_date` (`invoice_date`),
   KEY `status` (`status`)
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 LOCK TABLES `invoices` WRITE;
 /*!40000 ALTER TABLE `invoices` DISABLE KEYS */;
 INSERT INTO `invoices` VALUES
-(1,'INV/2026-27/0001',1,1,'2026-11-23','2026-11-23','subsidy','cash','customer',5000.00,NULL,0.00,NULL,'cumulative',3.00,1,'intra',180000.00,21600.00,201600.00,201600.00,'paid',NULL,2,'2026-11-23 10:51:13','2026-11-23 10:51:22'),
-(2,'INV/2026-27/0002',2,2,'2026-11-23','2026-11-23','non_subsidy','loan','company',NULL,'SBI Solar Loan',150000.00,'SBI-778','itemwise',5.00,1,'inter',176000.00,22320.00,198320.00,198320.00,'paid',NULL,2,'2026-11-23 10:51:14','2026-11-23 10:51:30'),
-(3,'INV/2026-27/0003',1,3,'2026-11-23',NULL,'non_subsidy','','customer',5000.00,NULL,0.00,NULL,'cumulative',1.00,NULL,'intra',1000.00,120.00,1120.00,0.00,'cancelled',NULL,2,'2026-11-23 10:51:16','2026-11-23 10:51:16'),
-(4,'INV/2026-27/0004',1,4,'2026-11-23',NULL,'non_subsidy','','customer',5000.00,NULL,0.00,NULL,'cumulative',3.00,1,'intra',165000.00,20700.00,185700.00,0.00,'cancelled',NULL,2,'2026-11-23 10:51:16','2026-11-23 10:51:16'),
-(6,'INV/2026-27/0005',6,6,'2026-11-23','2026-11-23','non_subsidy','','company',NULL,NULL,0.00,NULL,'cumulative',10.00,1,'intra',520000.00,62400.00,582400.00,100000.00,'partial',NULL,2,'2026-11-23 10:51:39','2026-11-23 10:51:39'),
-(7,'INV/2026-27/0006',3,7,'2026-11-23','2026-11-23','subsidy','','customer',4500.00,NULL,0.00,NULL,'cumulative',3.00,1,'intra',185000.00,22200.00,207200.00,25000.00,'partial',NULL,2,'2026-11-23 10:51:39','2026-11-23 10:51:39'),
-(8,'INV/2026-27/0007',4,8,'2026-11-23','2026-11-23','non_subsidy','cash','company',NULL,NULL,0.00,NULL,'cumulative',3.00,1,'inter',175000.00,21000.00,196000.00,90000.00,'partial',NULL,2,'2026-11-23 10:51:40','2026-11-23 10:51:40'),
-(9,'INV/2026-27/0008',7,9,'2026-11-23','2026-11-23','subsidy','cash','customer',4500.00,NULL,0.00,NULL,'cumulative',3.00,1,'intra',190000.00,22800.00,212800.00,190000.00,'partial',NULL,2,'2026-11-23 10:51:40','2026-11-23 10:51:40');
+(1,'INV/2026-27/0001',1,1,'2026-11-23','2026-11-23','subsidy','cash','customer',5000.00,NULL,0.00,NULL,'cumulative',3.00,1,'intra',180000.00,21600.00,201600.00,201600.00,'paid',NULL,2,'2026-11-23 11:23:29','2026-11-23 11:23:38'),
+(2,'INV/2026-27/0002',2,2,'2026-11-23','2026-11-23','non_subsidy','loan','company',NULL,'SBI Solar Loan',150000.00,'SBI-778','itemwise',5.00,1,'inter',176000.00,22320.00,198320.00,198320.00,'paid',NULL,2,'2026-11-23 11:23:30','2026-11-23 11:23:55'),
+(3,'INV/2026-27/0003',1,3,'2026-11-23',NULL,'non_subsidy','','customer',5000.00,NULL,0.00,NULL,'cumulative',1.00,NULL,'intra',1000.00,120.00,1120.00,0.00,'cancelled',NULL,2,'2026-11-23 11:23:32','2026-11-23 11:23:32'),
+(4,'INV/2026-27/0004',1,4,'2026-11-23',NULL,'non_subsidy','','customer',5000.00,NULL,0.00,NULL,'cumulative',3.00,1,'intra',165000.00,20700.00,185700.00,0.00,'cancelled',NULL,2,'2026-11-23 11:23:32','2026-11-23 11:23:32'),
+(7,'INV/2026-27/0005',7,6,'2026-11-23','2026-11-23','non_subsidy','','company',NULL,NULL,0.00,NULL,'cumulative',10.00,1,'intra',520000.00,62400.00,582400.00,100000.00,'partial',NULL,2,'2026-11-23 11:24:08','2026-11-23 11:24:08'),
+(8,'INV/2026-27/0006',3,7,'2026-11-23','2026-11-23','subsidy','','customer',4500.00,NULL,0.00,NULL,'cumulative',3.00,1,'intra',185000.00,22200.00,207200.00,25000.00,'partial',NULL,2,'2026-11-23 11:24:08','2026-11-23 11:24:08'),
+(9,'INV/2026-27/0007',4,8,'2026-11-23','2026-11-23','non_subsidy','cash','company',NULL,NULL,0.00,NULL,'cumulative',3.00,1,'inter',175000.00,21000.00,196000.00,90000.00,'partial',NULL,2,'2026-11-23 11:24:08','2026-11-23 11:24:09'),
+(10,'INV/2026-27/0008',8,9,'2026-11-23','2026-11-23','subsidy','cash','customer',4500.00,NULL,0.00,NULL,'cumulative',3.00,1,'intra',190000.00,22800.00,212800.00,190000.00,'partial',NULL,2,'2026-11-23 11:24:09','2026-11-23 11:24:09');
 /*!40000 ALTER TABLE `invoices` ENABLE KEYS */;
 UNLOCK TABLES;
 DROP TABLE IF EXISTS `item_categories`;
@@ -761,13 +762,13 @@ CREATE TABLE `item_categories` (
 LOCK TABLES `item_categories` WRITE;
 /*!40000 ALTER TABLE `item_categories` DISABLE KEYS */;
 INSERT INTO `item_categories` VALUES
-(1,NULL,'Solar Panel',1,1,'2026-11-23 10:51:02','2026-11-23 10:51:02'),
-(2,NULL,'Inverter',1,1,'2026-11-23 10:51:02','2026-11-23 10:51:02'),
-(3,NULL,'Structure',1,1,'2026-11-23 10:51:02','2026-11-23 10:51:02'),
-(4,NULL,'DC Cable',1,1,'2026-11-23 10:51:02','2026-11-23 10:51:02'),
-(5,2,'Battery',1,1,'2026-11-23 10:51:02','2026-11-23 10:51:02'),
-(6,1,'Connectors',1,1,'2026-11-23 10:51:29','2026-11-23 10:51:29'),
-(7,3,'Protection',1,1,'2026-11-23 10:51:29','2026-11-23 10:51:29');
+(1,NULL,'Solar Panel',1,1,'2026-11-23 11:23:18','2026-11-23 11:23:18'),
+(2,NULL,'Inverter',1,1,'2026-11-23 11:23:18','2026-11-23 11:23:18'),
+(3,NULL,'Structure',1,1,'2026-11-23 11:23:18','2026-11-23 11:23:18'),
+(4,NULL,'DC Cable',1,1,'2026-11-23 11:23:18','2026-11-23 11:23:18'),
+(5,2,'Battery',1,1,'2026-11-23 11:23:18','2026-11-23 11:23:18'),
+(6,1,'Connectors',1,1,'2026-11-23 11:23:45','2026-11-23 11:23:45'),
+(7,3,'Protection',1,1,'2026-11-23 11:23:45','2026-11-23 11:23:45');
 /*!40000 ALTER TABLE `item_categories` ENABLE KEYS */;
 UNLOCK TABLES;
 DROP TABLE IF EXISTS `items`;
@@ -800,16 +801,16 @@ CREATE TABLE `items` (
 LOCK TABLES `items` WRITE;
 /*!40000 ALTER TABLE `items` DISABLE KEYS */;
 INSERT INTO `items` VALUES
-(1,'PNL545','Mono PERC Panel 545W',NULL,1,'Nos',NULL,12.00,0.00,11000.00,0.00,1,1,'2026-11-23 10:51:02','2026-11-23 10:51:29',NULL),
-(2,'INV3','3 kW On-grid Inverter',1,2,'Nos','8504',12.00,24000.00,30000.00,2.00,1,1,'2026-11-23 10:51:02','2026-11-23 10:51:02',NULL),
-(3,'INV5','5 kW On-grid Inverter',1,2,'Nos','8504',12.00,38000.00,46000.00,1.00,1,1,'2026-11-23 10:51:02','2026-11-23 10:51:02',NULL),
-(4,'STR3','GI Structure Set 3 kW',NULL,3,'Set','7308',18.00,6000.00,8000.00,2.00,1,1,'2026-11-23 10:51:02','2026-11-23 10:51:02',NULL),
-(5,'DC4','DC Cable 4 sq.mm',NULL,4,'Mtr','8544',18.00,45.00,60.00,100.00,1,1,'2026-11-23 10:51:02','2026-11-23 10:51:02',NULL),
-(6,'BAT150','Lithium Battery 150Ah',2,5,'Nos','8507',18.00,15000.00,19000.00,2.00,1,1,'2026-11-23 10:51:03','2026-11-23 10:51:03',NULL),
-(7,'MC4','MC4 Connector',1,6,'Pair',NULL,18.00,0.00,120.00,0.00,1,1,'2026-11-23 10:51:29','2026-11-23 10:51:29',NULL),
-(8,'ACDB3','ACDB 3 kW',3,7,'Nos',NULL,18.00,0.00,2500.00,0.00,1,1,'2026-11-23 10:51:29','2026-11-23 10:51:29',NULL),
-(9,'EARTH','Earthing Kit',NULL,1,'Nos','8541',12.00,100.00,150.00,0.00,1,1,'2026-11-23 10:51:31','2026-11-23 10:51:31',NULL),
-(10,'PNL330','Poly Panel 330W (discontinued)',NULL,1,'Nos','8541',12.00,1000.00,1500.00,0.00,0,1,'2026-11-23 10:51:32','2026-11-23 10:51:32','2026-11-23 10:51:33');
+(1,'PNL545','Mono PERC Panel 545W',NULL,1,'Nos',NULL,12.00,0.00,11000.00,0.00,1,1,'2026-11-23 11:23:18','2026-11-23 11:23:45',NULL),
+(2,'INV3','3 kW On-grid Inverter',1,2,'Nos','8504',12.00,24000.00,30000.00,2.00,1,1,'2026-11-23 11:23:18','2026-11-23 11:23:18',NULL),
+(3,'INV5','5 kW On-grid Inverter',1,2,'Nos','8504',12.00,38000.00,46000.00,1.00,1,1,'2026-11-23 11:23:18','2026-11-23 11:23:18',NULL),
+(4,'STR3','GI Structure Set 3 kW',NULL,3,'Set','7308',18.00,6000.00,8000.00,2.00,1,1,'2026-11-23 11:23:18','2026-11-23 11:23:18',NULL),
+(5,'DC4','DC Cable 4 sq.mm',NULL,4,'Mtr','8544',18.00,45.00,60.00,100.00,1,1,'2026-11-23 11:23:18','2026-11-23 11:23:18',NULL),
+(6,'BAT150','Lithium Battery 150Ah',2,5,'Nos','8507',18.00,15000.00,19000.00,2.00,1,1,'2026-11-23 11:23:18','2026-11-23 11:23:18',NULL),
+(7,'MC4','MC4 Connector',1,6,'Pair',NULL,18.00,0.00,120.00,0.00,1,1,'2026-11-23 11:23:45','2026-11-23 11:23:45',NULL),
+(8,'ACDB3','ACDB 3 kW',3,7,'Nos',NULL,18.00,0.00,2500.00,0.00,1,1,'2026-11-23 11:23:45','2026-11-23 11:23:45',NULL),
+(9,'EARTH','Earthing Kit',NULL,1,'Nos','8541',12.00,100.00,150.00,0.00,1,1,'2026-11-23 11:23:56','2026-11-23 11:23:56',NULL),
+(10,'PNL330','Poly Panel 330W (discontinued)',NULL,1,'Nos','8541',12.00,1000.00,1500.00,0.00,0,1,'2026-11-23 11:23:57','2026-11-23 11:23:57','2026-11-23 11:23:57');
 /*!40000 ALTER TABLE `items` ENABLE KEYS */;
 UNLOCK TABLES;
 DROP TABLE IF EXISTS `kit_items`;
@@ -859,8 +860,8 @@ CREATE TABLE `kits` (
 LOCK TABLES `kits` WRITE;
 /*!40000 ALTER TABLE `kits` DISABLE KEYS */;
 INSERT INTO `kits` VALUES
-(1,'3 kW On-grid kit',1,3.00,NULL,1,1,'2026-11-23 10:51:03','2026-11-23 10:51:03'),
-(2,'5 kW On-grid kit',1,5.00,NULL,1,1,'2026-11-23 10:51:03','2026-11-23 10:51:03');
+(1,'3 kW On-grid kit',1,3.00,NULL,1,1,'2026-11-23 11:23:18','2026-11-23 11:23:18'),
+(2,'5 kW On-grid kit',1,5.00,NULL,1,1,'2026-11-23 11:23:18','2026-11-23 11:23:18');
 /*!40000 ALTER TABLE `kits` ENABLE KEYS */;
 UNLOCK TABLES;
 DROP TABLE IF EXISTS `lead_followups`;
@@ -876,17 +877,19 @@ CREATE TABLE `lead_followups` (
   `created_at` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `lead_id` (`lead_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 LOCK TABLES `lead_followups` WRITE;
 /*!40000 ALTER TABLE `lead_followups` DISABLE KEYS */;
 INSERT INTO `lead_followups` VALUES
-(1,1,'Explained PM Surya Ghar subsidy','interested','2026-11-23',2,'2026-11-23 10:51:13'),
-(2,3,'Not interested, budget issue','lost',NULL,2,'2026-11-23 10:51:13'),
-(3,4,'Site visit fixed for Saturday','interested','2026-11-23',2,'2026-11-23 10:51:38'),
-(4,5,'Quotation for 25 kW common-area rooftop sent to the association','follow_up','2026-11-23',2,'2026-11-23 10:51:39'),
-(5,7,'Owner asked for payback calculation and loan options','interested','2026-11-23',2,'2026-11-23 10:51:39');
+(1,1,'Explained PM Surya Ghar subsidy','interested','2026-11-23',2,'2026-11-23 11:23:29'),
+(2,3,'Not interested, budget issue','lost',NULL,2,'2026-11-23 11:23:29'),
+(3,5,'New IndiaMART enquiry [IM-2873002]:\nEnquiry: 5 kW On Grid Solar Power Plant\nPlease call back today.\nMonthly bill 4000\nType: Direct enquiry','new','2026-11-23',NULL,'2026-11-23 11:23:51'),
+(4,9,'New Google Ads enquiry [GA-20931]:\nSystem size needed: 5 kW\nGoogle Ads campaign 12345','new','2026-11-23',NULL,'2026-11-23 11:23:54'),
+(5,11,'Site visit fixed for Saturday','interested','2026-11-23',2,'2026-11-23 11:24:07'),
+(6,12,'Quotation for 25 kW common-area rooftop sent to the association','follow_up','2026-11-23',2,'2026-11-23 11:24:07'),
+(7,14,'Owner asked for payback calculation and loan options','interested','2026-11-23',2,'2026-11-23 11:24:08');
 /*!40000 ALTER TABLE `lead_followups` ENABLE KEYS */;
 UNLOCK TABLES;
 DROP TABLE IF EXISTS `leads`;
@@ -900,6 +903,7 @@ CREATE TABLE `leads` (
   `address` text DEFAULT NULL,
   `city` varchar(100) DEFAULT NULL,
   `source` varchar(60) DEFAULT NULL,
+  `external_ref` varchar(60) DEFAULT NULL,
   `customer_type` varchar(3) NOT NULL DEFAULT 'b2c',
   `required_kw` decimal(12,2) NOT NULL DEFAULT 0.00,
   `monthly_bill` decimal(14,2) NOT NULL DEFAULT 0.00,
@@ -917,22 +921,30 @@ CREATE TABLE `leads` (
   KEY `status` (`status`),
   KEY `assigned_to` (`assigned_to`),
   KEY `next_followup_date` (`next_followup_date`),
-  KEY `phone` (`phone`)
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  KEY `phone` (`phone`),
+  KEY `leads_external_ref` (`external_ref`)
+) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 LOCK TABLES `leads` WRITE;
 /*!40000 ALTER TABLE `leads` DISABLE KEYS */;
 INSERT INTO `leads` VALUES
-(1,'Murugan S','9876543210','murugan@example.com',NULL,'Erode','Referral','b2c',3.00,3000.00,'confirmed',NULL,'2026-11-23',1,NULL,NULL,2,'2026-11-23 10:51:13','2026-11-23 10:51:13',NULL),
-(2,'KMC School','9876543211','accounts@example.com',NULL,'Bengaluru','Referral','b2b',5.00,3000.00,'confirmed',NULL,'2026-11-23',2,NULL,NULL,2,'2026-11-23 10:51:13','2026-11-23 10:51:13',NULL),
-(3,'Ramesh K','9876543212',NULL,NULL,'Salem','Referral','b2c',2.00,3000.00,'lost',NULL,NULL,NULL,'Not interested, budget issue',NULL,2,'2026-11-23 10:51:13','2026-11-23 10:51:13',NULL),
-(4,'Deepa Raghavan','9840011223','deepa.r@example.com',NULL,'Coimbatore','Website','b2c',5.00,4500.00,'interested',NULL,'2026-11-23',NULL,NULL,NULL,2,'2026-11-23 10:51:38','2026-11-23 10:51:38',NULL),
-(5,'Green Valley Apartments','9840022334','office@example.com',NULL,'Chennai','Walk-in','b2b',25.00,38000.00,'follow_up',NULL,'2026-11-23',NULL,NULL,NULL,2,'2026-11-23 10:51:38','2026-11-23 10:51:39',NULL),
-(6,'Arun Prakash','9840033445',NULL,NULL,'Madurai','Facebook / Instagram','b2c',3.00,2800.00,'new',NULL,'2026-11-23',NULL,NULL,NULL,2,'2026-11-23 10:51:39','2026-11-23 10:51:39',NULL),
-(7,'Sri Balaji Rice Mill','9840044556','accounts@example.com',NULL,'Tiruppur','Referral','b2b',50.00,95000.00,'interested',NULL,'2026-11-23',NULL,NULL,NULL,2,'2026-11-23 10:51:39','2026-11-23 10:51:39',NULL),
-(8,'Lakshmi Textiles','9840055667','lakshmi.tex@example.com',NULL,'Erode','Referral','b2b',10.00,3500.00,'confirmed',NULL,'2026-11-23',6,NULL,NULL,2,'2026-11-23 10:51:39','2026-11-23 10:51:39',NULL),
-(9,'Karthik Ramasamy','9840066778','karthik.r@example.com',NULL,'Namakkal','Referral','b2c',3.00,3500.00,'confirmed',NULL,'2026-11-23',7,NULL,NULL,2,'2026-11-23 10:51:39','2026-11-23 10:51:39',NULL);
+(1,'Murugan S','9876543210','murugan@example.com',NULL,'Erode','Referral',NULL,'b2c',3.00,3000.00,'confirmed',NULL,'2026-11-23',1,NULL,NULL,2,'2026-11-23 11:23:28','2026-11-23 11:23:29',NULL),
+(2,'KMC School','9876543211','accounts@example.com',NULL,'Bengaluru','Referral',NULL,'b2b',5.00,3000.00,'confirmed',NULL,'2026-11-23',2,NULL,NULL,2,'2026-11-23 11:23:28','2026-11-23 11:23:29',NULL),
+(3,'Ramesh K','9876543212',NULL,NULL,'Salem','Referral',NULL,'b2c',2.00,3000.00,'lost',NULL,NULL,NULL,'Not interested, budget issue',NULL,2,'2026-11-23 11:23:29','2026-11-23 11:23:29',NULL),
+(4,'Vignesh Kumar','9555500001','vignesh.k@example.com',NULL,'Salem','Referral',NULL,'b2c',3.00,3000.00,'confirmed',NULL,'2026-11-23',5,NULL,NULL,2,'2026-11-23 11:23:46','2026-11-23 11:23:47',NULL),
+(5,'Rajesh Kannan','9443300111','rajesh@example.com','4, Anna Nagar','Tiruppur','IndiaMART','IM-2873001','b2c',5.00,0.00,'new',NULL,'2026-11-23',NULL,NULL,'Enquiry: 5 kW On Grid Solar Power Plant\nNeed 5 kw rooftop system for my house.\nMonthly bill 4000\nType: Direct enquiry',NULL,'2026-11-23 11:23:51','2026-11-23 11:23:51',NULL),
+(6,'Lakshmi Textiles','9500011223','buy@example.com',NULL,'Erode','IndiaMART','IM-2873101','b2b',50.00,0.00,'new',NULL,'2026-11-23',NULL,NULL,'Enquiry: 50 KW Solar Power Plant\nFactory rooftop\nType: Buy lead\nCompany: Lakshmi Textiles Pvt Ltd',NULL,'2026-11-23 11:23:53','2026-11-23 11:23:53',NULL),
+(7,'Priya S','9786012345','priya@example.com',NULL,'Erode','Facebook / Instagram','FB-444555666','b2c',3.00,0.00,'new',NULL,'2026-11-23',NULL,NULL,'Monthly electricity bill: 3000-5000\nCampaign: Erode Nov\nAd: 3 kW rooftop offer\nPlatform: Instagram',NULL,'2026-11-23 11:23:54','2026-11-23 11:23:54',NULL),
+(8,'Kavya Murali',NULL,NULL,NULL,NULL,'Facebook / Instagram','FB-999000999','b2c',0.00,0.00,'new',NULL,'2026-11-23',NULL,NULL,'Details could not be read automatically (unexpected reply from Meta). Open Meta Business Suite → Leads Center to see this lead, then fix the token in Settings.',NULL,'2026-11-23 11:23:54','2026-11-23 11:23:54',NULL),
+(9,'Senthil Kumar','9894055667',NULL,NULL,'Karur','Google Ads','GA-20877','b2c',5.00,0.00,'new',NULL,'2026-11-23',NULL,NULL,'System size needed: 5 kW\nGoogle Ads campaign 12345',NULL,'2026-11-23 11:23:54','2026-11-23 11:23:54',NULL),
+(10,'Mohan Raj','9000011111',NULL,NULL,'Karur','Google Ads','GA-T-9','b2c',5.00,0.00,'new',NULL,'2026-11-23',NULL,NULL,'System size needed: 5 kW\nGoogle Ads campaign 12345',NULL,'2026-11-23 11:23:54','2026-11-23 11:23:54',NULL),
+(11,'Deepa Raghavan','9840011223','deepa.r@example.com',NULL,'Coimbatore','Website',NULL,'b2c',5.00,4500.00,'interested',NULL,'2026-11-23',NULL,NULL,NULL,2,'2026-11-23 11:24:07','2026-11-23 11:24:07',NULL),
+(12,'Green Valley Apartments','9840022334','office@example.com',NULL,'Chennai','Walk-in',NULL,'b2b',25.00,38000.00,'follow_up',NULL,'2026-11-23',NULL,NULL,NULL,2,'2026-11-23 11:24:07','2026-11-23 11:24:07',NULL),
+(13,'Arun Prakash','9840033445',NULL,NULL,'Madurai','Facebook / Instagram',NULL,'b2c',3.00,2800.00,'new',NULL,'2026-11-23',NULL,NULL,NULL,2,'2026-11-23 11:24:07','2026-11-23 11:24:07',NULL),
+(14,'Sri Balaji Rice Mill','9840044556','accounts@example.com',NULL,'Tiruppur','Referral',NULL,'b2b',50.00,95000.00,'interested',NULL,'2026-11-23',NULL,NULL,NULL,2,'2026-11-23 11:24:07','2026-11-23 11:24:08',NULL),
+(15,'Sri Murugan Spinning Mills','9840055667','smsm@example.com',NULL,'Erode','Referral',NULL,'b2b',10.00,3500.00,'confirmed',NULL,'2026-11-23',7,NULL,NULL,2,'2026-11-23 11:24:08','2026-11-23 11:24:08',NULL),
+(16,'Karthik Ramasamy','9840066778','karthik.r@example.com',NULL,'Namakkal','Referral',NULL,'b2c',3.00,3500.00,'confirmed',NULL,'2026-11-23',8,NULL,NULL,2,'2026-11-23 11:24:08','2026-11-23 11:24:08',NULL);
 /*!40000 ALTER TABLE `leads` ENABLE KEYS */;
 UNLOCK TABLES;
 DROP TABLE IF EXISTS `ledgers`;
@@ -953,40 +965,41 @@ CREATE TABLE `ledgers` (
   UNIQUE KEY `name` (`name`),
   KEY `ref_type_ref_id` (`ref_type`,`ref_id`),
   KEY `group_name` (`group_name`)
-) ENGINE=InnoDB AUTO_INCREMENT=29 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=30 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 LOCK TABLES `ledgers` WRITE;
 /*!40000 ALTER TABLE `ledgers` DISABLE KEYS */;
 INSERT INTO `ledgers` VALUES
-(1,'Capital Account','Capital Account','manual',NULL,-495000.00,1,NULL,'2026-11-23 10:51:03','2026-11-23 10:51:03'),
-(2,'Purchase','Purchase Accounts','system',NULL,0.00,1,NULL,'2026-11-23 10:51:12','2026-11-23 10:51:12'),
-(3,'Input CGST @ 6%','Duties & Taxes','system',NULL,0.00,1,NULL,'2026-11-23 10:51:12','2026-11-23 10:51:12'),
-(4,'Input SGST @ 6%','Duties & Taxes','system',NULL,0.00,1,NULL,'2026-11-23 10:51:12','2026-11-23 10:51:12'),
-(5,'Input CGST @ 9%','Duties & Taxes','system',NULL,0.00,1,NULL,'2026-11-23 10:51:12','2026-11-23 10:51:12'),
-(6,'Input SGST @ 9%','Duties & Taxes','system',NULL,0.00,1,NULL,'2026-11-23 10:51:12','2026-11-23 10:51:12'),
-(7,'ABC Solar Distributors','Sundry Creditors','supplier',1,-25000.00,1,NULL,'2026-11-23 10:51:12','2026-11-23 10:51:12'),
-(8,'Input IGST @ 12%','Duties & Taxes','system',NULL,0.00,1,NULL,'2026-11-23 10:51:12','2026-11-23 10:51:12'),
-(9,'Bangalore Inverters Pvt Ltd','Sundry Creditors','supplier',2,0.00,1,NULL,'2026-11-23 10:51:12','2026-11-23 10:51:12'),
-(10,'HDFC Bank','Bank Accounts','account',1,500000.00,1,NULL,'2026-11-23 10:51:13','2026-11-23 10:51:13'),
-(11,'Murugan S','Sundry Debtors','customer',1,0.00,1,NULL,'2026-11-23 10:51:13','2026-11-23 10:51:13'),
-(12,'Sales','Sales Accounts','system',NULL,0.00,1,NULL,'2026-11-23 10:51:13','2026-11-23 10:51:13'),
-(13,'Output CGST @ 6%','Duties & Taxes','system',NULL,0.00,1,NULL,'2026-11-23 10:51:13','2026-11-23 10:51:13'),
-(14,'Output SGST @ 6%','Duties & Taxes','system',NULL,0.00,1,NULL,'2026-11-23 10:51:13','2026-11-23 10:51:13'),
-(15,'KMC School','Sundry Debtors','customer',2,0.00,1,NULL,'2026-11-23 10:51:14','2026-11-23 10:51:14'),
-(16,'Output IGST @ 12%','Duties & Taxes','system',NULL,0.00,1,NULL,'2026-11-23 10:51:14','2026-11-23 10:51:14'),
-(17,'Output IGST @ 18%','Duties & Taxes','system',NULL,0.00,1,NULL,'2026-11-23 10:51:14','2026-11-23 10:51:14'),
-(18,'Output CGST @ 9%','Duties & Taxes','system',NULL,0.00,1,NULL,'2026-11-23 10:51:16','2026-11-23 10:51:16'),
-(19,'Output SGST @ 9%','Duties & Taxes','system',NULL,0.00,1,NULL,'2026-11-23 10:51:16','2026-11-23 10:51:16'),
-(20,'Fuel Expenses','Indirect Expenses','expense_head',1,0.00,1,NULL,'2026-11-23 10:51:25','2026-11-23 10:51:25'),
-(21,'Cash','Cash-in-Hand','account',2,20000.00,1,NULL,'2026-11-23 10:51:25','2026-11-23 10:51:25'),
-(22,'Salary','Indirect Expenses','expense_head',2,0.00,1,NULL,'2026-11-23 10:51:25','2026-11-23 10:51:25'),
-(23,'Office Rent','Indirect Expenses','expense_head',3,0.00,1,NULL,'2026-11-23 10:51:25','2026-11-23 10:51:25'),
-(24,'Scrap Sale','Indirect Incomes','income_head',1,0.00,1,NULL,'2026-11-23 10:51:25','2026-11-23 10:51:25'),
-(25,'Lakshmi Textiles','Sundry Debtors','customer',6,0.00,1,NULL,'2026-11-23 10:51:39','2026-11-23 10:51:39'),
-(26,'Imported One','Sundry Debtors','customer',3,0.00,1,NULL,'2026-11-23 10:51:39','2026-11-23 10:51:39'),
-(27,'Imported Two Pvt Ltd','Sundry Debtors','customer',4,0.00,1,NULL,'2026-11-23 10:51:40','2026-11-23 10:51:40'),
-(28,'Karthik Ramasamy','Sundry Debtors','customer',7,0.00,1,NULL,'2026-11-23 10:51:40','2026-11-23 10:51:40');
+(1,'Capital Account','Capital Account','manual',NULL,-495000.00,1,NULL,'2026-11-23 11:23:19','2026-11-23 11:23:19'),
+(2,'Purchase','Purchase Accounts','system',NULL,0.00,1,NULL,'2026-11-23 11:23:28','2026-11-23 11:23:28'),
+(3,'Input CGST @ 6%','Duties & Taxes','system',NULL,0.00,1,NULL,'2026-11-23 11:23:28','2026-11-23 11:23:28'),
+(4,'Input SGST @ 6%','Duties & Taxes','system',NULL,0.00,1,NULL,'2026-11-23 11:23:28','2026-11-23 11:23:28'),
+(5,'Input CGST @ 9%','Duties & Taxes','system',NULL,0.00,1,NULL,'2026-11-23 11:23:28','2026-11-23 11:23:28'),
+(6,'Input SGST @ 9%','Duties & Taxes','system',NULL,0.00,1,NULL,'2026-11-23 11:23:28','2026-11-23 11:23:28'),
+(7,'ABC Solar Distributors','Sundry Creditors','supplier',1,-25000.00,1,NULL,'2026-11-23 11:23:28','2026-11-23 11:23:28'),
+(8,'Input IGST @ 12%','Duties & Taxes','system',NULL,0.00,1,NULL,'2026-11-23 11:23:28','2026-11-23 11:23:28'),
+(9,'Bangalore Inverters Pvt Ltd','Sundry Creditors','supplier',2,0.00,1,NULL,'2026-11-23 11:23:28','2026-11-23 11:23:28'),
+(10,'HDFC Bank','Bank Accounts','account',1,500000.00,1,NULL,'2026-11-23 11:23:28','2026-11-23 11:23:28'),
+(11,'Murugan S','Sundry Debtors','customer',1,0.00,1,NULL,'2026-11-23 11:23:29','2026-11-23 11:23:29'),
+(12,'Sales','Sales Accounts','system',NULL,0.00,1,NULL,'2026-11-23 11:23:29','2026-11-23 11:23:29'),
+(13,'Output CGST @ 6%','Duties & Taxes','system',NULL,0.00,1,NULL,'2026-11-23 11:23:29','2026-11-23 11:23:29'),
+(14,'Output SGST @ 6%','Duties & Taxes','system',NULL,0.00,1,NULL,'2026-11-23 11:23:29','2026-11-23 11:23:29'),
+(15,'KMC School','Sundry Debtors','customer',2,0.00,1,NULL,'2026-11-23 11:23:30','2026-11-23 11:23:30'),
+(16,'Output IGST @ 12%','Duties & Taxes','system',NULL,0.00,1,NULL,'2026-11-23 11:23:30','2026-11-23 11:23:30'),
+(17,'Output IGST @ 18%','Duties & Taxes','system',NULL,0.00,1,NULL,'2026-11-23 11:23:30','2026-11-23 11:23:30'),
+(18,'Output CGST @ 9%','Duties & Taxes','system',NULL,0.00,1,NULL,'2026-11-23 11:23:32','2026-11-23 11:23:32'),
+(19,'Output SGST @ 9%','Duties & Taxes','system',NULL,0.00,1,NULL,'2026-11-23 11:23:32','2026-11-23 11:23:32'),
+(20,'Fuel Expenses','Indirect Expenses','expense_head',1,0.00,1,NULL,'2026-11-23 11:23:41','2026-11-23 11:23:41'),
+(21,'Cash','Cash-in-Hand','account',2,20000.00,1,NULL,'2026-11-23 11:23:41','2026-11-23 11:23:41'),
+(22,'Salary','Indirect Expenses','expense_head',2,0.00,1,NULL,'2026-11-23 11:23:42','2026-11-23 11:23:42'),
+(23,'Office Rent','Indirect Expenses','expense_head',3,0.00,1,NULL,'2026-11-23 11:23:42','2026-11-23 11:23:42'),
+(24,'Scrap Sale','Indirect Incomes','income_head',1,0.00,1,NULL,'2026-11-23 11:23:42','2026-11-23 11:23:42'),
+(25,'Vignesh Kumar','Sundry Debtors','customer',5,0.00,1,NULL,'2026-11-23 11:23:47','2026-11-23 11:23:47'),
+(26,'Sri Murugan Spinning Mills','Sundry Debtors','customer',7,0.00,1,NULL,'2026-11-23 11:24:08','2026-11-23 11:24:08'),
+(27,'Priya Natarajan','Sundry Debtors','customer',3,0.00,1,NULL,'2026-11-23 11:24:08','2026-11-23 11:24:08'),
+(28,'Annai Foods Pvt Ltd','Sundry Debtors','customer',4,0.00,1,NULL,'2026-11-23 11:24:08','2026-11-23 11:24:08'),
+(29,'Karthik Ramasamy','Sundry Debtors','customer',8,0.00,1,NULL,'2026-11-23 11:24:09','2026-11-23 11:24:09');
 /*!40000 ALTER TABLE `ledgers` ENABLE KEYS */;
 UNLOCK TABLES;
 DROP TABLE IF EXISTS `loan_tranches`;
@@ -1012,10 +1025,10 @@ CREATE TABLE `loan_tranches` (
 LOCK TABLES `loan_tranches` WRITE;
 /*!40000 ALTER TABLE `loan_tranches` DISABLE KEYS */;
 INSERT INTO `loan_tranches` VALUES
-(1,2,1,50000.00,NULL,'received',2,NULL,2,'2026-11-23 10:51:14','2026-11-23 10:51:16'),
-(2,2,2,50000.00,NULL,'received',3,NULL,2,'2026-11-23 10:51:14','2026-11-23 10:51:17'),
-(3,2,3,30000.00,NULL,'received',4,NULL,2,'2026-11-23 10:51:14','2026-11-23 10:51:17'),
-(4,2,4,20000.00,'2026-11-23','received',5,NULL,8,'2026-11-23 10:51:16','2026-11-23 10:51:17');
+(1,2,1,50000.00,NULL,'received',2,NULL,2,'2026-11-23 11:23:30','2026-11-23 11:23:33'),
+(2,2,2,50000.00,NULL,'received',3,NULL,2,'2026-11-23 11:23:30','2026-11-23 11:23:33'),
+(3,2,3,30000.00,NULL,'received',4,NULL,2,'2026-11-23 11:23:30','2026-11-23 11:23:33'),
+(4,2,4,20000.00,'2026-11-23','received',5,NULL,8,'2026-11-23 11:23:32','2026-11-23 11:23:33');
 /*!40000 ALTER TABLE `loan_tranches` ENABLE KEYS */;
 UNLOCK TABLES;
 DROP TABLE IF EXISTS `locations`;
@@ -1036,8 +1049,8 @@ CREATE TABLE `locations` (
 LOCK TABLES `locations` WRITE;
 /*!40000 ALTER TABLE `locations` DISABLE KEYS */;
 INSERT INTO `locations` VALUES
-(1,'Main Store',NULL,1,1,'2026-11-23 10:51:01','2026-11-23 10:51:01'),
-(2,'Warehouse 2',NULL,1,1,'2026-11-23 10:51:02','2026-11-23 10:51:02');
+(1,'Main Store',NULL,1,1,'2026-11-23 11:23:17','2026-11-23 11:23:17'),
+(2,'Warehouse 2',NULL,1,1,'2026-11-23 11:23:17','2026-11-23 11:23:17');
 /*!40000 ALTER TABLE `locations` ENABLE KEYS */;
 UNLOCK TABLES;
 DROP TABLE IF EXISTS `message_log`;
@@ -1073,28 +1086,32 @@ CREATE TABLE `migrations` (
   `time` int(11) NOT NULL,
   `batch` int(11) unsigned NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 LOCK TABLES `migrations` WRITE;
 /*!40000 ALTER TABLE `migrations` DISABLE KEYS */;
 INSERT INTO `migrations` VALUES
-(1,'2020-12-28-223112','CodeIgniter\\Shield\\Database\\Migrations\\CreateAuthTables','default','CodeIgniter\\Shield',1795411260,1),
-(2,'2021-07-04-041948','CodeIgniter\\Settings\\Database\\Migrations\\CreateSettingsTable','default','CodeIgniter\\Settings',1795411260,1),
-(3,'2021-11-14-143905','CodeIgniter\\Settings\\Database\\Migrations\\AddContextColumn','default','CodeIgniter\\Settings',1795411260,1),
-(4,'2023-10-12-112040','CodeIgniter\\Queue\\Database\\Migrations\\AddQueueTables','default','CodeIgniter\\Queue',1795411260,1),
-(5,'2023-11-05-064053','CodeIgniter\\Queue\\Database\\Migrations\\AddPriorityField','default','CodeIgniter\\Queue',1795411260,1),
-(6,'2024-12-27-110712','CodeIgniter\\Queue\\Database\\Migrations\\ChangePayloadFieldTypeInSqlsrv','default','CodeIgniter\\Queue',1795411260,1),
-(7,'2026-07-20-181246','CodeIgniter\\Settings\\Database\\Migrations\\ConvertSqlsrvValueColumn','default','CodeIgniter\\Settings',1795411260,1),
-(8,'2026-11-07-100000','App\\Database\\Migrations\\CreateCrmTables','default','App',1795411260,1),
-(9,'2026-11-07-100100','App\\Database\\Migrations\\CreateInventoryTables','default','App',1795411260,1),
-(10,'2026-11-07-100200','App\\Database\\Migrations\\CreateAccountsTables','default','App',1795411260,1),
-(11,'2026-11-07-100300','App\\Database\\Migrations\\CreateProjectTables','default','App',1795411260,1),
-(12,'2026-11-07-100400','App\\Database\\Migrations\\CreateServiceLedgerTables','default','App',1795411260,1),
-(13,'2026-11-08-100000','App\\Database\\Migrations\\ClientChangesBatch2','default','App',1795411260,1),
-(14,'2026-11-08-110000','App\\Database\\Migrations\\DeliveryNoteFields','default','App',1795411260,1),
-(15,'2026-11-20-100000','App\\Database\\Migrations\\EbChargesPaidBy','default','App',1795411260,1),
-(16,'2026-11-22-100000','App\\Database\\Migrations\\EntriesPermissions','default','App',1795411260,1);
+(1,'2020-12-28-223112','CodeIgniter\\Shield\\Database\\Migrations\\CreateAuthTables','default','CodeIgniter\\Shield',1795413194,1),
+(2,'2021-07-04-041948','CodeIgniter\\Settings\\Database\\Migrations\\CreateSettingsTable','default','CodeIgniter\\Settings',1795413194,1),
+(3,'2021-11-14-143905','CodeIgniter\\Settings\\Database\\Migrations\\AddContextColumn','default','CodeIgniter\\Settings',1795413194,1),
+(4,'2023-10-12-112040','CodeIgniter\\Queue\\Database\\Migrations\\AddQueueTables','default','CodeIgniter\\Queue',1795413194,1),
+(5,'2023-11-05-064053','CodeIgniter\\Queue\\Database\\Migrations\\AddPriorityField','default','CodeIgniter\\Queue',1795413194,1),
+(6,'2024-12-27-110712','CodeIgniter\\Queue\\Database\\Migrations\\ChangePayloadFieldTypeInSqlsrv','default','CodeIgniter\\Queue',1795413194,1),
+(7,'2026-07-20-181246','CodeIgniter\\Settings\\Database\\Migrations\\ConvertSqlsrvValueColumn','default','CodeIgniter\\Settings',1795413194,1),
+(8,'2026-11-07-100000','App\\Database\\Migrations\\CreateCrmTables','default','App',1795413194,1),
+(9,'2026-11-07-100100','App\\Database\\Migrations\\CreateInventoryTables','default','App',1795413194,1),
+(10,'2026-11-07-100200','App\\Database\\Migrations\\CreateAccountsTables','default','App',1795413194,1),
+(11,'2026-11-07-100300','App\\Database\\Migrations\\CreateProjectTables','default','App',1795413194,1),
+(12,'2026-11-07-100400','App\\Database\\Migrations\\CreateServiceLedgerTables','default','App',1795413194,1),
+(13,'2026-11-08-100000','App\\Database\\Migrations\\ClientChangesBatch2','default','App',1795413194,1),
+(14,'2026-11-08-110000','App\\Database\\Migrations\\DeliveryNoteFields','default','App',1795413194,1),
+(15,'2026-11-20-100000','App\\Database\\Migrations\\EbChargesPaidBy','default','App',1795413194,1),
+(16,'2026-11-22-100000','App\\Database\\Migrations\\EntriesPermissions','default','App',1795413194,1),
+(17,'2026-11-23-100000','App\\Database\\Migrations\\Quotations','default','App',1795413194,1),
+(18,'2026-11-23-110000','App\\Database\\Migrations\\ProjectStatusLink','default','App',1795413194,1),
+(19,'2026-11-23-120000','App\\Database\\Migrations\\ServiceTickets','default','App',1795413194,1),
+(20,'2026-11-23-130000','App\\Database\\Migrations\\LeadExternalRef','default','App',1795413194,1);
 /*!40000 ALTER TABLE `migrations` ENABLE KEYS */;
 UNLOCK TABLES;
 DROP TABLE IF EXISTS `notifications`;
@@ -1110,60 +1127,70 @@ CREATE TABLE `notifications` (
   `created_at` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `user_id_read_at` (`user_id`,`read_at`)
-) ENGINE=InnoDB AUTO_INCREMENT=49 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=59 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 LOCK TABLES `notifications` WRITE;
 /*!40000 ALTER TABLE `notifications` DISABLE KEYS */;
 INSERT INTO `notifications` VALUES
-(1,3,'Site Survey & Approval – PRJ/2026-27/0001','Murugan S, Erode – 3 kW. This stage is now ready for you.','admin/projects/1','2026-11-23 10:51:27','2026-11-23 10:51:13'),
-(2,3,'Site Survey & Approval – PRJ/2026-27/0002','KMC School, Bengaluru – 5 kW. This stage is now ready for you.','admin/projects/2',NULL,'2026-11-23 10:51:14'),
-(3,3,'Site Survey & Approval – PRJ/2026-27/0003','Murugan S, Erode – 1 kW. This stage is now ready for you.','admin/projects/3',NULL,'2026-11-23 10:51:16'),
-(4,3,'Site Survey & Approval – PRJ/2026-27/0004','Murugan S, Erode – 3 kW. This stage is now ready for you.','admin/projects/4',NULL,'2026-11-23 10:51:16'),
-(5,7,'Invoice fully paid – INV/2026-27/0002','EB charges can now be paid for this project.','admin/projects/2',NULL,'2026-11-23 10:51:17'),
-(6,2,'Site survey rejected – PRJ/2026-27/0001','Roof shaded by tree','admin/projects/1',NULL,'2026-11-23 10:51:17'),
-(7,10,'Site survey rejected','Roof shaded by tree','admin/projects/1',NULL,'2026-11-23 10:51:17'),
-(8,3,'Site Survey & Approval – PRJ/2026-27/0001','Murugan S, Erode – 3 kW. This stage is now ready for you.','admin/projects/1',NULL,'2026-11-23 10:51:18'),
-(9,4,'Material Dispatch – PRJ/2026-27/0001','Murugan S, Erode – 3 kW. This stage is now ready for you.','admin/projects/1',NULL,'2026-11-23 10:51:18'),
-(10,11,'Material Dispatch – PRJ/2026-27/0001','Murugan S, Erode – 3 kW. This stage is now ready for you.','admin/projects/1',NULL,'2026-11-23 10:51:18'),
-(11,6,'Assigned: Installation – PRJ/2026-27/0001','You have been assigned this stage for 23-11-2026.','admin/projects/1',NULL,'2026-11-23 10:51:18'),
-(12,5,'Delivery at Site – PRJ/2026-27/0001','Murugan S, Erode – 3 kW. This stage is now ready for you.','admin/projects/1',NULL,'2026-11-23 10:51:19'),
-(13,11,'Delivery at Site – PRJ/2026-27/0001','Murugan S, Erode – 3 kW. This stage is now ready for you.','admin/projects/1',NULL,'2026-11-23 10:51:19'),
-(14,6,'Installation – PRJ/2026-27/0001','Murugan S, Erode – 3 kW. This stage is now ready for you.','admin/projects/1',NULL,'2026-11-23 10:51:19'),
-(15,7,'DCR & Installation Submission – PRJ/2026-27/0001','Murugan S, Erode – 3 kW. This stage is now ready for you.','admin/projects/1',NULL,'2026-11-23 10:51:20'),
-(16,7,'EB / Net Meter – PRJ/2026-27/0001','Murugan S, Erode – 3 kW. This stage is now ready for you.','admin/projects/1',NULL,'2026-11-23 10:51:20'),
-(17,7,'Invoice fully paid – INV/2026-27/0001','EB charges can now be paid for this project.','admin/projects/1',NULL,'2026-11-23 10:51:22'),
-(18,7,'Subsidy – PRJ/2026-27/0001','Murugan S, Erode – 3 kW. This stage is now ready for you.','admin/projects/1',NULL,'2026-11-23 10:51:22'),
-(19,2,'Project completed – PRJ/2026-27/0001','All stages are completed and the project is closed.','admin/projects/1',NULL,'2026-11-23 10:51:23'),
-(20,4,'Material Dispatch – PRJ/2026-27/0002','KMC School, Bengaluru – 5 kW. This stage is now ready for you.','admin/projects/2',NULL,'2026-11-23 10:51:23'),
-(21,11,'Material Dispatch – PRJ/2026-27/0002','KMC School, Bengaluru – 5 kW. This stage is now ready for you.','admin/projects/2',NULL,'2026-11-23 10:51:23'),
-(22,5,'Delivery at Site – PRJ/2026-27/0002','KMC School, Bengaluru – 5 kW. This stage is now ready for you.','admin/projects/2',NULL,'2026-11-23 10:51:23'),
-(23,11,'Delivery at Site – PRJ/2026-27/0002','KMC School, Bengaluru – 5 kW. This stage is now ready for you.','admin/projects/2',NULL,'2026-11-23 10:51:23'),
-(24,5,'Extra material dispatched – DSP/2026-27/0003','Please deliver and update with a photo.','admin/dispatches/4',NULL,'2026-11-23 10:51:23'),
-(25,11,'Extra material dispatched – DSP/2026-27/0003','Please deliver and update with a photo.','admin/dispatches/4',NULL,'2026-11-23 10:51:23'),
-(26,6,'Installation – PRJ/2026-27/0002','KMC School, Bengaluru – 5 kW. This stage is now ready for you.','admin/projects/2',NULL,'2026-11-23 10:51:24'),
-(27,7,'EB / Net Meter – PRJ/2026-27/0002','KMC School, Bengaluru – 5 kW. This stage is now ready for you.','admin/projects/2',NULL,'2026-11-23 10:51:24'),
-(28,2,'Project completed – PRJ/2026-27/0002','All stages are completed and the project is closed.','admin/projects/2',NULL,'2026-11-23 10:51:25'),
-(29,9,'AMC visit due 26-11-2026 – PRJ/2026-27/0001','Murugan S, 12, Gandhi Nagar Erode – visit 1','admin/amc',NULL,'2026-11-23 10:51:25'),
-(30,9,'AMC visit due 26-11-2026 – PRJ/2026-27/0002','KMC School, 5, MG Road Bengaluru – visit 1','admin/amc',NULL,'2026-11-23 10:51:25'),
-(31,3,'Site Survey & Approval – PRJ/2026-27/0005','Murugan S, Erode – 2 kW. This stage is now ready for you.','admin/projects/5',NULL,'2026-11-23 10:51:30'),
-(32,3,'Site Survey & Approval – PRJ/2026-27/0005','Lakshmi Textiles, Erode – 10 kW. This stage is now ready for you.','admin/projects/6',NULL,'2026-11-23 10:51:39'),
-(33,3,'Site Survey & Approval – PRJ/2026-27/0006','Imported One, Salem – 3 kW. This stage is now ready for you.','admin/projects/7',NULL,'2026-11-23 10:51:39'),
-(34,4,'Material Dispatch – PRJ/2026-27/0006','Imported One, Salem – 3 kW. This stage is now ready for you.','admin/projects/7',NULL,'2026-11-23 10:51:39'),
-(35,11,'Material Dispatch – PRJ/2026-27/0006','Imported One, Salem – 3 kW. This stage is now ready for you.','admin/projects/7',NULL,'2026-11-23 10:51:39'),
-(36,3,'Site Survey & Approval – PRJ/2026-27/0007','Imported Two Pvt Ltd, Bengaluru – 3 kW. This stage is now ready for you.','admin/projects/8',NULL,'2026-11-23 10:51:40'),
-(37,4,'Material Dispatch – PRJ/2026-27/0007','Imported Two Pvt Ltd, Bengaluru – 3 kW. This stage is now ready for you.','admin/projects/8',NULL,'2026-11-23 10:51:40'),
-(38,11,'Material Dispatch – PRJ/2026-27/0007','Imported Two Pvt Ltd, Bengaluru – 3 kW. This stage is now ready for you.','admin/projects/8',NULL,'2026-11-23 10:51:40'),
-(39,5,'Delivery at Site – PRJ/2026-27/0007','Imported Two Pvt Ltd, Bengaluru – 3 kW. This stage is now ready for you.','admin/projects/8',NULL,'2026-11-23 10:51:40'),
-(40,11,'Delivery at Site – PRJ/2026-27/0007','Imported Two Pvt Ltd, Bengaluru – 3 kW. This stage is now ready for you.','admin/projects/8',NULL,'2026-11-23 10:51:40'),
-(41,6,'Installation – PRJ/2026-27/0007','Imported Two Pvt Ltd, Bengaluru – 3 kW. This stage is now ready for you.','admin/projects/8',NULL,'2026-11-23 10:51:40'),
-(42,3,'Site Survey & Approval – PRJ/2026-27/0008','Karthik Ramasamy, Namakkal – 3 kW. This stage is now ready for you.','admin/projects/9',NULL,'2026-11-23 10:51:40'),
-(43,4,'Material Dispatch – PRJ/2026-27/0008','Karthik Ramasamy, Namakkal – 3 kW. This stage is now ready for you.','admin/projects/9',NULL,'2026-11-23 10:51:40'),
-(44,11,'Material Dispatch – PRJ/2026-27/0008','Karthik Ramasamy, Namakkal – 3 kW. This stage is now ready for you.','admin/projects/9',NULL,'2026-11-23 10:51:40'),
-(45,5,'Delivery at Site – PRJ/2026-27/0008','Karthik Ramasamy, Namakkal – 3 kW. This stage is now ready for you.','admin/projects/9',NULL,'2026-11-23 10:51:41'),
-(46,11,'Delivery at Site – PRJ/2026-27/0008','Karthik Ramasamy, Namakkal – 3 kW. This stage is now ready for you.','admin/projects/9',NULL,'2026-11-23 10:51:41'),
-(47,6,'Installation – PRJ/2026-27/0008','Karthik Ramasamy, Namakkal – 3 kW. This stage is now ready for you.','admin/projects/9',NULL,'2026-11-23 10:51:41'),
-(48,7,'DCR & Installation Submission – PRJ/2026-27/0008','Karthik Ramasamy, Namakkal – 3 kW. This stage is now ready for you.','admin/projects/9',NULL,'2026-11-23 10:51:41');
+(1,3,'Site Survey & Approval – PRJ/2026-27/0001','Murugan S, Erode – 3 kW. This stage is now ready for you.','admin/projects/1','2026-11-23 11:23:43','2026-11-23 11:23:29'),
+(2,3,'Site Survey & Approval – PRJ/2026-27/0002','KMC School, Bengaluru – 5 kW. This stage is now ready for you.','admin/projects/2',NULL,'2026-11-23 11:23:30'),
+(3,3,'Site Survey & Approval – PRJ/2026-27/0003','Murugan S, Erode – 1 kW. This stage is now ready for you.','admin/projects/3',NULL,'2026-11-23 11:23:32'),
+(4,3,'Site Survey & Approval – PRJ/2026-27/0004','Murugan S, Erode – 3 kW. This stage is now ready for you.','admin/projects/4',NULL,'2026-11-23 11:23:32'),
+(5,7,'Invoice fully paid – INV/2026-27/0002','EB charges can now be paid for this project.','admin/projects/2',NULL,'2026-11-23 11:23:33'),
+(6,2,'Site survey rejected – PRJ/2026-27/0001','Roof shaded by tree','admin/projects/1',NULL,'2026-11-23 11:23:33'),
+(7,10,'Site survey rejected','Roof shaded by tree','admin/projects/1',NULL,'2026-11-23 11:23:33'),
+(8,3,'Site Survey & Approval – PRJ/2026-27/0001','Murugan S, Erode – 3 kW. This stage is now ready for you.','admin/projects/1',NULL,'2026-11-23 11:23:34'),
+(9,4,'Material Dispatch – PRJ/2026-27/0001','Murugan S, Erode – 3 kW. This stage is now ready for you.','admin/projects/1',NULL,'2026-11-23 11:23:34'),
+(10,11,'Material Dispatch – PRJ/2026-27/0001','Murugan S, Erode – 3 kW. This stage is now ready for you.','admin/projects/1',NULL,'2026-11-23 11:23:34'),
+(11,6,'Assigned: Installation – PRJ/2026-27/0001','You have been assigned this stage for 23-11-2026.','admin/projects/1',NULL,'2026-11-23 11:23:34'),
+(12,5,'Delivery at Site – PRJ/2026-27/0001','Murugan S, Erode – 3 kW. This stage is now ready for you.','admin/projects/1',NULL,'2026-11-23 11:23:35'),
+(13,11,'Delivery at Site – PRJ/2026-27/0001','Murugan S, Erode – 3 kW. This stage is now ready for you.','admin/projects/1',NULL,'2026-11-23 11:23:35'),
+(14,6,'Installation – PRJ/2026-27/0001','Murugan S, Erode – 3 kW. This stage is now ready for you.','admin/projects/1',NULL,'2026-11-23 11:23:35'),
+(15,7,'DCR & Installation Submission – PRJ/2026-27/0001','Murugan S, Erode – 3 kW. This stage is now ready for you.','admin/projects/1',NULL,'2026-11-23 11:23:36'),
+(16,7,'EB / Net Meter – PRJ/2026-27/0001','Murugan S, Erode – 3 kW. This stage is now ready for you.','admin/projects/1',NULL,'2026-11-23 11:23:37'),
+(17,7,'Invoice fully paid – INV/2026-27/0001','EB charges can now be paid for this project.','admin/projects/1',NULL,'2026-11-23 11:23:38'),
+(18,7,'Subsidy – PRJ/2026-27/0001','Murugan S, Erode – 3 kW. This stage is now ready for you.','admin/projects/1',NULL,'2026-11-23 11:23:38'),
+(19,2,'Project completed – PRJ/2026-27/0001','All stages are completed and the project is closed.','admin/projects/1',NULL,'2026-11-23 11:23:39'),
+(20,4,'Material Dispatch – PRJ/2026-27/0002','KMC School, Bengaluru – 5 kW. This stage is now ready for you.','admin/projects/2',NULL,'2026-11-23 11:23:39'),
+(21,11,'Material Dispatch – PRJ/2026-27/0002','KMC School, Bengaluru – 5 kW. This stage is now ready for you.','admin/projects/2',NULL,'2026-11-23 11:23:39'),
+(22,5,'Delivery at Site – PRJ/2026-27/0002','KMC School, Bengaluru – 5 kW. This stage is now ready for you.','admin/projects/2',NULL,'2026-11-23 11:23:39'),
+(23,11,'Delivery at Site – PRJ/2026-27/0002','KMC School, Bengaluru – 5 kW. This stage is now ready for you.','admin/projects/2',NULL,'2026-11-23 11:23:39'),
+(24,5,'Extra material dispatched – DSP/2026-27/0003','Please deliver and update with a photo.','admin/dispatches/4',NULL,'2026-11-23 11:23:40'),
+(25,11,'Extra material dispatched – DSP/2026-27/0003','Please deliver and update with a photo.','admin/dispatches/4',NULL,'2026-11-23 11:23:40'),
+(26,6,'Installation – PRJ/2026-27/0002','KMC School, Bengaluru – 5 kW. This stage is now ready for you.','admin/projects/2',NULL,'2026-11-23 11:23:40'),
+(27,7,'EB / Net Meter – PRJ/2026-27/0002','KMC School, Bengaluru – 5 kW. This stage is now ready for you.','admin/projects/2',NULL,'2026-11-23 11:23:41'),
+(28,2,'Project completed – PRJ/2026-27/0002','All stages are completed and the project is closed.','admin/projects/2',NULL,'2026-11-23 11:23:41'),
+(29,9,'AMC visit due 26-11-2026 – PRJ/2026-27/0001','Murugan S, 12, Gandhi Nagar Erode – visit 1','admin/amc',NULL,'2026-11-23 11:23:41'),
+(30,9,'AMC visit due 26-11-2026 – PRJ/2026-27/0002','KMC School, 5, MG Road Bengaluru – visit 1','admin/amc',NULL,'2026-11-23 11:23:41'),
+(31,9,'New complaint SRV/2026-27/0001 – Murugan S','No generation / system off (URGENT)','admin/service/1',NULL,'2026-11-23 11:23:48'),
+(32,9,'Complaint SRV/2026-27/0001 assigned to you','Murugan S – No generation / system off, visit 23-11-2026','admin/service/1',NULL,'2026-11-23 11:23:49'),
+(33,9,'New complaint SRV/2026-27/0002 – Murugan S','Low generation','admin/service/2',NULL,'2026-11-23 11:23:51'),
+(34,9,'New complaint SRV/2026-27/0003 – Murugan S','Other','admin/service/3',NULL,'2026-11-23 11:23:51'),
+(35,2,'New IndiaMART lead: Rajesh Kannan – 5 kW On Grid Solar Power Plant','Rajesh Kannan – 5 kW On Grid Solar Power Plant','admin/leads?source=IndiaMART',NULL,'2026-11-23 11:23:51'),
+(36,2,'New IndiaMART lead: Lakshmi Textiles – 50 KW Solar Power Plant','Lakshmi Textiles – 50 KW Solar Power Plant','admin/leads?source=IndiaMART',NULL,'2026-11-23 11:23:53'),
+(37,2,'New Facebook / Instagram lead: Priya S – 3 kW rooftop offer','Priya S – 3 kW rooftop offer','admin/leads?source=Facebook%20%2F%20Instagram',NULL,'2026-11-23 11:23:54'),
+(38,2,'New Facebook / Instagram lead: Kavya Murali','Kavya Murali','admin/leads?source=Facebook%20%2F%20Instagram',NULL,'2026-11-23 11:23:54'),
+(39,2,'New Google Ads lead: Senthil Kumar','Senthil Kumar','admin/leads?source=Google%20Ads',NULL,'2026-11-23 11:23:54'),
+(40,2,'New Google Ads lead: Mohan Raj','Mohan Raj','admin/leads?source=Google%20Ads',NULL,'2026-11-23 11:23:54'),
+(41,3,'Site Survey & Approval – PRJ/2026-27/0005','Murugan S, Erode – 2 kW. This stage is now ready for you.','admin/projects/5',NULL,'2026-11-23 11:23:55'),
+(42,3,'Site Survey & Approval – PRJ/2026-27/0005','Sri Murugan Spinning Mills, Erode – 10 kW. This stage is now ready for you.','admin/projects/6',NULL,'2026-11-23 11:24:08'),
+(43,3,'Site Survey & Approval – PRJ/2026-27/0006','Priya Natarajan, Salem – 3 kW. This stage is now ready for you.','admin/projects/7',NULL,'2026-11-23 11:24:08'),
+(44,4,'Material Dispatch – PRJ/2026-27/0006','Priya Natarajan, Salem – 3 kW. This stage is now ready for you.','admin/projects/7',NULL,'2026-11-23 11:24:08'),
+(45,11,'Material Dispatch – PRJ/2026-27/0006','Priya Natarajan, Salem – 3 kW. This stage is now ready for you.','admin/projects/7',NULL,'2026-11-23 11:24:08'),
+(46,3,'Site Survey & Approval – PRJ/2026-27/0007','Annai Foods Pvt Ltd, Bengaluru – 3 kW. This stage is now ready for you.','admin/projects/8',NULL,'2026-11-23 11:24:08'),
+(47,4,'Material Dispatch – PRJ/2026-27/0007','Annai Foods Pvt Ltd, Bengaluru – 3 kW. This stage is now ready for you.','admin/projects/8',NULL,'2026-11-23 11:24:09'),
+(48,11,'Material Dispatch – PRJ/2026-27/0007','Annai Foods Pvt Ltd, Bengaluru – 3 kW. This stage is now ready for you.','admin/projects/8',NULL,'2026-11-23 11:24:09'),
+(49,5,'Delivery at Site – PRJ/2026-27/0007','Annai Foods Pvt Ltd, Bengaluru – 3 kW. This stage is now ready for you.','admin/projects/8',NULL,'2026-11-23 11:24:09'),
+(50,11,'Delivery at Site – PRJ/2026-27/0007','Annai Foods Pvt Ltd, Bengaluru – 3 kW. This stage is now ready for you.','admin/projects/8',NULL,'2026-11-23 11:24:09'),
+(51,6,'Installation – PRJ/2026-27/0007','Annai Foods Pvt Ltd, Bengaluru – 3 kW. This stage is now ready for you.','admin/projects/8',NULL,'2026-11-23 11:24:09'),
+(52,3,'Site Survey & Approval – PRJ/2026-27/0008','Karthik Ramasamy, Namakkal – 3 kW. This stage is now ready for you.','admin/projects/9',NULL,'2026-11-23 11:24:09'),
+(53,4,'Material Dispatch – PRJ/2026-27/0008','Karthik Ramasamy, Namakkal – 3 kW. This stage is now ready for you.','admin/projects/9',NULL,'2026-11-23 11:24:09'),
+(54,11,'Material Dispatch – PRJ/2026-27/0008','Karthik Ramasamy, Namakkal – 3 kW. This stage is now ready for you.','admin/projects/9',NULL,'2026-11-23 11:24:09'),
+(55,5,'Delivery at Site – PRJ/2026-27/0008','Karthik Ramasamy, Namakkal – 3 kW. This stage is now ready for you.','admin/projects/9',NULL,'2026-11-23 11:24:09'),
+(56,11,'Delivery at Site – PRJ/2026-27/0008','Karthik Ramasamy, Namakkal – 3 kW. This stage is now ready for you.','admin/projects/9',NULL,'2026-11-23 11:24:09'),
+(57,6,'Installation – PRJ/2026-27/0008','Karthik Ramasamy, Namakkal – 3 kW. This stage is now ready for you.','admin/projects/9',NULL,'2026-11-23 11:24:10'),
+(58,7,'DCR & Installation Submission – PRJ/2026-27/0008','Karthik Ramasamy, Namakkal – 3 kW. This stage is now ready for you.','admin/projects/9',NULL,'2026-11-23 11:24:10');
 /*!40000 ALTER TABLE `notifications` ENABLE KEYS */;
 UNLOCK TABLES;
 DROP TABLE IF EXISTS `payments`;
@@ -1194,17 +1221,17 @@ CREATE TABLE `payments` (
 LOCK TABLES `payments` WRITE;
 /*!40000 ALTER TABLE `payments` DISABLE KEYS */;
 INSERT INTO `payments` VALUES
-(1,'RCT/2026-27/0001',1,1,1,NULL,'2026-11-23',20000.00,'upi','UPI1001',NULL,8,'2026-11-23 10:51:16','2026-11-23 10:51:16'),
-(2,'RCT/2026-27/0002',2,2,1,1,'2026-11-23',50000.00,'loan','SBI-DISB-1',NULL,8,'2026-11-23 10:51:16','2026-11-23 10:51:16'),
-(3,'RCT/2026-27/0003',2,2,1,2,'2026-11-23',50000.00,'loan','SBI-DISB-2',NULL,8,'2026-11-23 10:51:17','2026-11-23 10:51:17'),
-(4,'RCT/2026-27/0004',2,2,1,3,'2026-11-23',30000.00,'loan','SBI-DISB-3',NULL,8,'2026-11-23 10:51:17','2026-11-23 10:51:17'),
-(5,'RCT/2026-27/0005',2,2,1,4,'2026-11-23',20000.00,'loan','SBI-DISB-4',NULL,8,'2026-11-23 10:51:17','2026-11-23 10:51:17'),
-(6,'RCT/2026-27/0006',2,2,1,NULL,'2026-11-23',48320.00,'cheque','CHQ556677',NULL,8,'2026-11-23 10:51:17','2026-11-23 10:51:17'),
-(7,'RCT/2026-27/0007',1,1,1,NULL,'2026-11-23',181600.00,'bank','NEFT77',NULL,8,'2026-11-23 10:51:22','2026-11-23 10:51:22'),
-(10,'RCT/2026-27/0008',6,6,1,NULL,'2026-11-23',100000.00,'upi','UPI369',NULL,8,'2026-11-23 10:51:39','2026-11-23 10:51:39'),
-(11,'RCT/2026-27/0009',7,3,1,NULL,'2026-11-23',25000.00,'upi','UPI21447',NULL,8,'2026-11-23 10:51:39','2026-11-23 10:51:39'),
-(12,'RCT/2026-27/0010',8,4,1,NULL,'2026-11-23',90000.00,'upi','UPI2343',NULL,8,'2026-11-23 10:51:40','2026-11-23 10:51:40'),
-(13,'RCT/2026-27/0011',9,7,1,NULL,'2026-11-23',190000.00,'upi','UPI14626',NULL,8,'2026-11-23 10:51:40','2026-11-23 10:51:40');
+(1,'RCT/2026-27/0001',1,1,1,NULL,'2026-11-23',20000.00,'upi','UPI1001',NULL,8,'2026-11-23 11:23:32','2026-11-23 11:23:32'),
+(2,'RCT/2026-27/0002',2,2,1,1,'2026-11-23',50000.00,'loan','SBI-DISB-1',NULL,8,'2026-11-23 11:23:33','2026-11-23 11:23:33'),
+(3,'RCT/2026-27/0003',2,2,1,2,'2026-11-23',50000.00,'loan','SBI-DISB-2',NULL,8,'2026-11-23 11:23:33','2026-11-23 11:23:33'),
+(4,'RCT/2026-27/0004',2,2,1,3,'2026-11-23',30000.00,'loan','SBI-DISB-3',NULL,8,'2026-11-23 11:23:33','2026-11-23 11:23:33'),
+(5,'RCT/2026-27/0005',2,2,1,4,'2026-11-23',20000.00,'loan','SBI-DISB-4',NULL,8,'2026-11-23 11:23:33','2026-11-23 11:23:33'),
+(6,'RCT/2026-27/0006',2,2,1,NULL,'2026-11-23',48320.00,'cheque','CHQ556677',NULL,8,'2026-11-23 11:23:33','2026-11-23 11:23:33'),
+(7,'RCT/2026-27/0007',1,1,1,NULL,'2026-11-23',181600.00,'bank','NEFT77',NULL,8,'2026-11-23 11:23:38','2026-11-23 11:23:38'),
+(10,'RCT/2026-27/0008',7,7,1,NULL,'2026-11-23',100000.00,'upi','UPI19062',NULL,8,'2026-11-23 11:24:08','2026-11-23 11:24:08'),
+(11,'RCT/2026-27/0009',8,3,1,NULL,'2026-11-23',25000.00,'upi','UPI9144',NULL,8,'2026-11-23 11:24:08','2026-11-23 11:24:08'),
+(12,'RCT/2026-27/0010',9,4,1,NULL,'2026-11-23',90000.00,'upi','UPI3710',NULL,8,'2026-11-23 11:24:08','2026-11-23 11:24:08'),
+(13,'RCT/2026-27/0011',10,8,1,NULL,'2026-11-23',190000.00,'upi','UPI5739',NULL,8,'2026-11-23 11:24:09','2026-11-23 11:24:09');
 /*!40000 ALTER TABLE `payments` ENABLE KEYS */;
 UNLOCK TABLES;
 DROP TABLE IF EXISTS `project_files`;
@@ -1227,26 +1254,26 @@ CREATE TABLE `project_files` (
 LOCK TABLES `project_files` WRITE;
 /*!40000 ALTER TABLE `project_files` DISABLE KEYS */;
 INSERT INTO `project_files` VALUES
-(1,1,'survey','site_photo','projects/1/site_photo-17954112780.jpg','photo.jpg',3,'2026-11-23 10:51:18'),
-(2,1,'delivery','delivery_photo','projects/1/delivery_photo-1795411279.jpg','photo.jpg',5,'2026-11-23 10:51:19'),
-(3,1,'installation','panel_photo','projects/1/panel_photo-17954112800.jpg','photo.jpg',6,'2026-11-23 10:51:20'),
-(4,1,'installation','net_meter_agreement','projects/1/net_meter_agreement-17954112800.jpg','photo.jpg',6,'2026-11-23 10:51:20'),
-(5,1,'installation','panel_serial_photo','projects/1/panel_serial_photo-17954112800.jpg','photo.jpg',6,'2026-11-23 10:51:20'),
-(6,1,'dcr','dcr_certificate','projects/1/dcr_certificate-17954112800.pdf','doc.pdf',7,'2026-11-23 10:51:20'),
-(7,1,'eb_process','pcr_copy','projects/1/pcr_copy-17954112820.pdf','doc.pdf',7,'2026-11-23 10:51:22'),
-(9,2,'delivery','delivery_photo','projects/2/delivery_photo-1795411284.jpg','photo.jpg',11,'2026-11-23 10:51:24'),
-(10,2,'delivery','delivery_photo','projects/2/delivery_photo-1795411284.jpg','photo.jpg',11,'2026-11-23 10:51:24'),
-(11,2,'installation','panel_photo','projects/2/panel_photo-17954112840.jpg','photo.jpg',6,'2026-11-23 10:51:24'),
-(12,2,'installation','net_meter_agreement','projects/2/net_meter_agreement-17954112840.jpg','photo.jpg',6,'2026-11-23 10:51:24'),
-(13,2,'installation','panel_serial_photo','projects/2/panel_serial_photo-17954112840.jpg','photo.jpg',6,'2026-11-23 10:51:24'),
-(14,7,'survey','site_photo','projects/7/site_photo-17954112990.jpg','photo.jpg',3,'2026-11-23 10:51:39'),
-(15,8,'survey','site_photo','projects/8/site_photo-17954113000.jpg','photo.jpg',3,'2026-11-23 10:51:40'),
-(16,8,'delivery','delivery_photo','projects/8/delivery_photo-1795411300.jpg','photo.jpg',5,'2026-11-23 10:51:40'),
-(17,9,'survey','site_photo','projects/9/site_photo-17954113000.jpg','photo.jpg',3,'2026-11-23 10:51:40'),
-(18,9,'delivery','delivery_photo','projects/9/delivery_photo-1795411301.jpg','photo.jpg',5,'2026-11-23 10:51:41'),
-(19,9,'installation','panel_photo','projects/9/panel_photo-17954113010.jpg','photo.jpg',6,'2026-11-23 10:51:41'),
-(20,9,'installation','net_meter_agreement','projects/9/net_meter_agreement-17954113010.jpg','photo.jpg',6,'2026-11-23 10:51:41'),
-(21,9,'installation','panel_serial_photo','projects/9/panel_serial_photo-17954113010.jpg','photo.jpg',6,'2026-11-23 10:51:41');
+(1,1,'survey','site_photo','projects/1/site_photo-17954132140.jpg','photo.jpg',3,'2026-11-23 11:23:34'),
+(2,1,'delivery','delivery_photo','projects/1/delivery_photo-1795413215.jpg','photo.jpg',5,'2026-11-23 11:23:35'),
+(3,1,'installation','panel_photo','projects/1/panel_photo-17954132160.jpg','photo.jpg',6,'2026-11-23 11:23:36'),
+(4,1,'installation','net_meter_agreement','projects/1/net_meter_agreement-17954132160.jpg','photo.jpg',6,'2026-11-23 11:23:36'),
+(5,1,'installation','panel_serial_photo','projects/1/panel_serial_photo-17954132160.jpg','photo.jpg',6,'2026-11-23 11:23:36'),
+(6,1,'dcr','dcr_certificate','projects/1/dcr_certificate-17954132160.pdf','doc.pdf',7,'2026-11-23 11:23:36'),
+(7,1,'eb_process','pcr_copy','projects/1/pcr_copy-17954132180.pdf','doc.pdf',7,'2026-11-23 11:23:38'),
+(9,2,'delivery','delivery_photo','projects/2/delivery_photo-1795413220.jpg','photo.jpg',11,'2026-11-23 11:23:40'),
+(10,2,'delivery','delivery_photo','projects/2/delivery_photo-1795413220.jpg','photo.jpg',11,'2026-11-23 11:23:40'),
+(11,2,'installation','panel_photo','projects/2/panel_photo-17954132200.jpg','photo.jpg',6,'2026-11-23 11:23:40'),
+(12,2,'installation','net_meter_agreement','projects/2/net_meter_agreement-17954132200.jpg','photo.jpg',6,'2026-11-23 11:23:40'),
+(13,2,'installation','panel_serial_photo','projects/2/panel_serial_photo-17954132200.jpg','photo.jpg',6,'2026-11-23 11:23:40'),
+(14,7,'survey','site_photo','projects/7/site_photo-17954132480.jpg','photo.jpg',3,'2026-11-23 11:24:08'),
+(15,8,'survey','site_photo','projects/8/site_photo-17954132490.jpg','photo.jpg',3,'2026-11-23 11:24:09'),
+(16,8,'delivery','delivery_photo','projects/8/delivery_photo-1795413249.jpg','photo.jpg',5,'2026-11-23 11:24:09'),
+(17,9,'survey','site_photo','projects/9/site_photo-17954132490.jpg','photo.jpg',3,'2026-11-23 11:24:09'),
+(18,9,'delivery','delivery_photo','projects/9/delivery_photo-1795413250.jpg','photo.jpg',5,'2026-11-23 11:24:10'),
+(19,9,'installation','panel_photo','projects/9/panel_photo-17954132500.jpg','photo.jpg',6,'2026-11-23 11:24:10'),
+(20,9,'installation','net_meter_agreement','projects/9/net_meter_agreement-17954132500.jpg','photo.jpg',6,'2026-11-23 11:24:10'),
+(21,9,'installation','panel_serial_photo','projects/9/panel_serial_photo-17954132500.jpg','photo.jpg',6,'2026-11-23 11:24:10');
 /*!40000 ALTER TABLE `project_files` ENABLE KEYS */;
 UNLOCK TABLES;
 DROP TABLE IF EXISTS `project_stages`;
@@ -1275,50 +1302,50 @@ CREATE TABLE `project_stages` (
 LOCK TABLES `project_stages` WRITE;
 /*!40000 ALTER TABLE `project_stages` DISABLE KEYS */;
 INSERT INTO `project_stages` VALUES
-(1,1,'survey',1,'done',NULL,NULL,'{\"approved\":\"yes\",\"survey_date\":\"2026-11-23\",\"roof_type\":\"RCC\",\"roof_area\":\"400\",\"shading\":\"Tree trimmed\",\"structure_height\":null,\"recommended_kw\":\"3\",\"earthing_point\":null,\"cable_length\":null}','Roof shaded by tree','2026-11-23 10:51:18','2026-11-23 10:51:18',3),
-(2,1,'dispatch',2,'done',NULL,NULL,'[]',NULL,'2026-11-23 10:51:18','2026-11-23 10:51:19',4),
-(3,1,'delivery',3,'done',NULL,NULL,'[]',NULL,'2026-11-23 10:51:19','2026-11-23 10:51:19',5),
-(4,1,'installation',4,'done',6,'2026-11-23','{\"installation_date\":\"2026-11-23\",\"inverter_make\":\"Growatt\",\"inverter_serial\":\"GW3K-0001\",\"panel_make\":\"Waaree\",\"panel_count\":\"6\",\"panel_serials\":\"WS1\\nWS2\\nWS3\\nWS4\\nWS5\\nWS6\"}',NULL,'2026-11-23 10:51:19','2026-11-23 10:51:20',6),
-(5,1,'dcr',5,'done',NULL,NULL,'{\"dcr_number\":\"DCR-1\",\"dcr_date\":\"2026-11-23\",\"submission_ref\":\"PMSG-INST-55\",\"submission_date\":\"2026-11-23\"}',NULL,'2026-11-23 10:51:20','2026-11-23 10:51:20',7),
-(6,1,'eb_process',6,'done',NULL,NULL,'{\"steps\":{\"acknowledgement\":\"2026-11-23\",\"pcr_uploaded\":\"2026-11-23\",\"sanction\":\"2026-11-23\",\"eb_charges_paid\":\"2026-11-23\",\"inspection\":\"2026-11-23\",\"meter_installed\":\"2026-11-23\"},\"eb_submission_status\":\"no\",\"application_no\":\"TN-RT-123\",\"sanction_no\":\"SAN-9\",\"eb_charges_amount\":null,\"amc_plan_id\":\"\"}',NULL,'2026-11-23 10:51:20','2026-11-23 10:51:22',7),
-(7,1,'subsidy',7,'done',NULL,NULL,'{\"status\":\"redeemed\",\"application_no\":\"PMSG-777\",\"applied_date\":\"2026-11-23\",\"subsidy_amount\":\"78000\",\"received_date\":\"2026-11-23\"}',NULL,'2026-11-23 10:51:22','2026-11-23 10:51:23',7),
-(8,2,'survey',1,'done',NULL,NULL,'{\"survey_date\":\"2026-11-23\",\"roof_type\":\"Metal sheet\",\"roof_area\":null,\"shading\":null,\"structure_height\":null,\"recommended_kw\":\"5\",\"earthing_point\":null,\"cable_length\":null,\"approved\":\"yes\"}',NULL,'2026-11-23 10:51:14','2026-11-23 10:51:23',3),
-(9,2,'dispatch',2,'done',NULL,NULL,'[]',NULL,'2026-11-23 10:51:23','2026-11-23 10:51:23',11),
-(10,2,'delivery',3,'done',NULL,NULL,'[]',NULL,'2026-11-23 10:51:23','2026-11-23 10:51:24',11),
-(11,2,'installation',4,'done',NULL,NULL,'{\"installation_date\":null,\"inverter_make\":null,\"inverter_serial\":\"INV5-01\",\"panel_make\":null,\"panel_count\":null,\"panel_serials\":\"A1\"}',NULL,'2026-11-23 10:51:24','2026-11-23 10:51:24',6),
-(12,2,'eb_process',5,'done',NULL,NULL,'{\"steps\":{\"acknowledgement\":\"2026-11-23\",\"eb_charges_paid\":\"2026-11-23\",\"sanction\":\"2026-11-23\",\"pcr_uploaded\":\"2026-11-23\",\"inspection\":\"2026-11-23\",\"meter_installed\":\"2026-11-23\"},\"eb_submission_status\":\"no\",\"application_no\":null,\"sanction_no\":null,\"eb_charges_amount\":null,\"amc_plan_id\":\"2\"}',NULL,'2026-11-23 10:51:24','2026-11-23 10:51:25',7),
-(13,3,'survey',1,'pending',NULL,NULL,'[]',NULL,'2026-11-23 10:51:16',NULL,NULL),
+(1,1,'survey',1,'done',NULL,NULL,'{\"approved\":\"yes\",\"survey_date\":\"2026-11-23\",\"roof_type\":\"RCC\",\"roof_area\":\"400\",\"shading\":\"Tree trimmed\",\"structure_height\":null,\"recommended_kw\":\"3\",\"earthing_point\":null,\"cable_length\":null}','Roof shaded by tree','2026-11-23 11:23:34','2026-11-23 11:23:34',3),
+(2,1,'dispatch',2,'done',NULL,NULL,'[]',NULL,'2026-11-23 11:23:34','2026-11-23 11:23:35',4),
+(3,1,'delivery',3,'done',NULL,NULL,'[]',NULL,'2026-11-23 11:23:35','2026-11-23 11:23:35',5),
+(4,1,'installation',4,'done',6,'2026-11-23','{\"installation_date\":\"2026-11-23\",\"inverter_make\":\"Growatt\",\"inverter_serial\":\"GW3K-0001\",\"panel_make\":\"Waaree\",\"panel_count\":\"6\",\"panel_serials\":\"WS1\\nWS2\\nWS3\\nWS4\\nWS5\\nWS6\"}',NULL,'2026-11-23 11:23:35','2026-11-23 11:23:36',6),
+(5,1,'dcr',5,'done',NULL,NULL,'{\"dcr_number\":\"DCR-1\",\"dcr_date\":\"2026-11-23\",\"submission_ref\":\"PMSG-INST-55\",\"submission_date\":\"2026-11-23\"}',NULL,'2026-11-23 11:23:36','2026-11-23 11:23:37',7),
+(6,1,'eb_process',6,'done',NULL,NULL,'{\"steps\":{\"acknowledgement\":\"2026-11-23\",\"pcr_uploaded\":\"2026-11-23\",\"sanction\":\"2026-11-23\",\"eb_charges_paid\":\"2026-11-23\",\"inspection\":\"2026-11-23\",\"meter_installed\":\"2026-11-23\"},\"eb_submission_status\":\"no\",\"application_no\":\"TN-RT-123\",\"sanction_no\":\"SAN-9\",\"eb_charges_amount\":null,\"amc_plan_id\":\"\"}',NULL,'2026-11-23 11:23:37','2026-11-23 11:23:38',7),
+(7,1,'subsidy',7,'done',NULL,NULL,'{\"status\":\"redeemed\",\"application_no\":\"PMSG-777\",\"applied_date\":\"2026-11-23\",\"subsidy_amount\":\"78000\",\"received_date\":\"2026-11-23\"}',NULL,'2026-11-23 11:23:38','2026-11-23 11:23:39',7),
+(8,2,'survey',1,'done',NULL,NULL,'{\"survey_date\":\"2026-11-23\",\"roof_type\":\"Metal sheet\",\"roof_area\":null,\"shading\":null,\"structure_height\":null,\"recommended_kw\":\"5\",\"earthing_point\":null,\"cable_length\":null,\"approved\":\"yes\"}',NULL,'2026-11-23 11:23:30','2026-11-23 11:23:39',3),
+(9,2,'dispatch',2,'done',NULL,NULL,'[]',NULL,'2026-11-23 11:23:39','2026-11-23 11:23:39',11),
+(10,2,'delivery',3,'done',NULL,NULL,'[]',NULL,'2026-11-23 11:23:39','2026-11-23 11:23:40',11),
+(11,2,'installation',4,'done',NULL,NULL,'{\"installation_date\":null,\"inverter_make\":null,\"inverter_serial\":\"INV5-01\",\"panel_make\":null,\"panel_count\":null,\"panel_serials\":\"A1\"}',NULL,'2026-11-23 11:23:40','2026-11-23 11:23:41',6),
+(12,2,'eb_process',5,'done',NULL,NULL,'{\"steps\":{\"acknowledgement\":\"2026-11-23\",\"eb_charges_paid\":\"2026-11-23\",\"sanction\":\"2026-11-23\",\"pcr_uploaded\":\"2026-11-23\",\"inspection\":\"2026-11-23\",\"meter_installed\":\"2026-11-23\"},\"eb_submission_status\":\"no\",\"application_no\":null,\"sanction_no\":null,\"eb_charges_amount\":null,\"amc_plan_id\":\"2\"}',NULL,'2026-11-23 11:23:41','2026-11-23 11:23:41',7),
+(13,3,'survey',1,'pending',NULL,NULL,'[]',NULL,'2026-11-23 11:23:32',NULL,NULL),
 (14,3,'dispatch',2,'pending',NULL,NULL,'[]',NULL,NULL,NULL,NULL),
 (15,3,'delivery',3,'pending',NULL,NULL,'[]',NULL,NULL,NULL,NULL),
 (16,3,'installation',4,'pending',NULL,NULL,'[]',NULL,NULL,NULL,NULL),
 (17,3,'eb_process',5,'pending',NULL,NULL,'[]',NULL,NULL,NULL,NULL),
-(18,4,'survey',1,'pending',NULL,NULL,'[]',NULL,'2026-11-23 10:51:16',NULL,NULL),
+(18,4,'survey',1,'pending',NULL,NULL,'[]',NULL,'2026-11-23 11:23:32',NULL,NULL),
 (19,4,'dispatch',2,'pending',NULL,NULL,'[]',NULL,NULL,NULL,NULL),
 (20,4,'delivery',3,'pending',NULL,NULL,'[]',NULL,NULL,NULL,NULL),
 (21,4,'installation',4,'pending',NULL,NULL,'[]',NULL,NULL,NULL,NULL),
 (22,4,'eb_process',5,'pending',NULL,NULL,'[]',NULL,NULL,NULL,NULL),
-(28,6,'survey',1,'active',NULL,NULL,'[]',NULL,'2026-11-23 10:51:39',NULL,NULL),
+(28,6,'survey',1,'active',NULL,NULL,'[]',NULL,'2026-11-23 11:24:08',NULL,NULL),
 (29,6,'dispatch',2,'pending',NULL,NULL,'[]',NULL,NULL,NULL,NULL),
 (30,6,'delivery',3,'pending',NULL,NULL,'[]',NULL,NULL,NULL,NULL),
 (31,6,'installation',4,'pending',NULL,NULL,'[]',NULL,NULL,NULL,NULL),
 (32,6,'eb_process',5,'pending',NULL,NULL,'[]',NULL,NULL,NULL,NULL),
-(33,7,'survey',1,'done',NULL,NULL,'{\"survey_date\":\"2026-11-23\",\"roof_type\":\"RCC\",\"roof_area\":\"450\",\"shading\":\"No shading\",\"structure_height\":null,\"recommended_kw\":\"3\",\"earthing_point\":null,\"cable_length\":null,\"approved\":\"yes\"}',NULL,'2026-11-23 10:51:39','2026-11-23 10:51:39',3),
-(34,7,'dispatch',2,'active',NULL,NULL,'[]',NULL,'2026-11-23 10:51:39',NULL,NULL),
+(33,7,'survey',1,'done',NULL,NULL,'{\"survey_date\":\"2026-11-23\",\"roof_type\":\"RCC\",\"roof_area\":\"450\",\"shading\":\"No shading\",\"structure_height\":null,\"recommended_kw\":\"3\",\"earthing_point\":null,\"cable_length\":null,\"approved\":\"yes\"}',NULL,'2026-11-23 11:24:08','2026-11-23 11:24:08',3),
+(34,7,'dispatch',2,'active',NULL,NULL,'[]',NULL,'2026-11-23 11:24:08',NULL,NULL),
 (35,7,'delivery',3,'pending',NULL,NULL,'[]',NULL,NULL,NULL,NULL),
 (36,7,'installation',4,'pending',NULL,NULL,'[]',NULL,NULL,NULL,NULL),
 (37,7,'dcr',5,'pending',NULL,NULL,'[]',NULL,NULL,NULL,NULL),
 (38,7,'eb_process',6,'pending',NULL,NULL,'[]',NULL,NULL,NULL,NULL),
 (39,7,'subsidy',7,'pending',NULL,NULL,'{\"status\":\"not_applied\"}',NULL,NULL,NULL,NULL),
-(40,8,'survey',1,'done',NULL,NULL,'{\"survey_date\":\"2026-11-23\",\"roof_type\":\"RCC\",\"roof_area\":\"450\",\"shading\":\"No shading\",\"structure_height\":null,\"recommended_kw\":\"3\",\"earthing_point\":null,\"cable_length\":null,\"approved\":\"yes\"}',NULL,'2026-11-23 10:51:40','2026-11-23 10:51:40',3),
-(41,8,'dispatch',2,'done',NULL,NULL,'[]',NULL,'2026-11-23 10:51:40','2026-11-23 10:51:40',4),
-(42,8,'delivery',3,'done',NULL,NULL,'[]',NULL,'2026-11-23 10:51:40','2026-11-23 10:51:40',5),
-(43,8,'installation',4,'active',NULL,NULL,'[]',NULL,'2026-11-23 10:51:40',NULL,NULL),
+(40,8,'survey',1,'done',NULL,NULL,'{\"survey_date\":\"2026-11-23\",\"roof_type\":\"RCC\",\"roof_area\":\"450\",\"shading\":\"No shading\",\"structure_height\":null,\"recommended_kw\":\"3\",\"earthing_point\":null,\"cable_length\":null,\"approved\":\"yes\"}',NULL,'2026-11-23 11:24:08','2026-11-23 11:24:09',3),
+(41,8,'dispatch',2,'done',NULL,NULL,'[]',NULL,'2026-11-23 11:24:09','2026-11-23 11:24:09',4),
+(42,8,'delivery',3,'done',NULL,NULL,'[]',NULL,'2026-11-23 11:24:09','2026-11-23 11:24:09',5),
+(43,8,'installation',4,'active',NULL,NULL,'[]',NULL,'2026-11-23 11:24:09',NULL,NULL),
 (44,8,'eb_process',5,'pending',NULL,NULL,'[]',NULL,NULL,NULL,NULL),
-(45,9,'survey',1,'done',NULL,NULL,'{\"survey_date\":\"2026-11-23\",\"roof_type\":\"RCC\",\"roof_area\":\"450\",\"shading\":\"No shading\",\"structure_height\":null,\"recommended_kw\":\"3\",\"earthing_point\":null,\"cable_length\":null,\"approved\":\"yes\"}',NULL,'2026-11-23 10:51:40','2026-11-23 10:51:40',3),
-(46,9,'dispatch',2,'done',NULL,NULL,'[]',NULL,'2026-11-23 10:51:40','2026-11-23 10:51:41',4),
-(47,9,'delivery',3,'done',NULL,NULL,'[]',NULL,'2026-11-23 10:51:41','2026-11-23 10:51:41',5),
-(48,9,'installation',4,'done',NULL,NULL,'{\"installation_date\":\"2026-11-23\",\"inverter_make\":\"Growatt\",\"inverter_serial\":\"GW3K-9\",\"panel_make\":\"Waaree\",\"panel_count\":\"6\",\"panel_serials\":\"W9-1\\nW9-2\\nW9-3\\nW9-4\\nW9-5\\nW9-6\"}',NULL,'2026-11-23 10:51:41','2026-11-23 10:51:41',6),
-(49,9,'dcr',5,'active',NULL,NULL,'[]',NULL,'2026-11-23 10:51:41',NULL,NULL),
+(45,9,'survey',1,'done',NULL,NULL,'{\"survey_date\":\"2026-11-23\",\"roof_type\":\"RCC\",\"roof_area\":\"450\",\"shading\":\"No shading\",\"structure_height\":null,\"recommended_kw\":\"3\",\"earthing_point\":null,\"cable_length\":null,\"approved\":\"yes\"}',NULL,'2026-11-23 11:24:09','2026-11-23 11:24:09',3),
+(46,9,'dispatch',2,'done',NULL,NULL,'[]',NULL,'2026-11-23 11:24:09','2026-11-23 11:24:09',4),
+(47,9,'delivery',3,'done',NULL,NULL,'[]',NULL,'2026-11-23 11:24:09','2026-11-23 11:24:10',5),
+(48,9,'installation',4,'done',NULL,NULL,'{\"installation_date\":\"2026-11-23\",\"inverter_make\":\"Growatt\",\"inverter_serial\":\"GW3K-9\",\"panel_make\":\"Waaree\",\"panel_count\":\"6\",\"panel_serials\":\"W9-1\\nW9-2\\nW9-3\\nW9-4\\nW9-5\\nW9-6\"}',NULL,'2026-11-23 11:24:10','2026-11-23 11:24:10',6),
+(49,9,'dcr',5,'active',NULL,NULL,'[]',NULL,'2026-11-23 11:24:10',NULL,NULL),
 (50,9,'eb_process',6,'pending',NULL,NULL,'[]',NULL,NULL,NULL,NULL),
 (51,9,'subsidy',7,'pending',NULL,NULL,'{\"status\":\"not_applied\"}',NULL,NULL,NULL,NULL);
 /*!40000 ALTER TABLE `project_stages` ENABLE KEYS */;
@@ -1340,12 +1367,15 @@ CREATE TABLE `projects` (
   `site_address` text DEFAULT NULL,
   `current_stage` varchar(30) DEFAULT NULL,
   `status` varchar(12) NOT NULL DEFAULT 'active',
+  `status_token` varchar(40) DEFAULT NULL,
+  `status_viewed_at` datetime DEFAULT NULL,
   `completed_at` datetime DEFAULT NULL,
   `created_by` int(10) unsigned DEFAULT NULL,
   `created_at` datetime DEFAULT NULL,
   `updated_at` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `project_no` (`project_no`),
+  UNIQUE KEY `projects_status_token` (`status_token`),
   KEY `customer_id` (`customer_id`),
   KEY `status` (`status`),
   KEY `current_stage` (`current_stage`)
@@ -1355,14 +1385,14 @@ CREATE TABLE `projects` (
 LOCK TABLES `projects` WRITE;
 /*!40000 ALTER TABLE `projects` DISABLE KEYS */;
 INSERT INTO `projects` VALUES
-(1,'PRJ/2026-27/0001',1,1,'b2c','subsidy',1,'2026-11-23',3.00,1,'12, Gandhi Nagar, Erode','completed','completed','2026-11-23 10:51:23',2,'2026-11-23 10:51:13','2026-11-23 10:51:23'),
-(2,'PRJ/2026-27/0002',2,2,'b2b','non_subsidy',1,'2026-11-23',5.00,2,'5, MG Road, Bengaluru','completed','completed','2026-11-23 10:51:25',2,'2026-11-23 10:51:14','2026-11-23 10:51:25'),
-(3,'PRJ/2026-27/0003',1,3,'b2c','non_subsidy',NULL,NULL,1.00,1,'12, Gandhi Nagar, Erode','survey','cancelled',NULL,2,'2026-11-23 10:51:16','2026-11-23 10:51:16'),
-(4,'PRJ/2026-27/0004',1,4,'b2c','non_subsidy',1,NULL,3.00,2,'12, Gandhi Nagar, Erode','survey','cancelled',NULL,2,'2026-11-23 10:51:16','2026-11-23 10:51:16'),
-(6,'PRJ/2026-27/0005',6,6,'b2b','non_subsidy',1,NULL,10.00,NULL,'SIDCO Industrial Estate, Erode','survey','active',NULL,2,'2026-11-23 10:51:39','2026-11-23 10:51:39'),
-(7,'PRJ/2026-27/0006',3,7,'b2c','subsidy',1,NULL,3.00,1,'4, Anna Street, Salem','dispatch','active',NULL,2,'2026-11-23 10:51:39','2026-11-23 10:51:39'),
-(8,'PRJ/2026-27/0007',4,8,'b2b','non_subsidy',1,NULL,3.00,1,'SIDCO Industrial Estate, Bengaluru','installation','active',NULL,2,'2026-11-23 10:51:40','2026-11-23 10:51:40'),
-(9,'PRJ/2026-27/0008',7,9,'b2c','subsidy',1,NULL,3.00,1,'4, Anna Street, Namakkal','dcr','active',NULL,2,'2026-11-23 10:51:40','2026-11-23 10:51:41');
+(1,'PRJ/2026-27/0001',1,1,'b2c','subsidy',1,'2026-11-23',3.00,1,'12, Gandhi Nagar, Erode','completed','completed','412ef285076e3a07bef895ba182e57ae','2026-11-23 11:23:51','2026-11-23 11:23:39',2,'2026-11-23 11:23:29','2026-11-23 11:23:39'),
+(2,'PRJ/2026-27/0002',2,2,'b2b','non_subsidy',1,'2026-11-23',5.00,2,'5, MG Road, Bengaluru','completed','completed','590215a74f4e2c8b7951dae208f34e42','2026-11-23 11:23:48','2026-11-23 11:23:41',2,'2026-11-23 11:23:30','2026-11-23 11:23:41'),
+(3,'PRJ/2026-27/0003',1,3,'b2c','non_subsidy',NULL,NULL,1.00,1,'12, Gandhi Nagar, Erode','survey','cancelled',NULL,NULL,NULL,2,'2026-11-23 11:23:32','2026-11-23 11:23:32'),
+(4,'PRJ/2026-27/0004',1,4,'b2c','non_subsidy',1,NULL,3.00,2,'12, Gandhi Nagar, Erode','survey','cancelled',NULL,NULL,NULL,2,'2026-11-23 11:23:32','2026-11-23 11:23:32'),
+(6,'PRJ/2026-27/0005',7,7,'b2b','non_subsidy',1,NULL,10.00,NULL,'SIDCO Industrial Estate, Erode','survey','active',NULL,NULL,NULL,2,'2026-11-23 11:24:08','2026-11-23 11:24:08'),
+(7,'PRJ/2026-27/0006',3,8,'b2c','subsidy',1,NULL,3.00,1,'4, Anna Street, Salem','dispatch','active','e99c152f7e279e18e70932f9f7aa4992',NULL,NULL,2,'2026-11-23 11:24:08','2026-11-23 11:24:08'),
+(8,'PRJ/2026-27/0007',4,9,'b2b','non_subsidy',1,NULL,3.00,1,'SIDCO Industrial Estate, Bengaluru','installation','active','f51af536bd9c52e1e4e2a88ae2d2e626',NULL,NULL,2,'2026-11-23 11:24:08','2026-11-23 11:24:09'),
+(9,'PRJ/2026-27/0008',8,10,'b2c','subsidy',1,NULL,3.00,1,'4, Anna Street, Namakkal','dcr','active','016318d1d3d6f699d853523afcffd23c',NULL,NULL,2,'2026-11-23 11:24:09','2026-11-23 11:24:10');
 /*!40000 ALTER TABLE `projects` ENABLE KEYS */;
 UNLOCK TABLES;
 DROP TABLE IF EXISTS `purchase_items`;
@@ -1448,7 +1478,7 @@ CREATE TABLE `purchase_orders` (
 LOCK TABLES `purchase_orders` WRITE;
 /*!40000 ALTER TABLE `purchase_orders` DISABLE KEYS */;
 INSERT INTO `purchase_orders` VALUES
-(1,'PO/2026-27/0001',1,'2026-11-23','2026-11-23','intra',481500.00,60750.00,542250.00,'received',NULL,4,'2026-11-23 10:51:12','2026-11-23 10:51:12');
+(1,'PO/2026-27/0001',1,'2026-11-23','2026-11-23','intra',481500.00,60750.00,542250.00,'received',NULL,4,'2026-11-23 11:23:27','2026-11-23 11:23:27');
 /*!40000 ALTER TABLE `purchase_orders` ENABLE KEYS */;
 UNLOCK TABLES;
 DROP TABLE IF EXISTS `purchase_return_items`;
@@ -1502,7 +1532,7 @@ CREATE TABLE `purchase_returns` (
 LOCK TABLES `purchase_returns` WRITE;
 /*!40000 ALTER TABLE `purchase_returns` DISABLE KEYS */;
 INSERT INTO `purchase_returns` VALUES
-(1,'PRN/2026-27/0001',1,1,1,'2026-11-23','intra',18000.00,2160.00,20160.00,'Cracked glass',4,'2026-11-23 10:51:12','2026-11-23 10:51:12');
+(1,'PRN/2026-27/0001',1,1,1,'2026-11-23','intra',18000.00,2160.00,20160.00,'Cracked glass',4,'2026-11-23 11:23:28','2026-11-23 11:23:28');
 /*!40000 ALTER TABLE `purchase_returns` ENABLE KEYS */;
 UNLOCK TABLES;
 DROP TABLE IF EXISTS `purchases`;
@@ -1534,9 +1564,9 @@ CREATE TABLE `purchases` (
 LOCK TABLES `purchases` WRITE;
 /*!40000 ALTER TABLE `purchases` DISABLE KEYS */;
 INSERT INTO `purchases` VALUES
-(1,'PUR/2026-27/0001',1,1,1,'ABC-101','2026-11-23','intra',337500.00,43470.00,380970.00,NULL,4,'2026-11-23 10:51:12','2026-11-23 10:51:12'),
-(2,'PUR/2026-27/0002',1,1,1,'ABC-102','2026-11-23','intra',144000.00,17280.00,161280.00,NULL,4,'2026-11-23 10:51:12','2026-11-23 10:51:12'),
-(3,'PUR/2026-27/0003',2,2,NULL,'BLR-77','2026-11-23','inter',76000.00,9120.00,85120.00,NULL,4,'2026-11-23 10:51:12','2026-11-23 10:51:12');
+(1,'PUR/2026-27/0001',1,1,1,'ABC-101','2026-11-23','intra',337500.00,43470.00,380970.00,NULL,4,'2026-11-23 11:23:28','2026-11-23 11:23:28'),
+(2,'PUR/2026-27/0002',1,1,1,'ABC-102','2026-11-23','intra',144000.00,17280.00,161280.00,NULL,4,'2026-11-23 11:23:28','2026-11-23 11:23:28'),
+(3,'PUR/2026-27/0003',2,2,NULL,'BLR-77','2026-11-23','inter',76000.00,9120.00,85120.00,NULL,4,'2026-11-23 11:23:28','2026-11-23 11:23:28');
 /*!40000 ALTER TABLE `purchases` ENABLE KEYS */;
 UNLOCK TABLES;
 DROP TABLE IF EXISTS `queue_jobs`;
@@ -1580,6 +1610,154 @@ LOCK TABLES `queue_jobs_failed` WRITE;
 /*!40000 ALTER TABLE `queue_jobs_failed` DISABLE KEYS */;
 /*!40000 ALTER TABLE `queue_jobs_failed` ENABLE KEYS */;
 UNLOCK TABLES;
+DROP TABLE IF EXISTS `quotation_items`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8mb4 */;
+CREATE TABLE `quotation_items` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `quotation_id` int(10) unsigned NOT NULL,
+  `item_id` int(10) unsigned DEFAULT NULL,
+  `description` varchar(255) NOT NULL,
+  `hsn` varchar(20) DEFAULT NULL,
+  `qty` decimal(12,2) NOT NULL DEFAULT 0.00,
+  `rate` decimal(14,2) NOT NULL DEFAULT 0.00,
+  `tax_percent` decimal(5,2) NOT NULL DEFAULT 0.00,
+  `tax_amount` decimal(14,2) NOT NULL DEFAULT 0.00,
+  `amount` decimal(14,2) NOT NULL DEFAULT 0.00,
+  PRIMARY KEY (`id`),
+  KEY `quotation_id` (`quotation_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+LOCK TABLES `quotation_items` WRITE;
+/*!40000 ALTER TABLE `quotation_items` DISABLE KEYS */;
+INSERT INTO `quotation_items` VALUES
+(1,1,NULL,'Supply of 3 kW On-grid Solar Power System','8541',1.00,160000.00,12.00,19200.00,160000.00),
+(2,1,NULL,'Installation & commissioning service','9954',1.00,10000.00,18.00,1800.00,10000.00);
+/*!40000 ALTER TABLE `quotation_items` ENABLE KEYS */;
+UNLOCK TABLES;
+DROP TABLE IF EXISTS `quotations`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8mb4 */;
+CREATE TABLE `quotations` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `quote_no` varchar(30) NOT NULL,
+  `lead_id` int(10) unsigned DEFAULT NULL,
+  `customer_id` int(10) unsigned DEFAULT NULL,
+  `party_name` varchar(150) NOT NULL,
+  `party_phone` varchar(20) DEFAULT NULL,
+  `party_email` varchar(150) DEFAULT NULL,
+  `party_address` text DEFAULT NULL,
+  `party_city` varchar(100) DEFAULT NULL,
+  `party_state` varchar(100) DEFAULT NULL,
+  `customer_type` varchar(3) NOT NULL DEFAULT 'b2c',
+  `quote_date` date NOT NULL,
+  `valid_until` date DEFAULT NULL,
+  `subsidy_type` varchar(12) NOT NULL DEFAULT 'subsidy',
+  `installation_type_id` int(10) unsigned DEFAULT NULL,
+  `capacity_kw` decimal(12,2) NOT NULL DEFAULT 0.00,
+  `kit_id` int(10) unsigned DEFAULT NULL,
+  `gst_type` varchar(6) NOT NULL DEFAULT 'intra',
+  `print_format` varchar(12) NOT NULL DEFAULT 'cumulative',
+  `subtotal` decimal(14,2) NOT NULL DEFAULT 0.00,
+  `tax_total` decimal(14,2) NOT NULL DEFAULT 0.00,
+  `total` decimal(14,2) NOT NULL DEFAULT 0.00,
+  `subsidy_amount` decimal(14,2) NOT NULL DEFAULT 0.00,
+  `eb_charges_by` varchar(10) DEFAULT NULL,
+  `eb_charges_amount` decimal(12,2) DEFAULT NULL,
+  `units_per_kw_day` decimal(5,2) NOT NULL DEFAULT 4.00,
+  `tariff` decimal(6,2) NOT NULL DEFAULT 0.00,
+  `design_path` varchar(255) DEFAULT NULL,
+  `notes` text DEFAULT NULL,
+  `status` varchar(12) NOT NULL DEFAULT 'draft',
+  `share_token` varchar(40) DEFAULT NULL,
+  `invoice_id` int(10) unsigned DEFAULT NULL,
+  `sent_at` datetime DEFAULT NULL,
+  `viewed_at` datetime DEFAULT NULL,
+  `created_by` int(10) unsigned DEFAULT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `quote_no` (`quote_no`),
+  UNIQUE KEY `share_token` (`share_token`),
+  KEY `lead_id` (`lead_id`),
+  KEY `customer_id` (`customer_id`),
+  KEY `status` (`status`),
+  KEY `quote_date` (`quote_date`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+LOCK TABLES `quotations` WRITE;
+/*!40000 ALTER TABLE `quotations` DISABLE KEYS */;
+INSERT INTO `quotations` VALUES
+(1,'QT/2026-27/0001',4,5,'Vignesh Kumar','9555500001','vignesh.k@example.com',NULL,'Salem','Tamil Nadu','b2c','2026-11-23','2026-11-23','subsidy',1,3.00,1,'intra','cumulative',170000.00,21000.00,191000.00,78000.00,'customer',5000.00,4.00,6.50,NULL,'50% advance','accepted','44caa37bfaffd872fdf320a29df4643b',NULL,'2026-11-23 11:23:47','2026-11-23 11:23:47',2,'2026-11-23 11:23:47','2026-11-23 11:23:47');
+/*!40000 ALTER TABLE `quotations` ENABLE KEYS */;
+UNLOCK TABLES;
+DROP TABLE IF EXISTS `service_ticket_updates`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8mb4 */;
+CREATE TABLE `service_ticket_updates` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `ticket_id` int(10) unsigned NOT NULL,
+  `status` varchar(12) DEFAULT NULL,
+  `note` text DEFAULT NULL,
+  `photo_path` varchar(255) DEFAULT NULL,
+  `created_by` int(10) unsigned DEFAULT NULL,
+  `created_at` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `ticket_id` (`ticket_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+LOCK TABLES `service_ticket_updates` WRITE;
+/*!40000 ALTER TABLE `service_ticket_updates` DISABLE KEYS */;
+INSERT INTO `service_ticket_updates` VALUES
+(7,2,'open','Complaint registered (Customer status page).',NULL,NULL,'2026-11-23 11:23:51'),
+(8,3,'open','Complaint registered (Customer status page).',NULL,NULL,'2026-11-23 11:23:51');
+/*!40000 ALTER TABLE `service_ticket_updates` ENABLE KEYS */;
+UNLOCK TABLES;
+DROP TABLE IF EXISTS `service_tickets`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8mb4 */;
+CREATE TABLE `service_tickets` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `ticket_no` varchar(30) NOT NULL,
+  `customer_id` int(10) unsigned NOT NULL,
+  `project_id` int(10) unsigned DEFAULT NULL,
+  `category` varchar(30) NOT NULL,
+  `priority` varchar(10) NOT NULL DEFAULT 'normal',
+  `description` text DEFAULT NULL,
+  `reported_via` varchar(15) NOT NULL DEFAULT 'phone',
+  `contact_phone` varchar(20) DEFAULT NULL,
+  `status` varchar(12) NOT NULL DEFAULT 'open',
+  `assigned_to` int(10) unsigned DEFAULT NULL,
+  `scheduled_date` date DEFAULT NULL,
+  `under_amc` tinyint(1) NOT NULL DEFAULT 0,
+  `chargeable` tinyint(1) NOT NULL DEFAULT 0,
+  `charge_amount` decimal(14,2) NOT NULL DEFAULT 0.00,
+  `resolution` text DEFAULT NULL,
+  `resolved_at` datetime DEFAULT NULL,
+  `resolved_by` int(10) unsigned DEFAULT NULL,
+  `closed_at` datetime DEFAULT NULL,
+  `created_by` int(10) unsigned DEFAULT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `ticket_no` (`ticket_no`),
+  KEY `customer_id` (`customer_id`),
+  KEY `project_id` (`project_id`),
+  KEY `status` (`status`),
+  KEY `assigned_to` (`assigned_to`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+LOCK TABLES `service_tickets` WRITE;
+/*!40000 ALTER TABLE `service_tickets` DISABLE KEYS */;
+INSERT INTO `service_tickets` VALUES
+(2,'SRV/2026-27/0002',1,1,'low_generation','normal','Generation dropped to half this week','status_page',NULL,'open',NULL,NULL,1,0,0.00,NULL,NULL,NULL,NULL,NULL,'2026-11-23 11:23:51','2026-11-23 11:23:51'),
+(3,'SRV/2026-27/0003',1,1,'other','normal','Another problem 1','status_page',NULL,'open',NULL,NULL,1,0,0.00,NULL,NULL,NULL,NULL,NULL,'2026-11-23 11:23:51','2026-11-23 11:23:51');
+/*!40000 ALTER TABLE `service_tickets` ENABLE KEYS */;
+UNLOCK TABLES;
 DROP TABLE IF EXISTS `settings`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8mb4 */;
@@ -1593,29 +1771,29 @@ CREATE TABLE `settings` (
   `created_at` datetime NOT NULL,
   `updated_at` datetime NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=34 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 LOCK TABLES `settings` WRITE;
 /*!40000 ALTER TABLE `settings` DISABLE KEYS */;
 INSERT INTO `settings` VALUES
-(1,'Config\\Solar','companyName','Sygma Solar Suite Demo','string',NULL,'2026-11-23 10:51:01','2026-11-23 10:51:01'),
-(2,'Config\\Solar','companyAddress','12, Perundurai Road, Erode','string',NULL,'2026-11-23 10:51:01','2026-11-23 10:51:01'),
-(3,'Config\\Solar','companyPhone','9876500000','string',NULL,'2026-11-23 10:51:01','2026-11-23 10:51:01'),
-(4,'Config\\Solar','companyEmail','info@sygmasolar.com','string',NULL,'2026-11-23 10:51:01','2026-11-23 10:51:01'),
-(5,'Config\\Solar','companyGstin','33AAAAA0000A1Z5','string',NULL,'2026-11-23 10:51:01','2026-11-23 10:51:01'),
-(6,'Config\\Solar','smtpEnabled','0','boolean',NULL,'2026-11-23 10:51:01','2026-11-23 10:51:01'),
-(7,'Config\\Solar','smtpHost','','string',NULL,'2026-11-23 10:51:01','2026-11-23 10:51:01'),
-(8,'Config\\Solar','smtpPort','1026','integer',NULL,'2026-11-23 10:51:01','2026-11-23 10:51:01'),
-(9,'Config\\Solar','smtpCrypto','','string',NULL,'2026-11-23 10:51:01','2026-11-23 10:51:01'),
-(10,'Config\\Solar','mailFromEmail','noreply@sygmasolar.com','string',NULL,'2026-11-23 10:51:01','2026-11-23 10:51:01'),
-(11,'Config\\Solar','mailFromName','Sygma Solar Suite Demo','string',NULL,'2026-11-23 10:51:01','2026-11-23 10:51:01'),
-(12,'Config\\Solar','amcReminderDays','7','integer',NULL,'2026-11-23 10:51:01','2026-11-23 10:51:01'),
-(13,'Config\\Solar','theme','solar','string',NULL,'2026-11-23 10:51:01','2026-11-23 10:51:01'),
-(14,'Config\\Solar','logoPath','','string',NULL,'2026-11-23 10:51:01','2026-11-23 10:51:01'),
-(15,'Config\\Solar','signaturePath','','string',NULL,'2026-11-23 10:51:01','2026-11-23 10:51:01'),
-(16,'Config\\Solar','smtpUser','','string',NULL,'2026-11-23 10:51:01','2026-11-23 10:51:01'),
-(17,'Config\\Solar','smtpPass','','string',NULL,'2026-11-23 10:51:01','2026-11-23 10:51:01');
+(4,'Config\\Solar','companyName','Sygma Solar Suite Demo','string',NULL,'2026-11-23 11:23:16','2026-11-23 11:23:16'),
+(5,'Config\\Solar','companyAddress','12, Perundurai Road, Erode','string',NULL,'2026-11-23 11:23:16','2026-11-23 11:23:16'),
+(6,'Config\\Solar','companyPhone','9876500000','string',NULL,'2026-11-23 11:23:16','2026-11-23 11:23:16'),
+(7,'Config\\Solar','companyEmail','info@sygmasolar.com','string',NULL,'2026-11-23 11:23:16','2026-11-23 11:23:16'),
+(8,'Config\\Solar','companyGstin','33AAAAA0000A1Z5','string',NULL,'2026-11-23 11:23:16','2026-11-23 11:23:16'),
+(9,'Config\\Solar','smtpEnabled','0','boolean',NULL,'2026-11-23 11:23:16','2026-11-23 11:23:16'),
+(10,'Config\\Solar','smtpHost','','string',NULL,'2026-11-23 11:23:16','2026-11-23 11:23:16'),
+(11,'Config\\Solar','smtpPort','1026','integer',NULL,'2026-11-23 11:23:16','2026-11-23 11:23:17'),
+(12,'Config\\Solar','smtpCrypto','','string',NULL,'2026-11-23 11:23:16','2026-11-23 11:23:17'),
+(13,'Config\\Solar','mailFromEmail','noreply@sygmasolar.com','string',NULL,'2026-11-23 11:23:16','2026-11-23 11:23:16'),
+(14,'Config\\Solar','mailFromName','Sygma Solar Suite Demo','string',NULL,'2026-11-23 11:23:16','2026-11-23 11:23:16'),
+(15,'Config\\Solar','amcReminderDays','7','integer',NULL,'2026-11-23 11:23:16','2026-11-23 11:23:16'),
+(16,'Config\\Solar','theme','solar','string',NULL,'2026-11-23 11:23:17','2026-11-23 11:23:17'),
+(17,'Config\\Solar','logoPath','','string',NULL,'2026-11-23 11:23:17','2026-11-23 11:23:17'),
+(18,'Config\\Solar','signaturePath','','string',NULL,'2026-11-23 11:23:17','2026-11-23 11:23:17'),
+(19,'Config\\Solar','smtpUser','','string',NULL,'2026-11-23 11:23:17','2026-11-23 11:23:17'),
+(20,'Config\\Solar','smtpPass','','string',NULL,'2026-11-23 11:23:17','2026-11-23 11:23:17');
 /*!40000 ALTER TABLE `settings` ENABLE KEYS */;
 UNLOCK TABLES;
 DROP TABLE IF EXISTS `stock_movements`;
@@ -1635,38 +1813,39 @@ CREATE TABLE `stock_movements` (
   PRIMARY KEY (`id`),
   KEY `item_id_location_id` (`item_id`,`location_id`),
   KEY `ref_type_ref_id` (`ref_type`,`ref_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=32 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=33 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 LOCK TABLES `stock_movements` WRITE;
 /*!40000 ALTER TABLE `stock_movements` DISABLE KEYS */;
 INSERT INTO `stock_movements` VALUES
-(1,6,2,10.00,'opening','adjustment',NULL,'Opening stock (item created)',1,'2026-11-23 10:51:03'),
-(2,1,1,24.00,'purchase','purchase',1,'Bill ABC-101',4,'2026-11-23 10:51:12'),
-(3,2,1,3.00,'purchase','purchase',1,'Bill ABC-101',4,'2026-11-23 10:51:12'),
-(4,4,1,6.00,'purchase','purchase',1,'Bill ABC-101',4,'2026-11-23 10:51:12'),
-(5,5,1,300.00,'purchase','purchase',1,'Bill ABC-101',4,'2026-11-23 10:51:12'),
-(6,1,1,16.00,'purchase','purchase',2,'Bill ABC-102',4,'2026-11-23 10:51:12'),
-(7,3,2,2.00,'purchase','purchase',3,'Bill BLR-77',4,'2026-11-23 10:51:12'),
-(8,1,1,-2.00,'purchase_return','purchase_return',1,'Returned to supplier',4,'2026-11-23 10:51:12'),
-(9,1,1,-6.00,'dispatch','dispatch',2,'To site',4,'2026-11-23 10:51:19'),
-(10,2,1,-1.00,'dispatch','dispatch',2,'To site',4,'2026-11-23 10:51:19'),
-(11,4,1,-1.00,'dispatch','dispatch',2,'To site',4,'2026-11-23 10:51:19'),
-(12,5,1,-30.00,'dispatch','dispatch',2,'To site',4,'2026-11-23 10:51:19'),
-(14,1,1,-10.00,'dispatch','dispatch',3,'To site',11,'2026-11-23 10:51:23'),
-(15,4,1,-2.00,'dispatch','dispatch',3,'To site',11,'2026-11-23 10:51:23'),
-(16,5,1,-50.00,'dispatch','dispatch',3,'To site',11,'2026-11-23 10:51:23'),
-(17,3,2,-1.00,'dispatch','dispatch',4,'To site',11,'2026-11-23 10:51:23'),
-(18,6,2,-1.00,'adjustment','adjustment',NULL,'Physical count',4,'2026-11-23 10:51:27'),
-(19,7,1,50.00,'opening','adjustment',NULL,'Opening stock (bulk upload)',1,'2026-11-23 10:51:29'),
-(24,1,1,-6.00,'dispatch','dispatch',6,'To site',4,'2026-11-23 10:51:40'),
-(25,2,1,-1.00,'dispatch','dispatch',6,'To site',4,'2026-11-23 10:51:40'),
-(26,4,1,-1.00,'dispatch','dispatch',6,'To site',4,'2026-11-23 10:51:40'),
-(27,5,1,-30.00,'dispatch','dispatch',6,'To site',4,'2026-11-23 10:51:40'),
-(28,1,1,-6.00,'dispatch','dispatch',7,'To site',4,'2026-11-23 10:51:41'),
-(29,2,1,-1.00,'dispatch','dispatch',7,'To site',4,'2026-11-23 10:51:41'),
-(30,4,1,-1.00,'dispatch','dispatch',7,'To site',4,'2026-11-23 10:51:41'),
-(31,5,1,-30.00,'dispatch','dispatch',7,'To site',4,'2026-11-23 10:51:41');
+(1,6,2,10.00,'opening','adjustment',NULL,'Opening stock (item created)',1,'2026-11-23 11:23:18'),
+(2,1,1,24.00,'purchase','purchase',1,'Bill ABC-101',4,'2026-11-23 11:23:28'),
+(3,2,1,3.00,'purchase','purchase',1,'Bill ABC-101',4,'2026-11-23 11:23:28'),
+(4,4,1,6.00,'purchase','purchase',1,'Bill ABC-101',4,'2026-11-23 11:23:28'),
+(5,5,1,300.00,'purchase','purchase',1,'Bill ABC-101',4,'2026-11-23 11:23:28'),
+(6,1,1,16.00,'purchase','purchase',2,'Bill ABC-102',4,'2026-11-23 11:23:28'),
+(7,3,2,2.00,'purchase','purchase',3,'Bill BLR-77',4,'2026-11-23 11:23:28'),
+(8,1,1,-2.00,'purchase_return','purchase_return',1,'Returned to supplier',4,'2026-11-23 11:23:28'),
+(9,1,1,-6.00,'dispatch','dispatch',2,'To site',4,'2026-11-23 11:23:35'),
+(10,2,1,-1.00,'dispatch','dispatch',2,'To site',4,'2026-11-23 11:23:35'),
+(11,4,1,-1.00,'dispatch','dispatch',2,'To site',4,'2026-11-23 11:23:35'),
+(12,5,1,-30.00,'dispatch','dispatch',2,'To site',4,'2026-11-23 11:23:35'),
+(14,1,1,-10.00,'dispatch','dispatch',3,'To site',11,'2026-11-23 11:23:39'),
+(15,4,1,-2.00,'dispatch','dispatch',3,'To site',11,'2026-11-23 11:23:39'),
+(16,5,1,-50.00,'dispatch','dispatch',3,'To site',11,'2026-11-23 11:23:39'),
+(17,3,2,-1.00,'dispatch','dispatch',4,'To site',11,'2026-11-23 11:23:40'),
+(18,6,2,-1.00,'adjustment','adjustment',NULL,'Physical count',4,'2026-11-23 11:23:43'),
+(19,7,1,50.00,'opening','adjustment',NULL,'Opening stock (bulk upload)',1,'2026-11-23 11:23:45'),
+(24,6,1,1.00,'opening','adjustment',NULL,'Opening stock',1,'2026-11-23 11:24:00'),
+(25,1,1,-6.00,'dispatch','dispatch',6,'To site',4,'2026-11-23 11:24:09'),
+(26,2,1,-1.00,'dispatch','dispatch',6,'To site',4,'2026-11-23 11:24:09'),
+(27,4,1,-1.00,'dispatch','dispatch',6,'To site',4,'2026-11-23 11:24:09'),
+(28,5,1,-30.00,'dispatch','dispatch',6,'To site',4,'2026-11-23 11:24:09'),
+(29,1,1,-6.00,'dispatch','dispatch',7,'To site',4,'2026-11-23 11:24:09'),
+(30,2,1,-1.00,'dispatch','dispatch',7,'To site',4,'2026-11-23 11:24:09'),
+(31,4,1,-1.00,'dispatch','dispatch',7,'To site',4,'2026-11-23 11:24:09'),
+(32,5,1,-30.00,'dispatch','dispatch',7,'To site',4,'2026-11-23 11:24:09');
 /*!40000 ALTER TABLE `stock_movements` ENABLE KEYS */;
 UNLOCK TABLES;
 DROP TABLE IF EXISTS `supplier_payments`;
@@ -1695,8 +1874,8 @@ CREATE TABLE `supplier_payments` (
 LOCK TABLES `supplier_payments` WRITE;
 /*!40000 ALTER TABLE `supplier_payments` DISABLE KEYS */;
 INSERT INTO `supplier_payments` VALUES
-(1,'SPAY/2026-27/0001',1,1,'2026-11-23',300000.00,'bank','UTR9001',NULL,8,'2026-11-23 10:51:13','2026-11-23 10:51:13'),
-(2,'SPAY/2026-27/0002',2,1,'2026-11-23',85120.00,'bank','UTR9002',NULL,8,'2026-11-23 10:51:13','2026-11-23 10:51:13');
+(1,'SPAY/2026-27/0001',1,1,'2026-11-23',300000.00,'bank','UTR9001',NULL,8,'2026-11-23 11:23:28','2026-11-23 11:23:28'),
+(2,'SPAY/2026-27/0002',2,1,'2026-11-23',85120.00,'bank','UTR9002',NULL,8,'2026-11-23 11:23:28','2026-11-23 11:23:28');
 /*!40000 ALTER TABLE `supplier_payments` ENABLE KEYS */;
 UNLOCK TABLES;
 DROP TABLE IF EXISTS `suppliers`;
@@ -1724,9 +1903,9 @@ CREATE TABLE `suppliers` (
 LOCK TABLES `suppliers` WRITE;
 /*!40000 ALTER TABLE `suppliers` DISABLE KEYS */;
 INSERT INTO `suppliers` VALUES
-(1,'ABC Solar Distributors',NULL,'9800000001',NULL,'33ABCDE1234F1Z5','Tamil Nadu',NULL,25000.00,1,1,'2026-11-23 10:51:03','2026-11-23 10:51:03',NULL),
-(2,'Bangalore Inverters Pvt Ltd',NULL,'9800000002',NULL,'29BBBBB1111B1Z2','Karnataka',NULL,0.00,1,1,'2026-11-23 10:51:03','2026-11-23 10:51:03',NULL),
-(3,'Kerala Solar Traders',NULL,'9111111111',NULL,NULL,'Kerala',NULL,1000.00,1,1,'2026-11-23 10:51:29','2026-11-23 10:51:29',NULL);
+(1,'ABC Solar Distributors',NULL,'9800000001',NULL,'33ABCDE1234F1Z5','Tamil Nadu',NULL,25000.00,1,1,'2026-11-23 11:23:19','2026-11-23 11:23:19',NULL),
+(2,'Bangalore Inverters Pvt Ltd',NULL,'9800000002',NULL,'29BBBBB1111B1Z2','Karnataka',NULL,0.00,1,1,'2026-11-23 11:23:19','2026-11-23 11:23:19',NULL),
+(3,'Kerala Solar Traders',NULL,'9111111111',NULL,NULL,'Kerala',NULL,1000.00,1,1,'2026-11-23 11:23:45','2026-11-23 11:23:45',NULL);
 /*!40000 ALTER TABLE `suppliers` ENABLE KEYS */;
 UNLOCK TABLES;
 DROP TABLE IF EXISTS `users`;
@@ -1750,17 +1929,17 @@ CREATE TABLE `users` (
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
 INSERT INTO `users` VALUES
-(1,'demo',NULL,NULL,1,'2026-11-23 10:51:36','2026-11-23 10:51:00','2026-11-23 10:51:00',NULL),
-(2,'ravi',NULL,NULL,1,'2026-11-23 10:51:40','2026-11-23 10:51:03','2026-11-23 10:51:27',NULL),
-(3,'suresh',NULL,NULL,1,'2026-11-23 10:51:40','2026-11-23 10:51:04','2026-11-23 10:51:04',NULL),
-(4,'store1',NULL,NULL,1,'2026-11-23 10:51:41','2026-11-23 10:51:04','2026-11-23 10:51:05',NULL),
-(5,'driver1',NULL,NULL,1,'2026-11-23 10:51:41','2026-11-23 10:51:05','2026-11-23 10:51:05',NULL),
-(6,'fitter1',NULL,NULL,1,'2026-11-23 10:51:41','2026-11-23 10:51:05','2026-11-23 10:51:06',NULL),
-(7,'eb1',NULL,NULL,1,'2026-11-23 10:51:33','2026-11-23 10:51:06','2026-11-23 10:51:06',NULL),
-(8,'acct1',NULL,NULL,1,'2026-11-23 10:51:40','2026-11-23 10:51:06','2026-11-23 10:51:07',NULL),
-(9,'service1',NULL,NULL,1,'2026-11-23 10:51:33','2026-11-23 10:51:07','2026-11-23 10:51:07',NULL),
-(10,'mgr',NULL,NULL,1,'2026-11-23 10:51:34','2026-11-23 10:51:07','2026-11-23 10:51:08',NULL),
-(11,'kumar',NULL,NULL,1,'2026-11-23 10:51:34','2026-11-23 10:51:08','2026-11-23 10:51:08',NULL);
+(1,'demo',NULL,NULL,1,'2026-11-23 11:24:05','2026-11-23 11:23:14','2026-11-23 11:23:15',NULL),
+(2,'ravi',NULL,NULL,1,'2026-11-23 11:24:09','2026-11-23 11:23:19','2026-11-23 11:23:44',NULL),
+(3,'suresh',NULL,NULL,1,'2026-11-23 11:24:09','2026-11-23 11:23:19','2026-11-23 11:23:20',NULL),
+(4,'store1',NULL,NULL,1,'2026-11-23 11:24:09','2026-11-23 11:23:20','2026-11-23 11:23:20',NULL),
+(5,'driver1',NULL,NULL,1,'2026-11-23 11:24:10','2026-11-23 11:23:20','2026-11-23 11:23:21',NULL),
+(6,'fitter1',NULL,NULL,1,'2026-11-23 11:24:10','2026-11-23 11:23:21','2026-11-23 11:23:21',NULL),
+(7,'eb1',NULL,NULL,1,'2026-11-23 11:24:02','2026-11-23 11:23:22','2026-11-23 11:23:22',NULL),
+(8,'acct1',NULL,NULL,1,'2026-11-23 11:24:09','2026-11-23 11:23:22','2026-11-23 11:23:23',NULL),
+(9,'service1',NULL,NULL,1,'2026-11-23 11:24:02','2026-11-23 11:23:23','2026-11-23 11:23:23',NULL),
+(10,'mgr',NULL,NULL,1,'2026-11-23 11:24:02','2026-11-23 11:23:23','2026-11-23 11:23:24',NULL),
+(11,'kumar',NULL,NULL,1,'2026-11-23 11:24:02','2026-11-23 11:23:24','2026-11-23 11:23:24',NULL);
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 DROP TABLE IF EXISTS `voucher_entries`;
@@ -1775,7 +1954,7 @@ CREATE TABLE `voucher_entries` (
   PRIMARY KEY (`id`),
   KEY `voucher_id` (`voucher_id`),
   KEY `ledger_id` (`ledger_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=113 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=119 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 LOCK TABLES `voucher_entries` WRITE;
@@ -1832,29 +2011,29 @@ INSERT INTO `voucher_entries` VALUES
 (61,21,24,0.00,2500.00),
 (64,23,10,10000.00,0.00),
 (65,23,21,0.00,10000.00),
-(90,32,25,582400.00,0.00),
-(91,32,12,0.00,520000.00),
-(92,32,13,0.00,31200.00),
-(93,32,14,0.00,31200.00),
-(94,33,10,100000.00,0.00),
-(95,33,25,0.00,100000.00),
-(96,34,26,207200.00,0.00),
-(97,34,12,0.00,185000.00),
-(98,34,13,0.00,11100.00),
-(99,34,14,0.00,11100.00),
-(100,35,10,25000.00,0.00),
-(101,35,26,0.00,25000.00),
-(102,36,27,196000.00,0.00),
-(103,36,12,0.00,175000.00),
-(104,36,16,0.00,21000.00),
-(105,37,10,90000.00,0.00),
-(106,37,27,0.00,90000.00),
-(107,38,28,212800.00,0.00),
-(108,38,12,0.00,190000.00),
-(109,38,13,0.00,11400.00),
-(110,38,14,0.00,11400.00),
-(111,39,10,190000.00,0.00),
-(112,39,28,0.00,190000.00);
+(96,33,26,582400.00,0.00),
+(97,33,12,0.00,520000.00),
+(98,33,13,0.00,31200.00),
+(99,33,14,0.00,31200.00),
+(100,34,10,100000.00,0.00),
+(101,34,26,0.00,100000.00),
+(102,35,27,207200.00,0.00),
+(103,35,12,0.00,185000.00),
+(104,35,13,0.00,11100.00),
+(105,35,14,0.00,11100.00),
+(106,36,10,25000.00,0.00),
+(107,36,27,0.00,25000.00),
+(108,37,28,196000.00,0.00),
+(109,37,12,0.00,175000.00),
+(110,37,16,0.00,21000.00),
+(111,38,10,90000.00,0.00),
+(112,38,28,0.00,90000.00),
+(113,39,29,212800.00,0.00),
+(114,39,12,0.00,190000.00),
+(115,39,13,0.00,11400.00),
+(116,39,14,0.00,11400.00),
+(117,40,10,190000.00,0.00),
+(118,40,29,0.00,190000.00);
 /*!40000 ALTER TABLE `voucher_entries` ENABLE KEYS */;
 UNLOCK TABLES;
 DROP TABLE IF EXISTS `vouchers`;
@@ -1874,39 +2053,39 @@ CREATE TABLE `vouchers` (
   PRIMARY KEY (`id`),
   KEY `voucher_type_voucher_date` (`voucher_type`,`voucher_date`),
   KEY `ref_type_ref_id` (`ref_type`,`ref_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=40 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=41 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 LOCK TABLES `vouchers` WRITE;
 /*!40000 ALTER TABLE `vouchers` DISABLE KEYS */;
 INSERT INTO `vouchers` VALUES
-(1,'Purchase','PUR/2026-27/0001','2026-11-23','Supplier invoice ABC-101 dt. 23-11-2026','purchase',1,380970.00,4,'2026-11-23 10:51:12'),
-(2,'Purchase','PUR/2026-27/0002','2026-11-23','Supplier invoice ABC-102 dt. 23-11-2026','purchase',2,161280.00,4,'2026-11-23 10:51:12'),
-(3,'Purchase','PUR/2026-27/0003','2026-11-23','Supplier invoice BLR-77 dt. 23-11-2026','purchase',3,85120.00,4,'2026-11-23 10:51:12'),
-(4,'Debit Note','PRN/2026-27/0001','2026-11-23','Purchase return: Cracked glass','purchase_return',1,20160.00,4,'2026-11-23 10:51:12'),
-(5,'Payment','SPAY/2026-27/0001','2026-11-23','BANK UTR9001','supplier_payment',1,300000.00,8,'2026-11-23 10:51:13'),
-(6,'Payment','SPAY/2026-27/0002','2026-11-23','BANK UTR9002','supplier_payment',2,85120.00,8,'2026-11-23 10:51:13'),
-(7,'Sales','INV/2026-27/0001','2026-11-23','Invoice INV/2026-27/0001 – Murugan S – 3 kW','invoice',1,201600.00,2,'2026-11-23 10:51:13'),
-(8,'Sales','INV/2026-27/0002','2026-11-23','Invoice INV/2026-27/0002 – KMC School – 5 kW','invoice',2,198320.00,2,'2026-11-23 10:51:14'),
-(11,'Receipt','RCT/2026-27/0001','2026-11-23','Against INV/2026-27/0001 UPI UPI1001','payment',1,20000.00,8,'2026-11-23 10:51:16'),
-(12,'Receipt','RCT/2026-27/0002','2026-11-23','Against INV/2026-27/0002 LOAN SBI-DISB-1','payment',2,50000.00,8,'2026-11-23 10:51:17'),
-(13,'Receipt','RCT/2026-27/0003','2026-11-23','Against INV/2026-27/0002 LOAN SBI-DISB-2','payment',3,50000.00,8,'2026-11-23 10:51:17'),
-(14,'Receipt','RCT/2026-27/0004','2026-11-23','Against INV/2026-27/0002 LOAN SBI-DISB-3','payment',4,30000.00,8,'2026-11-23 10:51:17'),
-(15,'Receipt','RCT/2026-27/0005','2026-11-23','Against INV/2026-27/0002 LOAN SBI-DISB-4','payment',5,20000.00,8,'2026-11-23 10:51:17'),
-(16,'Receipt','RCT/2026-27/0006','2026-11-23','Against INV/2026-27/0002 CHEQUE CHQ556677','payment',6,48320.00,8,'2026-11-23 10:51:17'),
-(17,'Receipt','RCT/2026-27/0007','2026-11-23','Against INV/2026-27/0001 BANK NEFT77','payment',7,181600.00,8,'2026-11-23 10:51:22'),
-(18,'Payment','EXP/2026-27/0001','2026-11-23','Indian Oil Van diesel','expense',1,1500.00,8,'2026-11-23 10:51:25'),
-(19,'Payment','EXP/2026-27/0002','2026-11-23','Staff Salary','expense',2,45000.00,8,'2026-11-23 10:51:25'),
-(21,'Receipt','INC/2026-27/0001','2026-11-23','Scrap dealer','income',1,2500.00,8,'2026-11-23 10:51:25'),
-(23,'Contra','JV/2026-27/0001','2026-11-23','Cash deposited','manual',NULL,10000.00,8,'2026-11-23 10:51:28'),
-(32,'Sales','INV/2026-27/0005','2026-11-23','Invoice INV/2026-27/0005 – Lakshmi Textiles – 10 kW','invoice',6,582400.00,2,'2026-11-23 10:51:39'),
-(33,'Receipt','RCT/2026-27/0008','2026-11-23','Against INV/2026-27/0005 UPI UPI369','payment',10,100000.00,8,'2026-11-23 10:51:39'),
-(34,'Sales','INV/2026-27/0006','2026-11-23','Invoice INV/2026-27/0006 – Imported One – 3 kW','invoice',7,207200.00,2,'2026-11-23 10:51:39'),
-(35,'Receipt','RCT/2026-27/0009','2026-11-23','Against INV/2026-27/0006 UPI UPI21447','payment',11,25000.00,8,'2026-11-23 10:51:39'),
-(36,'Sales','INV/2026-27/0007','2026-11-23','Invoice INV/2026-27/0007 – Imported Two Pvt Ltd – 3 kW','invoice',8,196000.00,2,'2026-11-23 10:51:40'),
-(37,'Receipt','RCT/2026-27/0010','2026-11-23','Against INV/2026-27/0007 UPI UPI2343','payment',12,90000.00,8,'2026-11-23 10:51:40'),
-(38,'Sales','INV/2026-27/0008','2026-11-23','Invoice INV/2026-27/0008 – Karthik Ramasamy – 3 kW','invoice',9,212800.00,2,'2026-11-23 10:51:40'),
-(39,'Receipt','RCT/2026-27/0011','2026-11-23','Against INV/2026-27/0008 UPI UPI14626','payment',13,190000.00,8,'2026-11-23 10:51:40');
+(1,'Purchase','PUR/2026-27/0001','2026-11-23','Supplier invoice ABC-101 dt. 23-11-2026','purchase',1,380970.00,4,'2026-11-23 11:23:28'),
+(2,'Purchase','PUR/2026-27/0002','2026-11-23','Supplier invoice ABC-102 dt. 23-11-2026','purchase',2,161280.00,4,'2026-11-23 11:23:28'),
+(3,'Purchase','PUR/2026-27/0003','2026-11-23','Supplier invoice BLR-77 dt. 23-11-2026','purchase',3,85120.00,4,'2026-11-23 11:23:28'),
+(4,'Debit Note','PRN/2026-27/0001','2026-11-23','Purchase return: Cracked glass','purchase_return',1,20160.00,4,'2026-11-23 11:23:28'),
+(5,'Payment','SPAY/2026-27/0001','2026-11-23','BANK UTR9001','supplier_payment',1,300000.00,8,'2026-11-23 11:23:28'),
+(6,'Payment','SPAY/2026-27/0002','2026-11-23','BANK UTR9002','supplier_payment',2,85120.00,8,'2026-11-23 11:23:28'),
+(7,'Sales','INV/2026-27/0001','2026-11-23','Invoice INV/2026-27/0001 – Murugan S – 3 kW','invoice',1,201600.00,2,'2026-11-23 11:23:29'),
+(8,'Sales','INV/2026-27/0002','2026-11-23','Invoice INV/2026-27/0002 – KMC School – 5 kW','invoice',2,198320.00,2,'2026-11-23 11:23:30'),
+(11,'Receipt','RCT/2026-27/0001','2026-11-23','Against INV/2026-27/0001 UPI UPI1001','payment',1,20000.00,8,'2026-11-23 11:23:32'),
+(12,'Receipt','RCT/2026-27/0002','2026-11-23','Against INV/2026-27/0002 LOAN SBI-DISB-1','payment',2,50000.00,8,'2026-11-23 11:23:33'),
+(13,'Receipt','RCT/2026-27/0003','2026-11-23','Against INV/2026-27/0002 LOAN SBI-DISB-2','payment',3,50000.00,8,'2026-11-23 11:23:33'),
+(14,'Receipt','RCT/2026-27/0004','2026-11-23','Against INV/2026-27/0002 LOAN SBI-DISB-3','payment',4,30000.00,8,'2026-11-23 11:23:33'),
+(15,'Receipt','RCT/2026-27/0005','2026-11-23','Against INV/2026-27/0002 LOAN SBI-DISB-4','payment',5,20000.00,8,'2026-11-23 11:23:33'),
+(16,'Receipt','RCT/2026-27/0006','2026-11-23','Against INV/2026-27/0002 CHEQUE CHQ556677','payment',6,48320.00,8,'2026-11-23 11:23:33'),
+(17,'Receipt','RCT/2026-27/0007','2026-11-23','Against INV/2026-27/0001 BANK NEFT77','payment',7,181600.00,8,'2026-11-23 11:23:38'),
+(18,'Payment','EXP/2026-27/0001','2026-11-23','Indian Oil Van diesel','expense',1,1500.00,8,'2026-11-23 11:23:41'),
+(19,'Payment','EXP/2026-27/0002','2026-11-23','Staff Salary','expense',2,45000.00,8,'2026-11-23 11:23:42'),
+(21,'Receipt','INC/2026-27/0001','2026-11-23','Scrap dealer','income',1,2500.00,8,'2026-11-23 11:23:42'),
+(23,'Contra','JV/2026-27/0001','2026-11-23','Cash deposited','manual',NULL,10000.00,8,'2026-11-23 11:23:44'),
+(33,'Sales','INV/2026-27/0005','2026-11-23','Invoice INV/2026-27/0005 – Sri Murugan Spinning Mills – 10 kW','invoice',7,582400.00,2,'2026-11-23 11:24:08'),
+(34,'Receipt','RCT/2026-27/0008','2026-11-23','Against INV/2026-27/0005 UPI UPI19062','payment',10,100000.00,8,'2026-11-23 11:24:08'),
+(35,'Sales','INV/2026-27/0006','2026-11-23','Invoice INV/2026-27/0006 – Priya Natarajan – 3 kW','invoice',8,207200.00,2,'2026-11-23 11:24:08'),
+(36,'Receipt','RCT/2026-27/0009','2026-11-23','Against INV/2026-27/0006 UPI UPI9144','payment',11,25000.00,8,'2026-11-23 11:24:08'),
+(37,'Sales','INV/2026-27/0007','2026-11-23','Invoice INV/2026-27/0007 – Annai Foods Pvt Ltd – 3 kW','invoice',9,196000.00,2,'2026-11-23 11:24:08'),
+(38,'Receipt','RCT/2026-27/0010','2026-11-23','Against INV/2026-27/0007 UPI UPI3710','payment',12,90000.00,8,'2026-11-23 11:24:08'),
+(39,'Sales','INV/2026-27/0008','2026-11-23','Invoice INV/2026-27/0008 – Karthik Ramasamy – 3 kW','invoice',10,212800.00,2,'2026-11-23 11:24:09'),
+(40,'Receipt','RCT/2026-27/0011','2026-11-23','Against INV/2026-27/0008 UPI UPI5739','payment',13,190000.00,8,'2026-11-23 11:24:09');
 /*!40000 ALTER TABLE `vouchers` ENABLE KEYS */;
 UNLOCK TABLES;
 DROP TABLE IF EXISTS `whatsapp_templates`;

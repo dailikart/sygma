@@ -107,6 +107,6 @@ class Workflow extends BaseConfig
 
     public array $leadSources = [
         'Walk-in', 'Phone call', 'Website', 'Facebook / Instagram', 'IndiaMART',
-        'JustDial', 'Referral', 'Channel partner', 'Exhibition', 'Other',
+        'JustDial', 'Google Ads', 'Referral', 'Channel partner', 'Exhibition', 'Other',
     ];
 }

@@ -170,6 +170,36 @@ class Reports extends AdminController
         ]);
     }
 
+    /** Profit per project: invoice value (before GST) − material dispatched − project expenses − EB charges paid by us. */
+    public function projectProfit()
+    {
+        $this->requirePermission('reports.view');
+        [$from, $to] = fy_range();
+        $db   = db_connect();
+        $b    = $db->table('projects p')
+            ->select('p.id, p.project_no, p.capacity_kw, p.customer_type, p.subsidy_type, p.status, p.current_stage, c.name AS customer, i.invoice_no, i.invoice_date, i.id AS invoice_id')
+            ->join('customers c', 'c.id = p.customer_id')->join('invoices i', 'i.id = p.invoice_id')
+            ->where('i.invoice_date >=', $from)->where('i.invoice_date <=', $to)->where('i.status !=', 'cancelled');
+        if ($t = $this->request->getGet('type')) {
+            $b->where('p.customer_type', $t);
+        }
+        $rows   = $b->orderBy('i.invoice_date', 'DESC')->get()->getResultArray();
+        $profit = \App\Libraries\ProjectProfit::forProjects(array_map('intval', array_column($rows, 'id')));
+        foreach ($rows as &$r) {
+            $r += $profit[(int) $r['id']] ?? ['revenue' => 0, 'material' => 0, 'expenses' => 0, 'eb' => 0, 'cost' => 0, 'profit' => 0, 'margin' => null];
+        }
+        unset($r);
+        if ($this->request->getGet('export') === 'excel') {
+            return $this->excel('Project_Profit', ['Project', 'Invoice', 'Date', 'Customer', 'kW', 'Type', 'Stage', 'Invoice value (before GST)', 'Material', 'Expenses', 'EB charges (paid by us)', 'Total cost', 'Profit', 'Margin %', 'Profit per kW'], array_map(static fn ($r) => [
+                $r['project_no'], $r['invoice_no'], fdate($r['invoice_date']), $r['customer'], (float) $r['capacity_kw'], strtoupper($r['customer_type']),
+                \App\Libraries\Workflow::stageTitle((string) $r['current_stage']), $r['revenue'], $r['material'], $r['expenses'], $r['eb'], $r['cost'], $r['profit'],
+                $r['margin'] ?? '', (float) $r['capacity_kw'] > 0 ? round($r['profit'] / (float) $r['capacity_kw'], 2) : '',
+            ], $rows));
+        }
+
+        return $this->render('reports/project_profit', ['rows' => $rows, 'from' => $from, 'to' => $to]);
+    }
+
     /** Customers / invoices by payment mode (cash or bank loan) with loan disbursement status. */
     public function finance()
     {

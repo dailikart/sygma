@@ -27,6 +27,7 @@ class Solar extends BaseConfig
     public string $currency = '₹';
 
     /** Number prefixes. The financial year and a running number are added. */
+    public string $quotePrefix    = 'QT';
     public string $invoicePrefix  = 'INV';
     public string $receiptPrefix  = 'RCT';
     public string $projectPrefix  = 'PRJ';
@@ -39,6 +40,16 @@ class Solar extends BaseConfig
     public string $expensePrefix  = 'EXP';
     public string $journalPrefix  = 'JV';
     public string $amcPrefix      = 'AMC';
+    public string $servicePrefix  = 'SRV';
+
+    // ── Quotation ──
+    /** Days a quotation stays valid. */
+    public int $quoteValidDays = 15;
+    /** Average units generated per kW per day (used for savings / payback). */
+    public string $quoteUnitsPerKw = '4';
+    /** Electricity tariff (₹ per unit) used for savings. */
+    public string $quoteTariff = '6.50';
+    public string $quoteTerms = "1. Prices include supply, installation and commissioning.\n2. 50% advance with order, balance before dispatch.\n3. Subsidy is credited by the government directly to the customer's bank account.\n4. Panel warranty as per manufacturer; system warranty 5 years.";
 
     /** Days before an AMC visit to remind the customer and service team. */
     public int $amcReminderDays = 3;
@@ -68,6 +79,33 @@ class Solar extends BaseConfig
     public string $whatsappVendorUid   = '';
     public string $whatsappApiToken    = '';
     public string $whatsappFromPhoneId = '';
+
+    // ── IndiaMART lead import ──
+    public bool $indiamartEnabled = false;
+    /** CRM key from IndiaMART seller panel → Lead Manager → CRM integration (Pull API). */
+    public string $indiamartKey = '';
+    public string $indiamartApiUrl = 'https://mapi.indiamart.com/wservce/crm/crmListing/v2/';
+    /** Secret part of the Push API address (made automatically). */
+    public string $indiamartPushToken = '';
+    public string $indiamartLastPull = '';
+    public string $indiamartLastCall = '';
+    public string $indiamartLastResult = '';
+
+    // ── Meta (Facebook / Instagram) Lead Ads ──
+    public bool $metaEnabled = false;
+    /** Page access token (long-lived) used to read each lead's details. */
+    public string $metaPageToken = '';
+    /** App secret, to check that calls really come from Meta. */
+    public string $metaAppSecret = '';
+    public string $metaVerifyToken = '';
+    public string $metaGraphUrl = 'https://graph.facebook.com/v19.0/';
+    public string $metaLastResult = '';
+
+    // ── Google Ads lead form ──
+    public bool $googleEnabled = false;
+    /** The "key" typed into Google Ads → lead form → webhook (made automatically). */
+    public string $googleKey = '';
+    public string $googleLastResult = '';
 
     // ── Tally ledger names (must match the ledgers in your Tally company) ──
     public string $tallySalesLedger    = 'Sales';

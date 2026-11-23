@@ -22,6 +22,9 @@ class Leads extends AdminController
         if ($this->request->getGet('due')) {
             $b->where('next_followup_date <=', date('Y-m-d'));
         }
+        if ($src = $this->request->getGet('source')) {
+            $b->where('source', (string) $src);
+        }
         if ($a = $this->request->getGet('assigned')) {
             $b->where('assigned_to', (int) $a);
         }

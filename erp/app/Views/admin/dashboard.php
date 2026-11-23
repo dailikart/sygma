@@ -14,6 +14,9 @@
         <?= $card('Collected this month', money($collectedMonth), 'bi-cash', 'admin/payments', 'success') ?>
         <?= $card('Receivable', money($receivable), 'bi-hourglass-split', 'admin/invoices?status=unpaid', 'warning') ?>
     <?php endif ?>
+    <?php if (isset($openComplaints)): ?>
+        <?= $card('Open complaints', $openComplaints . ($urgentComplaints ? ' <small class="fs-6 text-danger">' . $urgentComplaints . ' urgent / unassigned</small>' : ''), 'bi-tools', 'admin/service', $urgentComplaints ? 'danger' : 'warning') ?>
+    <?php endif ?>
     <?php if (isset($onHold)): ?>
         <?= $card('Projects on hold', $onHold, 'bi-pause-circle', 'admin/projects?status=on_hold', 'warning') ?>
     <?php endif ?>

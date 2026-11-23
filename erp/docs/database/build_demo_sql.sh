@@ -51,17 +51,13 @@ UPDATE settings SET value = '0' WHERE class LIKE '%Solar' AND \`key\` = 'smtpEna
 UPDATE settings SET value = ''  WHERE class LIKE '%Solar' AND \`key\` IN ('smtpHost', 'smtpPass', 'smtpUser', 'logoPath', 'signaturePath');
 UPDATE settings SET value = 'solar' WHERE class LIKE '%Solar' AND \`key\` = 'theme';
 
--- Test-only names → realistic demo names.
-UPDATE customers SET name = 'Priya Natarajan', city = 'Salem' WHERE name = 'Imported One';
-UPDATE customers SET name = 'Annai Foods Pvt Ltd', company = 'Annai Foods Pvt Ltd' WHERE name = 'Imported Two Pvt Ltd';
-UPDATE customers SET name = 'Senthil Kumar' WHERE name = 'Delete Me';
-UPDATE suppliers SET name = 'Kerala Solar Traders' WHERE name = 'Imported Supplier';
-UPDATE items SET name = 'Earthing Kit', sku = 'EARTH' WHERE name = 'Ledger Clear Test';
-UPDATE items SET name = 'Poly Panel 330W (discontinued)', sku = 'PNL330' WHERE name = 'Delete Test Panel';
+-- Lead integrations (IndiaMART / Meta / Google) off, no test keys or tokens.
+DELETE FROM settings WHERE \`key\` REGEXP '^(indiamart|meta|google)';
 
--- Emails in business data.
-UPDATE customers SET email = REPLACE(REPLACE(email, '@e2e.test', '@example.com'), '@kmc.test', '@example.com') WHERE email IS NOT NULL;
-UPDATE leads     SET email = REPLACE(REPLACE(email, '@e2e.test', '@example.com'), '@kmc.test', '@example.com') WHERE email IS NOT NULL;
+-- Item codes of test-only items (names are replaced in the dump below).
+UPDATE items SET sku = 'EARTH'  WHERE name = 'Ledger Clear Test';
+UPDATE items SET sku = 'PNL330' WHERE name = 'Delete Test Panel';
+UPDATE customers SET company = 'Annai Foods Pvt Ltd' WHERE name = 'Imported Two Pvt Ltd';
 
 -- Logs and queues from the test run.
 TRUNCATE activity_log;
@@ -107,7 +103,21 @@ cat <<'HDR'
 -- ============================================================================
 
 HDR
-mysqldump -u"$DBUSER" -p"$DBPASS" --no-tablespaces --skip-comments --skip-dump-date "$TMP" | grep -v '^/\*M!999999'
+# Test-only names and emails → demo values, in every table at once (customers,
+# leads, quotations, ledgers, voucher narrations, notifications...).
+mysqldump -u"$DBUSER" -p"$DBPASS" --no-tablespaces --skip-comments --skip-dump-date "$TMP" | grep -v '^/\*M!999999' | sed \
+  -e 's/Imported Two Pvt Ltd/Annai Foods Pvt Ltd/g' \
+  -e 's/Imported One/Priya Natarajan/g' \
+  -e 's/Imported Supplier/Kerala Solar Traders/g' \
+  -e 's/Delete Me/Ganesh P/g' \
+  -e 's/Quote Lead Kumar/Vignesh Kumar/g' \
+  -e 's/Facebook lead 999000999/Kavya Murali/g' \
+  -e 's/Senthil Kumar (Google test lead)/Mohan Raj/g' \
+  -e 's/Ledger Clear Test/Earthing Kit/g' \
+  -e 's/Delete Test Panel/Poly Panel 330W (discontinued)/g' \
+  -e 's/qlead@e2e\.test/vignesh.k@example.com/g' \
+  -e "s/GA-test-2/GA-20931/g; s/GA-TeSter-123/GA-20877/g; s/'search test'/'Opening stock'/g" \
+  -e 's/@e2e\.test/@example.com/g; s/@kmc\.test/@example.com/g; s/@lakshmitex\.test/@example.com/g; s/@sunpower\.test/@example.com/g'
 } > "$OUT"
 
 my -e "DROP DATABASE $TMP;"

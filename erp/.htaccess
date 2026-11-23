@@ -1,0 +1,23 @@
+# Used when the ERP is uploaded inside the web root, e.g. Hostinger
+# public_html/erp/ next to the Sygma Solar Suite website (index.html). Sends every request into public/ and
+# blocks direct access to the code, uploads, logs and .env.
+# If your host lets you point the domain at the public/ folder, do that
+# instead; then this file is never used.
+
+Options -Indexes
+ServerSignature Off
+
+<FilesMatch "^(\.env|env|composer\.(json|lock)|spark|phpunit\.dist\.xml|preload\.php)$">
+    Require all denied
+</FilesMatch>
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # Block the application folders.
+    RewriteRule ^(\.git|app|vendor|writable|tests|builds|docs)(/|$) - [F,L]
+
+    # Everything else is served from public/ (works at / or in a subfolder such as /erp/).
+    RewriteCond %{REQUEST_URI} !/public/
+    RewriteRule ^(.*)$ public/$1 [L]
+</IfModule>

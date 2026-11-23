@@ -2,9 +2,11 @@
 
 Marketing landing page for **Sygma Solar Suite**, an all-in-one software platform for solar businesses: CRM, AI rooftop design, proposals, project management, procurement & inventory, O&M, plant monitoring and finance/billing.
 
-Plain HTML/CSS/JS — no build step, no dependencies (fonts from Google Fonts).
+The website is plain HTML/CSS/JS (no build step). The ERP behind **Log in** and
+**Live demo** is in [`erp/`](erp/) (CodeIgniter 4, PHP 8.2+, MySQL).
 
 ```
+erp/                  # the ERP, served at /erp/  → setup: erp/docs/DEMO_SETUP.md
 index.html            # page markup
 assets/css/style.css  # styles (responsive 320px → desktop, reduced-motion aware)
 assets/js/main.js     # menus, animations, calculator, carousel, forms
@@ -26,6 +28,16 @@ python3 -m http.server 8080
 ```
 
 Then open http://localhost:8080 (or just open `index.html` directly).
+
+## Live demo / login
+
+- **Log in** (header, footer) → `erp/login`
+- **Open live demo** (announcement bar), **Explore the live demo** (hero), **Try the live demo now** (demo section),
+  **Live demo** (footer) → `erp/login?demo=1`, which fills in `demo@sygmasolar.com` / `Demo@12345`.
+- Demo database: `erp/docs/database/sygma_demo.sql`. Full steps (database, `.env`, nightly reset cron):
+  [erp/docs/DEMO_SETUP.md](erp/docs/DEMO_SETUP.md).
+
+Upload the whole repo to `public_html`: the website is served at `/` and the ERP at `/erp/`.
 
 ## Before going live
 

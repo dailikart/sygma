@@ -3,6 +3,8 @@
 <?= $this->section('content') ?>
 <div class="d-flex flex-wrap gap-2 mb-3">
     <?php if (can('customers.manage')): ?><a href="<?= site_url('admin/customers/' . $c['id'] . '/edit') ?>" class="btn btn-outline-primary">Edit</a><?php endif ?>
+    <?php if (can('amc.manage') || can('customers.manage')): ?><a href="<?= site_url('admin/service/new?customer=' . $c['id']) ?>" class="btn btn-outline-danger"><i class="bi bi-tools"></i> Complaint</a><?php endif ?>
+    <?php if (can('quotations.manage')): ?><a href="<?= site_url('admin/quotations/new?customer=' . $c['id']) ?>" class="btn btn-outline-primary"><i class="bi bi-file-earmark-text"></i> Quotation</a><?php endif ?>
     <?php if (can('invoices.manage')): ?><a href="<?= site_url('admin/invoices/new?customer=' . $c['id']) ?>" class="btn btn-primary"><i class="bi bi-receipt"></i> Create Invoice</a><?php endif ?>
     <?php if (can('entries.delete')): ?><form method="post" action="<?= site_url('admin/customers/' . $c['id'] . '/delete') ?>" class="ms-auto"><?= csrf_field() ?><button class="btn btn-outline-danger" data-confirm="Delete customer <?= esc($c['name']) ?>? Only possible when they have no invoices."><i class="bi bi-trash"></i> Delete customer</button></form><?php endif ?>
 </div>

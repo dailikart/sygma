@@ -1,7 +1,7 @@
 -- ============================================================================
--- Solar CRM – full database (MySQL 8 / MariaDB 10.6+)  · updated 2026-11-22
+-- Solar CRM – full database (MySQL 8 / MariaDB 10.6+)  · updated 2026-11-23
 --
--- All tables from every migration up to 2026-11-22-100000 (55 tables),
+-- All tables from every migration up to 2026-11-23-130000 (59 tables),
 -- the default document types, and the first Super Admin login.
 --
 -- !! ONLY FOR A NEW, EMPTY DATABASE !!
@@ -535,6 +535,7 @@ CREATE TABLE `leads` (
   `address` text DEFAULT NULL,
   `city` varchar(100) DEFAULT NULL,
   `source` varchar(60) DEFAULT NULL,
+  `external_ref` varchar(60) DEFAULT NULL,
   `customer_type` varchar(3) NOT NULL DEFAULT 'b2c',
   `required_kw` decimal(12,2) NOT NULL DEFAULT 0.00,
   `monthly_bill` decimal(14,2) NOT NULL DEFAULT 0.00,
@@ -552,7 +553,8 @@ CREATE TABLE `leads` (
   KEY `status` (`status`),
   KEY `assigned_to` (`assigned_to`),
   KEY `next_followup_date` (`next_followup_date`),
-  KEY `phone` (`phone`)
+  KEY `phone` (`phone`),
+  KEY `leads_external_ref` (`external_ref`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -722,12 +724,15 @@ CREATE TABLE `projects` (
   `site_address` text DEFAULT NULL,
   `current_stage` varchar(30) DEFAULT NULL,
   `status` varchar(12) NOT NULL DEFAULT 'active',
+  `status_token` varchar(40) DEFAULT NULL,
+  `status_viewed_at` datetime DEFAULT NULL,
   `completed_at` datetime DEFAULT NULL,
   `created_by` int(10) unsigned DEFAULT NULL,
   `created_at` datetime DEFAULT NULL,
   `updated_at` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `project_no` (`project_no`),
+  UNIQUE KEY `projects_status_token` (`status_token`),
   KEY `customer_id` (`customer_id`),
   KEY `status` (`status`),
   KEY `current_stage` (`current_stage`)
@@ -880,6 +885,119 @@ CREATE TABLE `queue_jobs_failed` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8mb4 */;
+CREATE TABLE `quotation_items` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `quotation_id` int(10) unsigned NOT NULL,
+  `item_id` int(10) unsigned DEFAULT NULL,
+  `description` varchar(255) NOT NULL,
+  `hsn` varchar(20) DEFAULT NULL,
+  `qty` decimal(12,2) NOT NULL DEFAULT 0.00,
+  `rate` decimal(14,2) NOT NULL DEFAULT 0.00,
+  `tax_percent` decimal(5,2) NOT NULL DEFAULT 0.00,
+  `tax_amount` decimal(14,2) NOT NULL DEFAULT 0.00,
+  `amount` decimal(14,2) NOT NULL DEFAULT 0.00,
+  PRIMARY KEY (`id`),
+  KEY `quotation_id` (`quotation_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8mb4 */;
+CREATE TABLE `quotations` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `quote_no` varchar(30) NOT NULL,
+  `lead_id` int(10) unsigned DEFAULT NULL,
+  `customer_id` int(10) unsigned DEFAULT NULL,
+  `party_name` varchar(150) NOT NULL,
+  `party_phone` varchar(20) DEFAULT NULL,
+  `party_email` varchar(150) DEFAULT NULL,
+  `party_address` text DEFAULT NULL,
+  `party_city` varchar(100) DEFAULT NULL,
+  `party_state` varchar(100) DEFAULT NULL,
+  `customer_type` varchar(3) NOT NULL DEFAULT 'b2c',
+  `quote_date` date NOT NULL,
+  `valid_until` date DEFAULT NULL,
+  `subsidy_type` varchar(12) NOT NULL DEFAULT 'subsidy',
+  `installation_type_id` int(10) unsigned DEFAULT NULL,
+  `capacity_kw` decimal(12,2) NOT NULL DEFAULT 0.00,
+  `kit_id` int(10) unsigned DEFAULT NULL,
+  `gst_type` varchar(6) NOT NULL DEFAULT 'intra',
+  `print_format` varchar(12) NOT NULL DEFAULT 'cumulative',
+  `subtotal` decimal(14,2) NOT NULL DEFAULT 0.00,
+  `tax_total` decimal(14,2) NOT NULL DEFAULT 0.00,
+  `total` decimal(14,2) NOT NULL DEFAULT 0.00,
+  `subsidy_amount` decimal(14,2) NOT NULL DEFAULT 0.00,
+  `eb_charges_by` varchar(10) DEFAULT NULL,
+  `eb_charges_amount` decimal(12,2) DEFAULT NULL,
+  `units_per_kw_day` decimal(5,2) NOT NULL DEFAULT 4.00,
+  `tariff` decimal(6,2) NOT NULL DEFAULT 0.00,
+  `design_path` varchar(255) DEFAULT NULL,
+  `notes` text DEFAULT NULL,
+  `status` varchar(12) NOT NULL DEFAULT 'draft',
+  `share_token` varchar(40) DEFAULT NULL,
+  `invoice_id` int(10) unsigned DEFAULT NULL,
+  `sent_at` datetime DEFAULT NULL,
+  `viewed_at` datetime DEFAULT NULL,
+  `created_by` int(10) unsigned DEFAULT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `quote_no` (`quote_no`),
+  UNIQUE KEY `share_token` (`share_token`),
+  KEY `lead_id` (`lead_id`),
+  KEY `customer_id` (`customer_id`),
+  KEY `status` (`status`),
+  KEY `quote_date` (`quote_date`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8mb4 */;
+CREATE TABLE `service_ticket_updates` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `ticket_id` int(10) unsigned NOT NULL,
+  `status` varchar(12) DEFAULT NULL,
+  `note` text DEFAULT NULL,
+  `photo_path` varchar(255) DEFAULT NULL,
+  `created_by` int(10) unsigned DEFAULT NULL,
+  `created_at` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `ticket_id` (`ticket_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8mb4 */;
+CREATE TABLE `service_tickets` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `ticket_no` varchar(30) NOT NULL,
+  `customer_id` int(10) unsigned NOT NULL,
+  `project_id` int(10) unsigned DEFAULT NULL,
+  `category` varchar(30) NOT NULL,
+  `priority` varchar(10) NOT NULL DEFAULT 'normal',
+  `description` text DEFAULT NULL,
+  `reported_via` varchar(15) NOT NULL DEFAULT 'phone',
+  `contact_phone` varchar(20) DEFAULT NULL,
+  `status` varchar(12) NOT NULL DEFAULT 'open',
+  `assigned_to` int(10) unsigned DEFAULT NULL,
+  `scheduled_date` date DEFAULT NULL,
+  `under_amc` tinyint(1) NOT NULL DEFAULT 0,
+  `chargeable` tinyint(1) NOT NULL DEFAULT 0,
+  `charge_amount` decimal(14,2) NOT NULL DEFAULT 0.00,
+  `resolution` text DEFAULT NULL,
+  `resolved_at` datetime DEFAULT NULL,
+  `resolved_by` int(10) unsigned DEFAULT NULL,
+  `closed_at` datetime DEFAULT NULL,
+  `created_by` int(10) unsigned DEFAULT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `ticket_no` (`ticket_no`),
+  KEY `customer_id` (`customer_id`),
+  KEY `project_id` (`project_id`),
+  KEY `status` (`status`),
+  KEY `assigned_to` (`assigned_to`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `settings` (
   `id` int(9) NOT NULL AUTO_INCREMENT,
   `class` varchar(255) NOT NULL,
@@ -1016,32 +1134,36 @@ CREATE TABLE `whatsapp_templates` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 -- Default document types (customer documents / PCR)
-INSERT INTO `document_types` VALUES (1,'Aadhaar card',1,1,1,NULL,'2026-11-22 16:06:26','2026-11-22 16:06:26');
-INSERT INTO `document_types` VALUES (2,'EB bill',1,2,1,NULL,'2026-11-22 16:06:26','2026-11-22 16:06:26');
-INSERT INTO `document_types` VALUES (3,'Property tax receipt',1,3,1,NULL,'2026-11-22 16:06:26','2026-11-22 16:06:26');
-INSERT INTO `document_types` VALUES (4,'Bank passbook / cancelled cheque',1,4,1,NULL,'2026-11-22 16:06:26','2026-11-22 16:06:26');
-INSERT INTO `document_types` VALUES (5,'Passport size photo',1,5,1,NULL,'2026-11-22 16:06:26','2026-11-22 16:06:26');
-INSERT INTO `document_types` VALUES (6,'PAN card',0,6,1,NULL,'2026-11-22 16:06:26','2026-11-22 16:06:26');
-INSERT INTO `document_types` VALUES (7,'Site photo',0,7,1,NULL,'2026-11-22 16:06:26','2026-11-22 16:06:26');
-INSERT INTO `document_types` VALUES (8,'Signed agreement',0,8,1,NULL,'2026-11-22 16:06:26','2026-11-22 16:06:26');
+INSERT INTO `document_types` VALUES (1,'Aadhaar card',1,1,1,NULL,'2026-11-23 10:27:12','2026-11-23 10:27:12');
+INSERT INTO `document_types` VALUES (2,'EB bill',1,2,1,NULL,'2026-11-23 10:27:12','2026-11-23 10:27:12');
+INSERT INTO `document_types` VALUES (3,'Property tax receipt',1,3,1,NULL,'2026-11-23 10:27:12','2026-11-23 10:27:12');
+INSERT INTO `document_types` VALUES (4,'Bank passbook / cancelled cheque',1,4,1,NULL,'2026-11-23 10:27:12','2026-11-23 10:27:12');
+INSERT INTO `document_types` VALUES (5,'Passport size photo',1,5,1,NULL,'2026-11-23 10:27:12','2026-11-23 10:27:12');
+INSERT INTO `document_types` VALUES (6,'PAN card',0,6,1,NULL,'2026-11-23 10:27:12','2026-11-23 10:27:12');
+INSERT INTO `document_types` VALUES (7,'Site photo',0,7,1,NULL,'2026-11-23 10:27:12','2026-11-23 10:27:12');
+INSERT INTO `document_types` VALUES (8,'Signed agreement',0,8,1,NULL,'2026-11-23 10:27:12','2026-11-23 10:27:12');
 
 -- Migration history (so CodeIgniter knows the tables exist)
-INSERT INTO `migrations` VALUES (1,'2020-12-28-223112','CodeIgniter\\Shield\\Database\\Migrations\\CreateAuthTables','default','CodeIgniter\\Shield',1795343786,1);
-INSERT INTO `migrations` VALUES (2,'2021-07-04-041948','CodeIgniter\\Settings\\Database\\Migrations\\CreateSettingsTable','default','CodeIgniter\\Settings',1795343786,1);
-INSERT INTO `migrations` VALUES (3,'2021-11-14-143905','CodeIgniter\\Settings\\Database\\Migrations\\AddContextColumn','default','CodeIgniter\\Settings',1795343786,1);
-INSERT INTO `migrations` VALUES (4,'2023-10-12-112040','CodeIgniter\\Queue\\Database\\Migrations\\AddQueueTables','default','CodeIgniter\\Queue',1795343786,1);
-INSERT INTO `migrations` VALUES (5,'2023-11-05-064053','CodeIgniter\\Queue\\Database\\Migrations\\AddPriorityField','default','CodeIgniter\\Queue',1795343786,1);
-INSERT INTO `migrations` VALUES (6,'2024-12-27-110712','CodeIgniter\\Queue\\Database\\Migrations\\ChangePayloadFieldTypeInSqlsrv','default','CodeIgniter\\Queue',1795343786,1);
-INSERT INTO `migrations` VALUES (7,'2026-07-20-181246','CodeIgniter\\Settings\\Database\\Migrations\\ConvertSqlsrvValueColumn','default','CodeIgniter\\Settings',1795343786,1);
-INSERT INTO `migrations` VALUES (8,'2026-11-07-100000','App\\Database\\Migrations\\CreateCrmTables','default','App',1795343786,1);
-INSERT INTO `migrations` VALUES (9,'2026-11-07-100100','App\\Database\\Migrations\\CreateInventoryTables','default','App',1795343786,1);
-INSERT INTO `migrations` VALUES (10,'2026-11-07-100200','App\\Database\\Migrations\\CreateAccountsTables','default','App',1795343786,1);
-INSERT INTO `migrations` VALUES (11,'2026-11-07-100300','App\\Database\\Migrations\\CreateProjectTables','default','App',1795343786,1);
-INSERT INTO `migrations` VALUES (12,'2026-11-07-100400','App\\Database\\Migrations\\CreateServiceLedgerTables','default','App',1795343786,1);
-INSERT INTO `migrations` VALUES (13,'2026-11-08-100000','App\\Database\\Migrations\\ClientChangesBatch2','default','App',1795343786,1);
-INSERT INTO `migrations` VALUES (14,'2026-11-08-110000','App\\Database\\Migrations\\DeliveryNoteFields','default','App',1795343786,1);
-INSERT INTO `migrations` VALUES (15,'2026-11-20-100000','App\\Database\\Migrations\\EbChargesPaidBy','default','App',1795343786,1);
-INSERT INTO `migrations` VALUES (16,'2026-11-22-100000','App\\Database\\Migrations\\EntriesPermissions','default','App',1795343786,1);
+INSERT INTO `migrations` VALUES (1,'2020-12-28-223112','CodeIgniter\\Shield\\Database\\Migrations\\CreateAuthTables','default','CodeIgniter\\Shield',1795409832,1);
+INSERT INTO `migrations` VALUES (2,'2021-07-04-041948','CodeIgniter\\Settings\\Database\\Migrations\\CreateSettingsTable','default','CodeIgniter\\Settings',1795409832,1);
+INSERT INTO `migrations` VALUES (3,'2021-11-14-143905','CodeIgniter\\Settings\\Database\\Migrations\\AddContextColumn','default','CodeIgniter\\Settings',1795409832,1);
+INSERT INTO `migrations` VALUES (4,'2023-10-12-112040','CodeIgniter\\Queue\\Database\\Migrations\\AddQueueTables','default','CodeIgniter\\Queue',1795409832,1);
+INSERT INTO `migrations` VALUES (5,'2023-11-05-064053','CodeIgniter\\Queue\\Database\\Migrations\\AddPriorityField','default','CodeIgniter\\Queue',1795409832,1);
+INSERT INTO `migrations` VALUES (6,'2024-12-27-110712','CodeIgniter\\Queue\\Database\\Migrations\\ChangePayloadFieldTypeInSqlsrv','default','CodeIgniter\\Queue',1795409832,1);
+INSERT INTO `migrations` VALUES (7,'2026-07-20-181246','CodeIgniter\\Settings\\Database\\Migrations\\ConvertSqlsrvValueColumn','default','CodeIgniter\\Settings',1795409832,1);
+INSERT INTO `migrations` VALUES (8,'2026-11-07-100000','App\\Database\\Migrations\\CreateCrmTables','default','App',1795409832,1);
+INSERT INTO `migrations` VALUES (9,'2026-11-07-100100','App\\Database\\Migrations\\CreateInventoryTables','default','App',1795409832,1);
+INSERT INTO `migrations` VALUES (10,'2026-11-07-100200','App\\Database\\Migrations\\CreateAccountsTables','default','App',1795409832,1);
+INSERT INTO `migrations` VALUES (11,'2026-11-07-100300','App\\Database\\Migrations\\CreateProjectTables','default','App',1795409832,1);
+INSERT INTO `migrations` VALUES (12,'2026-11-07-100400','App\\Database\\Migrations\\CreateServiceLedgerTables','default','App',1795409832,1);
+INSERT INTO `migrations` VALUES (13,'2026-11-08-100000','App\\Database\\Migrations\\ClientChangesBatch2','default','App',1795409832,1);
+INSERT INTO `migrations` VALUES (14,'2026-11-08-110000','App\\Database\\Migrations\\DeliveryNoteFields','default','App',1795409832,1);
+INSERT INTO `migrations` VALUES (15,'2026-11-20-100000','App\\Database\\Migrations\\EbChargesPaidBy','default','App',1795409832,1);
+INSERT INTO `migrations` VALUES (16,'2026-11-22-100000','App\\Database\\Migrations\\EntriesPermissions','default','App',1795409832,1);
+INSERT INTO `migrations` VALUES (17,'2026-11-23-100000','App\\Database\\Migrations\\Quotations','default','App',1795409832,1);
+INSERT INTO `migrations` VALUES (18,'2026-11-23-110000','App\\Database\\Migrations\\ProjectStatusLink','default','App',1795409832,1);
+INSERT INTO `migrations` VALUES (19,'2026-11-23-120000','App\\Database\\Migrations\\ServiceTickets','default','App',1795409832,1);
+INSERT INTO `migrations` VALUES (20,'2026-11-23-130000','App\\Database\\Migrations\\LeadExternalRef','default','App',1795409832,1);
 -- First Super Admin login: admin@example.com / Admin@12345  (CHANGE IT after first login)
 INSERT INTO `users` (`id`, `username`, `active`, `created_at`, `updated_at`) VALUES (1, 'admin', 1, NOW(), NOW());
 INSERT INTO `auth_identities` (`user_id`, `type`, `secret`, `secret2`, `force_reset`, `created_at`, `updated_at`)

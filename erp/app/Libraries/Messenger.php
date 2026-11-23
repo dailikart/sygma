@@ -41,7 +41,8 @@ class Messenger
             if (empty($customer['email'])) {
                 $result = 'Customer has no email address – email not sent.';
             } else {
-                $r = Mailer::send($customer['email'], $subject, $body . "\n\nRegards,\n" . setting('Solar.companyName'), $attachments);
+                $track = ! empty($vars['status_link']) ? "\n\nFollow your project: " . $vars['status_link'] : '';
+                $r = Mailer::send($customer['email'], $subject, $body . $track . "\n\nRegards,\n" . setting('Solar.companyName'), $attachments);
                 $result = $r['ok'] ? 'Email sent to ' . $customer['email'] . '.' : 'Email to ' . $customer['email'] . ' FAILED: ' . mb_strimwidth((string) ($r['error'] ?? ''), 0, 450, '…');
                 self::log('email', $customer['email'], $event, ['subject' => $subject], $r);
             }

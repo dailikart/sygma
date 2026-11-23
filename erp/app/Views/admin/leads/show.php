@@ -24,6 +24,7 @@
         </div>
     </div></div>
 
+    <?php if (can('quotations.manage')): ?><a href="<?= site_url('admin/quotations/new?lead=' . $lead['id']) ?>" class="btn btn-outline-primary w-100 mt-3"><i class="bi bi-file-earmark-text"></i> Create quotation for this lead</a><?php endif ?>
     <?php if (! $lead['customer_id'] && can('leads.manage') && can('customers.manage') && $lead['status'] !== 'lost'): ?>
     <form method="post" action="<?= site_url('admin/leads/' . $lead['id'] . '/convert') ?>" class="card card-body mt-3 border-success border">
         <?= csrf_field() ?>

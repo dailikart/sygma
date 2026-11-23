@@ -7,6 +7,20 @@ $routes->addRedirect('/', 'admin');
 
 service('auth')->routes($routes);
 $routes->get('branding/(:segment)', 'Admin\Settings::branding/$1');
+// Install on phone (PWA): manifest and home-screen icons.
+$routes->get('manifest.webmanifest', 'AppManifest::manifest');
+$routes->get('app-icon/(:segment)', 'AppManifest::icon/$1');
+// Quotation link sent to the customer (no login; long random token).
+$routes->get('quote/(:segment)', 'PublicQuote::show/$1');
+// Customer's project status page (no login; long random token).
+$routes->get('track/(:segment)', 'PublicStatus::show/$1');
+$routes->post('track/(:segment)/complaint', 'PublicStatus::complaint/$1');
+// IndiaMART Push API (IndiaMART posts each new enquiry here; secret token in the address).
+$routes->post('indiamart/push/(:segment)', 'IndiaMartPush::receive/$1');
+// Meta Lead Ads and Google Ads lead-form webhooks.
+$routes->get('webhooks/meta', 'LeadWebhooks::metaVerify');
+$routes->post('webhooks/meta', 'LeadWebhooks::meta');
+$routes->post('webhooks/google', 'LeadWebhooks::google');
 
 // Admin area: every route here requires login. Module permissions are checked
 // inside each controller (see AdminController::requirePermission).
@@ -38,6 +52,7 @@ $routes->group('admin', ['filter' => 'session', 'namespace' => 'App\Controllers\
     $routes->get('user-log', 'UserLog::index');
     $routes->get('maintenance', 'Maintenance::index');
     $routes->post('maintenance/migrate', 'Maintenance::migrate');
+    $routes->post('indiamart/pull', 'IndiaMartAdmin::pull');
 
     // User manual (every logged-in user).
     $routes->get('manual', 'Manual::index');
@@ -79,6 +94,19 @@ $routes->group('admin', ['filter' => 'session', 'namespace' => 'App\Controllers\
     $routes->post('documents/(:num)/delete', 'Documents::delete/$1');
 
     // Sales
+    $routes->get('quotations', 'Quotations::index');
+    $routes->get('quotations/new', 'Quotations::create');
+    $routes->post('quotations', 'Quotations::store');
+    $routes->get('quotations/(:num)', 'Quotations::show/$1');
+    $routes->get('quotations/(:num)/edit', 'Quotations::edit/$1');
+    $routes->post('quotations/(:num)/update', 'Quotations::update/$1');
+    $routes->post('quotations/(:num)/delete', 'Quotations::delete/$1');
+    $routes->post('quotations/(:num)/status', 'Quotations::status/$1');
+    $routes->get('quotations/(:num)/pdf', 'Quotations::pdf/$1');
+    $routes->get('quotations/(:num)/design', 'Quotations::design/$1');
+    $routes->post('quotations/(:num)/email', 'Quotations::email/$1');
+    $routes->get('quotations/(:num)/whatsapp', 'Quotations::whatsapp/$1');
+    $routes->post('quotations/(:num)/convert', 'Quotations::convert/$1');
     $routes->get('invoices', 'Invoices::index');
     $routes->get('invoices/new', 'Invoices::create');
     $routes->post('invoices', 'Invoices::store');
@@ -95,6 +123,8 @@ $routes->group('admin', ['filter' => 'session', 'namespace' => 'App\Controllers\
     $routes->post('customers/(:num)/delete', 'Customers::delete/$1');
     $routes->post('items/(:num)/delete', 'Items::delete/$1');
     $routes->post('projects/(:num)/delete', 'Projects::delete/$1');
+    $routes->get('projects/(:num)/status-link/whatsapp', 'Projects::statusWhatsapp/$1');
+    $routes->post('projects/(:num)/status-link/reset', 'Projects::statusReset/$1');
     $routes->post('invoices/(:num)/finance', 'Invoices::finance/$1');
     $routes->post('invoices/(:num)/eb-charges', 'Invoices::ebCharges/$1');
     $routes->post('invoices/(:num)/tranches', 'Invoices::tranches/$1');
@@ -128,6 +158,16 @@ $routes->group('admin', ['filter' => 'session', 'namespace' => 'App\Controllers\
     $routes->get('amc/contracts/(:num)', 'Amc::contract/$1');
     $routes->post('amc/visits/(:num)/assign', 'Amc::assign/$1');
     $routes->post('amc/visits/(:num)/complete', 'Amc::complete/$1');
+    $routes->get('service', 'ServiceTickets::index');
+    $routes->get('service/new', 'ServiceTickets::create');
+    $routes->post('service', 'ServiceTickets::store');
+    $routes->get('service/(:num)', 'ServiceTickets::show/$1');
+    $routes->post('service/(:num)/assign', 'ServiceTickets::assign/$1');
+    $routes->post('service/(:num)/update', 'ServiceTickets::update/$1');
+    $routes->post('service/(:num)/resolve', 'ServiceTickets::resolve/$1');
+    $routes->post('service/(:num)/close', 'ServiceTickets::close/$1');
+    $routes->post('service/(:num)/delete', 'ServiceTickets::delete/$1');
+    $routes->get('service/photo/(:num)', 'ServiceTickets::photo/$1');
     $routes->get('amc/visits/(:num)/photo', 'Amc::photo/$1');
 
     // Inventory
@@ -181,6 +221,7 @@ $routes->group('admin', ['filter' => 'session', 'namespace' => 'App\Controllers\
     $routes->get('reports/suppliers', 'Reports::suppliers');
     $routes->get('reports/suppliers/(:num)', 'Reports::supplierLedger/$1');
     $routes->get('reports/projects', 'Reports::projects');
+    $routes->get('reports/project-profit', 'Reports::projectProfit');
     $routes->get('reports/subsidy', 'Reports::subsidy');
     $routes->get('reports/finance', 'Reports::finance');
     $routes->get('accounts/profit-loss', 'Reports::profitLoss');

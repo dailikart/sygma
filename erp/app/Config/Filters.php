@@ -75,7 +75,7 @@ class Filters extends BaseFilters
     public array $globals = [
         'before' => [
             // 'honeypot',
-            'csrf',
+            'csrf' => ['except' => ['indiamart/push/*', 'webhooks/*']], // IndiaMART server cannot send a form token; the secret address protects it
             // 'invalidchars',
         ],
         'after' => [

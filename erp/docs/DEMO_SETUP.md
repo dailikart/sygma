@@ -47,8 +47,11 @@ Website buttons: **Log in** → `erp/login`, **Open / Explore / Try the live dem
 Leads (open, interested, lost, converted), B2B and B2C customers with KYC documents,
 6 invoices (subsidy / non-subsidy, CGST+SGST and IGST, bank loan with disbursements),
 part and full payments, 2 completed projects and 4 active ones at **survey, dispatch,
-installation and DCR**, purchases, purchase return, supplier payments, stock in two
-locations, AMC contracts with visits, income / expense entries and the full ledger.
+installation and DCR**, quotations / proposals (with share link), service complaints,
+customer status-page links, leads from IndiaMART / Facebook / Google Ads, purchases,
+purchase return, supplier payments, stock in two locations, AMC contracts with visits,
+income / expense entries and the full ledger. The IndiaMART / Meta / Google
+integrations are switched off in the demo (no keys).
 
 ## 2. `erp/.env`
 
@@ -74,9 +77,9 @@ and make `erp/writable/` writable. Everything else (PHP version, extensions) is 
 
 - The sign-in page shows the demo email / password and a **Use demo login** button.
 - A "Live demo" banner is shown inside the ERP.
-- Visitors can try everything (leads, invoices, payments, projects, stock, AMC, reports),
-  but **profile/password, users, roles, settings, WhatsApp templates, bulk import and
-  database updates are view-only**, so nobody can lock the demo or change server settings.
+- Visitors can try everything (leads, quotations, invoices, payments, projects, service
+  complaints, stock, AMC, reports), but **profile/password, users, roles, settings,
+  WhatsApp templates, IndiaMART fetch, bulk import and database updates are view-only**, so nobody can lock the demo or change server settings.
 - Nightly reset to the original data, so visitors' changes disappear:
 
   ```bash
@@ -106,5 +109,5 @@ docs/database/demo_extra.sh
 docs/database/build_demo_sql.sh
 ```
 
-The first runs the whole app end to end (283 checks), the second adds open leads and
+The first runs the whole app end to end (397 checks), the second adds open leads and
 active projects, the third cleans test values and writes `sygma_demo.sql` + `demo_uploads/`.

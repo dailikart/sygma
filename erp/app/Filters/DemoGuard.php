@@ -11,14 +11,15 @@ use CodeIgniter\HTTP\ResponseInterface;
  *
  * Visitors share the published demo logins, so changes that would lock other
  * visitors out or touch the server are refused: passwords, users, roles,
- * settings (SMTP / WhatsApp keys), database updates and bulk imports.
+ * settings (SMTP / WhatsApp / lead-integration keys), IndiaMART fetch,
+ * database updates and bulk imports.
  * Everything else (leads, invoices, projects, stock...) works normally and is
  * wiped by the nightly `php spark demo:reset`.
  */
 class DemoGuard implements FilterInterface
 {
     /** URI prefixes (after admin/) that are read-only in the demo. */
-    private const LOCKED = ['profile', 'users', 'roles', 'settings', 'maintenance', 'import', 'whatsapp-templates'];
+    private const LOCKED = ['profile', 'users', 'roles', 'settings', 'maintenance', 'import', 'whatsapp-templates', 'indiamart'];
 
     public static function enabled(): bool
     {

@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title><?= strip_tags($this->renderSection('title', true)) ?: 'Sygma Solar Suite' ?> | <?= esc(setting('Solar.companyName')) ?></title>
     <?= view('partials_favicon') ?>
+    <?= view('partials_pwa') ?>
     <link href="<?= base_url("assets/vendor/bootstrap/css/bootstrap.min.css") ?>" rel="stylesheet">
     <link href="<?= base_url("assets/vendor/bootstrap-icons/bootstrap-icons.min.css") ?>" rel="stylesheet">
     <link href="<?= base_url('assets/css/app.css') ?>" rel="stylesheet">
@@ -37,6 +38,7 @@
                     <ul class="dropdown-menu dropdown-menu-end">
                         <li><span class="dropdown-item-text small text-muted"><?= esc(implode(', ', auth()->user()->getGroups())) ?></span></li>
                         <li><a class="dropdown-item" href="<?= site_url('admin/profile') ?>">Change password</a></li>
+                        <li><a class="dropdown-item" href="#" data-install-app><i class="bi bi-phone"></i> Install app on this device</a></li>
                         <li><a class="dropdown-item" href="<?= url_to('logout') ?>">Logout</a></li>
                     </ul>
                 </div>
@@ -65,6 +67,7 @@
 </div>
 <script src="<?= base_url("assets/vendor/bootstrap/js/bootstrap.bundle.min.js") ?>"></script>
 <script src="<?= base_url('assets/js/app.js') ?>"></script>
+<script src="<?= base_url('assets/js/searchable-select.js') ?>"></script>
 <?= $this->renderSection('scripts') ?>
 </body>
 </html>

@@ -15,10 +15,10 @@ class Settings extends AdminController
                 'purple' => 'Royal purple', 'crimson' => 'Crimson', 'teal' => 'Teal', 'solar' => 'Solar amber']],
         ],
         'Numbering' => [
-            'invoicePrefix' => 'Invoice', 'receiptPrefix' => 'Receipt', 'projectPrefix' => 'Project',
+            'quotePrefix' => 'Quotation', 'invoicePrefix' => 'Invoice', 'receiptPrefix' => 'Receipt', 'projectPrefix' => 'Project',
             'poPrefix' => 'Purchase order', 'purchasePrefix' => 'Purchase', 'returnPrefix' => 'Purchase return',
             'dispatchPrefix' => 'Dispatch', 'supplierPayPrefix' => 'Supplier payment', 'incomePrefix' => 'Income',
-            'expensePrefix' => 'Expense', 'journalPrefix' => 'Journal / contra', 'amcPrefix' => 'AMC contract',
+            'expensePrefix' => 'Expense', 'journalPrefix' => 'Journal / contra', 'amcPrefix' => 'AMC contract', 'servicePrefix' => 'Service complaint',
         ],
         'Email (SMTP)' => [
             'smtpEnabled' => ['Send email through this SMTP server', 'bool'],
@@ -28,6 +28,24 @@ class Settings extends AdminController
             'smtpPass' => ['SMTP password (Gmail: an App Password, not your Gmail password)', 'password'], 'mailFromEmail' => 'From email (usually same as username)',
             'mailFromName' => 'From name (e.g. your company name)',
             'emailUseQueue' => ['Send staff notification emails through the queue (needs the cron job)', 'bool'],
+        ],
+        'Quotation' => [
+            'quoteValidDays' => ['Quotation valid for (days)', 'number'],
+            'quoteUnitsPerKw' => 'Units generated per kW per day (for savings)',
+            'quoteTariff' => 'Electricity tariff ₹ per unit (for savings)',
+            'quoteTerms' => ['Default terms printed on quotations', 'textarea'],
+        ],
+        'IndiaMART leads' => [
+            'indiamartEnabled' => ['Import IndiaMART enquiries as leads', 'bool'],
+            'indiamartKey'     => ['IndiaMART CRM key (Lead Manager → CRM integration)', 'password'],
+        ],
+        'Meta (Facebook / Instagram) leads' => [
+            'metaEnabled'   => ['Import Facebook / Instagram Lead Ads as leads', 'bool'],
+            'metaPageToken' => ['Page access token (long-lived)', 'password'],
+            'metaAppSecret' => ['App secret (to verify calls from Meta)', 'password'],
+        ],
+        'Google Ads leads' => [
+            'googleEnabled' => ['Import Google Ads lead-form leads', 'bool'],
         ],
         'AMC' => [
             'amcReminderDays' => ['Remind this many days before a service visit', 'number'],
@@ -71,6 +89,7 @@ class Settings extends AdminController
                 $value = match ($type) {
                     'bool'   => (bool) $value,
                     'number' => (int) $value,
+                    'textarea' => trim(str_replace("\r\n", "\n", (string) $value)),
                     default  => trim((string) $value),
                 };
                 if ($value !== setting('Solar.' . $key)) {

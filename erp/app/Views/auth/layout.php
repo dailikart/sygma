@@ -9,6 +9,7 @@ $tagline = (string) (setting('Solar.companyTagline') ?: 'Powering homes with the
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title><?= $this->renderSection('title') ?> | <?= esc($company) ?></title>
     <?= view('partials_favicon') ?>
+    <?= view('partials_pwa') ?>
     <link href="<?= base_url('assets/vendor/bootstrap/css/bootstrap.min.css') ?>" rel="stylesheet">
     <link href="<?= base_url('assets/vendor/bootstrap-icons/bootstrap-icons.min.css') ?>" rel="stylesheet">
     <style>

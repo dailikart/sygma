@@ -13,6 +13,9 @@
                     <?php foreach (['' => '#1f2937', 'ocean' => '#0c4a6e', 'forest' => '#14532d', 'sunset' => '#ea580c', 'purple' => '#7c3aed', 'crimson' => '#e11d48', 'teal' => '#0d9488', 'solar' => '#d97706'] as $t => $c): ?>
                         <span title="<?= esc($def[2][$t]) ?>" style="width:26px;height:26px;border-radius:50%;background:<?= $c ?>;display:inline-block;border:2px solid #fff;box-shadow:0 0 0 1px #ccc"></span>
                     <?php endforeach ?></div><?php endif ?>
+            <?php elseif ($type === 'textarea'): ?>
+                <div class="col-12"><label class="form-label small"><?= esc($label) ?></label>
+                    <textarea name="<?= $key ?>" class="form-control" rows="4"><?= esc((string) $val) ?></textarea></div>
             <?php elseif ($type === 'bool'): ?>
                 <div class="col-12"><div class="form-check form-switch"><input type="hidden" name="<?= $key ?>" value="0">
                     <input class="form-check-input" type="checkbox" name="<?= $key ?>" value="1" id="s_<?= $key ?>" <?= $val ? 'checked' : '' ?>>
@@ -41,6 +44,38 @@
 <?php endforeach ?>
 <button class="btn btn-primary">Save settings</button>
 </form>
+<div class="card card-body mt-3" style="max-width:900px" id="indiamart">
+    <label class="form-label fw-semibold"><i class="bi bi-cloud-download"></i> IndiaMART leads</label>
+    <p class="small mb-2">Two ways to bring IndiaMART enquiries into <strong>Leads</strong> (use either or both; duplicates are skipped):</p>
+    <ol class="small mb-2">
+        <li><strong>Pull (CRM key):</strong> paste the key above and switch on import, then click <em>Fetch now</em>, or let the server do it automatically with this cron job (every 10 minutes):<br><code>/usr/bin/php <?= esc(ROOTPATH) ?>spark indiamart:pull</code></li>
+        <li><strong>Push (instant):</strong> in IndiaMART Lead Manager → CRM integration → Push API, give this address:<br>
+            <div class="input-group input-group-sm mt-1" style="max-width:700px"><input class="form-control" readonly value="<?= esc(\App\Libraries\IndiaMart::pushUrl()) ?>" id="imPush" onclick="this.select()"><button type="button" class="btn btn-outline-secondary" onclick="navigator.clipboard.writeText(document.getElementById('imPush').value)">Copy</button></div></li>
+    </ol>
+    <div class="small text-muted mb-2">Last result: <?= esc((string) setting('Solar.indiamartLastResult') ?: 'nothing imported yet') ?></div>
+    <form method="post" action="<?= site_url('admin/indiamart/pull') ?>"><?= csrf_field() ?><button class="btn btn-sm btn-outline-primary"><i class="bi bi-arrow-repeat"></i> Fetch now</button></form>
+</div>
+<?php $copy = static fn (string $id, string $val) => '<div class="input-group input-group-sm mt-1" style="max-width:700px"><input class="form-control" readonly value="' . esc($val) . '" id="' . $id . '" onclick="this.select()"><button type="button" class="btn btn-outline-secondary" onclick="navigator.clipboard.writeText(document.getElementById(\'' . $id . '\').value)">Copy</button></div>'; ?>
+<div class="card card-body mt-3" style="max-width:900px" id="meta-google">
+    <label class="form-label fw-semibold"><i class="bi bi-facebook"></i> Facebook / Instagram Lead Ads</label>
+    <ol class="small mb-2">
+        <li>In <a href="https://developers.facebook.com/apps" target="_blank" rel="noopener">Meta for Developers</a> create an app (type Business), add <em>Webhooks</em> → <em>Page</em> → subscribe to <strong>leadgen</strong> with:
+            <div class="mt-1">Callback URL</div><?= $copy('metaUrl', site_url('webhooks/meta')) ?>
+            <div class="mt-1">Verify token</div><?= $copy('metaVerify', \App\Libraries\LeadInbox::secret('metaVerifyToken')) ?></li>
+        <li>Connect your Facebook Page to the app and generate a <strong>long-lived Page access token</strong> with <code>leads_retrieval</code> and <code>pages_manage_metadata</code> permissions; paste it above with the app secret, tick <em>Import</em>, Save.</li>
+        <li>Test with Meta's <a href="https://developers.facebook.com/tools/lead-ads-testing" target="_blank" rel="noopener">Lead Ads Testing Tool</a>: the test lead appears in Leads (source Facebook / Instagram).</li>
+    </ol>
+    <div class="small text-muted mb-3">Last result: <?= esc((string) setting('Solar.metaLastResult') ?: 'nothing received yet') ?></div>
+    <label class="form-label fw-semibold"><i class="bi bi-google"></i> Google Ads lead forms</label>
+    <ol class="small mb-2">
+        <li>Tick <em>Import Google Ads lead-form leads</em> above and Save.</li>
+        <li>In Google Ads → your lead form asset → <em>Lead delivery</em> → <em>Webhook integration</em>, paste:
+            <div class="mt-1">Webhook URL</div><?= $copy('gUrl', site_url('webhooks/google')) ?>
+            <div class="mt-1">Key</div><?= $copy('gKey', \App\Libraries\LeadInbox::secret('googleKey')) ?></li>
+        <li>Click <em>Send test data</em> in Google Ads: a "(Google test lead)" appears in Leads (source Google Ads).</li>
+    </ol>
+    <div class="small text-muted">Last result: <?= esc((string) setting('Solar.googleLastResult') ?: 'nothing received yet') ?></div>
+</div>
 <form method="post" action="<?= site_url('admin/settings/test-email') ?>" class="card card-body mt-3" style="max-width:900px"><?= csrf_field() ?>
     <label class="form-label fw-semibold">Send a test email</label>
     <div class="d-flex gap-2"><input type="email" name="test_to" class="form-control" placeholder="you@example.com" required value="<?= esc((string) auth()->user()->email) ?>">

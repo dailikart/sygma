@@ -51,6 +51,8 @@ class AuthGroups extends ShieldAuthGroups
         'customers.manage'    => 'Customers: add and edit',
         'documents.upload'    => 'Customer documents: upload (Aadhaar, EB bill… for PCR)',
         // Billing
+        'quotations.view'     => 'Quotations: view',
+        'quotations.manage'   => 'Quotations: create, edit, send, convert to invoice',
         'invoices.view'       => 'Invoices: view',
         'invoices.manage'     => 'Invoices: create and cancel',
         'payments.manage'     => 'Customer payments: record receipts',
@@ -82,19 +84,19 @@ class AuthGroups extends ShieldAuthGroups
 
     public array $matrix = [
         'superadmin' => [
-            'users.*', 'roles.*', 'settings.*', 'entries.*', 'leads.*', 'customers.*', 'invoices.*', 'payments.*',
+            'users.*', 'roles.*', 'settings.*', 'entries.*', 'leads.*', 'customers.*', 'quotations.*', 'invoices.*', 'payments.*',
             'projects.*', 'survey.*', 'dispatch.*', 'delivery.*', 'installation.*', 'eb.*', 'subsidy.*',
             'inventory.*', 'suppliers.*', 'purchases.*', 'accounts.*', 'reports.*', 'tally.*',
             'documents.*', 'amc.*',
         ],
         'admin' => [
-            'users.manage', 'entries.edit', 'entries.delete', 'leads.*', 'customers.*', 'invoices.*', 'payments.*', 'projects.*',
+            'users.manage', 'entries.edit', 'entries.delete', 'leads.*', 'customers.*', 'quotations.*', 'invoices.*', 'payments.*', 'projects.*',
             'survey.*', 'dispatch.*', 'delivery.*', 'installation.*', 'eb.*', 'subsidy.*',
             'inventory.view', 'purchases.view', 'accounts.view', 'reports.*', 'documents.*', 'amc.*',
         ],
-        'marketing' => ['leads.*', 'customers.*', 'documents.upload', 'invoices.*', 'projects.view'],
+        'marketing' => ['leads.*', 'customers.*', 'quotations.*', 'documents.upload', 'invoices.*', 'projects.view'],
         'accounts'  => [
-            'customers.view', 'invoices.view', 'payments.manage', 'projects.view', 'purchases.view',
+            'customers.view', 'quotations.view', 'invoices.view', 'payments.manage', 'projects.view', 'purchases.view',
             'suppliers.manage', 'accounts.*', 'reports.view', 'tally.export',
         ],
         'surveyor'  => ['survey.update'],

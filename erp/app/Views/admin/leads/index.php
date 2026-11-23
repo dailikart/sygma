@@ -5,6 +5,7 @@
     <form class="d-flex gap-2" method="get">
         <input name="q" value="<?= esc(service('request')->getGet('q')) ?>" class="form-control form-control-sm" placeholder="Name, phone, city">
         <select name="status" class="form-select form-select-sm"><?= select_options($statuses, service('request')->getGet('status'), 'Open leads') ?></select>
+        <select name="source" class="form-select form-select-sm"><?php $srcs = config('Workflow')->leadSources; ?><?= select_options(array_combine($srcs, $srcs), service('request')->getGet('source'), 'All sources') ?></select>
         <button class="btn btn-sm btn-outline-secondary">Filter</button>
     </form>
     <a href="<?= site_url('admin/leads?due=1') ?>" class="btn btn-sm btn-outline-danger">Follow-ups due</a>

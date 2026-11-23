@@ -7,7 +7,7 @@
 <h4>Daily entries</h4>
 <ul>
     <li><span class="path">Accounts → Income</span> → New: other income (not customer payments).</li>
-    <li><span class="path">Accounts → Expenses</span> → New: head, account paid from, amount, attach the bill. Link it to a project to track project cost.</li>
+    <li><span class="path">Accounts → Expenses</span> → New: head, account paid from, amount, attach the bill. Link it to a project to track project cost; it then counts in <span class="path">Reports → Project Profit</span>.</li>
     <li><span class="path">Accounts → Supplier Payments</span> → New.</li>
     <li><span class="path">Accounts → Journal / Contra</span>: manual entries with Dr / Cr lines, e.g. cash deposited in the bank (contra) or corrections. <span class="btnname">Save voucher</span> only when Dr = Cr.</li>
 </ul>

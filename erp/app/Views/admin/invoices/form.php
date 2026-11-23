@@ -1,20 +1,11 @@
 <?= $this->extend('admin/layout') ?>
-<?php $inv = $inv ?? null; $val = static fn ($k, $d = '') => old($k, $inv[$k] ?? $d); ?>
+<?php $inv = $inv ?? null; $pre = $pre ?? []; $val = static fn ($k, $d = '') => old($k, $inv[$k] ?? $pre[$k] ?? $d); ?>
 <?= $this->section('title') ?><?= $inv ? 'Edit Invoice ' . esc($inv['invoice_no']) : 'Create Invoice' ?><?= $this->endSection() ?>
 <?= $this->section('content') ?>
-<?php
-$kitJson = [];
-$db = db_connect();
-foreach ($kits as $k) {
-    $ki = $db->table('kit_items ki')->select('ki.item_id, ki.qty, i.sale_price, i.tax_percent, i.hsn')->join('items i', 'i.id = ki.item_id')->where('ki.kit_id', $k['id'])->get()->getResultArray();
-    $value = 0; $byTax = [];
-    foreach ($ki as $r) { $v = (float) $r['qty'] * (float) $r['sale_price']; $value += $v; $byTax[(string) (float) $r['tax_percent']] = ($byTax[(string) (float) $r['tax_percent']] ?? 0) + $v; }
-    arsort($byTax);
-    $kitJson[$k['id']] = ['kw' => (float) $k['capacity_kw'], 'name' => $k['name'], 'value' => round($value, 2), 'tax' => (float) (array_key_first($byTax) ?? 0), 'items' => array_map(static fn ($r) => ['item_id' => $r['item_id'], 'qty' => $r['qty']], $ki)];
-}
-?>
 <?php if ($inv): ?><div class="alert alert-warning small"><i class="bi bi-pencil-square"></i> Editing a saved invoice. Totals, GST, the accounting entries and the project (kW, customer) are updated when you save. Payments stay as they are.</div><?php endif ?>
+<?php if (! empty($pre['quotation_id'])): ?><div class="alert alert-info small"><i class="bi bi-file-earmark-text"></i> Filled from quotation <strong><?= esc($pre['quote_no']) ?></strong>. Check and save; the quotation is marked as converted.</div><?php endif ?>
 <form method="post" action="<?= site_url($inv ? 'admin/invoices/' . $inv['id'] . '/update' : 'admin/invoices') ?>">
+<?php if (! empty($pre['quotation_id'])): ?><input type="hidden" name="quotation_id" value="<?= (int) $pre['quotation_id'] ?>"><?php endif ?>
 <?= csrf_field() ?>
 <div class="card card-body mb-3">
     <div class="mb-2"><span class="badge text-bg-light border fs-6">Invoice no: <?= esc($nextNo) ?></span> <?= $inv ? '' : '<small class="text-muted">(given automatically when you save)</small>' ?></div>
@@ -31,9 +22,9 @@ foreach ($kits as $k) {
             <select name="subsidy_type" class="form-select" required><?= select_options(['subsidy' => 'Subsidy customer (PM Surya Ghar)', 'non_subsidy' => 'Non-subsidy customer'], $val('subsidy_type', 'subsidy')) ?></select></div>
         <div class="col-md-3"><label class="form-label">Installation type</label>
             <select name="installation_type_id" class="form-select"><?= select_options($types, $val('installation_type_id'), '— Select —') ?></select></div>
-        <div class="col-md-3"><label class="form-label">System capacity (kW) *</label><input type="number" step="0.01" min="0.1" name="capacity_kw" id="capacity_kw" class="form-control" required value="<?= esc($inv ? qty($val('capacity_kw')) : old('capacity_kw')) ?>"></div>
+        <div class="col-md-3"><label class="form-label">System capacity (kW) *</label><input type="number" step="0.01" min="0.1" name="capacity_kw" id="capacity_kw" class="form-control" required value="<?= esc(($inv || $pre) && $val('capacity_kw') !== '' ? qty($val('capacity_kw')) : old('capacity_kw')) ?>"></div>
         <div class="col-md-9"><label class="form-label">Kit / item group (decides what the store loads for this project)</label>
-            <div class="input-group"><select id="kit" name="kit_id" class="form-select"><option value="">— Auto (by kW) —</option><?php foreach ($kits as $k): ?><option value="<?= $k['id'] ?>" <?= (string) old('kit_id') === (string) $k['id'] ? 'selected' : '' ?>><?= esc($k['name']) ?> (<?= qty($k['capacity_kw']) ?> kW)</option><?php endforeach ?></select>
+            <div class="input-group"><select id="kit" name="kit_id" class="form-select"><option value="">— Auto (by kW) —</option><?php foreach ($kits as $k): ?><option value="<?= $k['id'] ?>" <?= (string) $val('kit_id') === (string) $k['id'] ? 'selected' : '' ?>><?= esc($k['name']) ?> (<?= qty($k['capacity_kw']) ?> kW)</option><?php endforeach ?></select>
                 <button type="button" class="btn btn-outline-secondary" id="load-kit" title="B2B: list every item of the kit on the invoice">Load items (B2B)</button>
                 <button type="button" class="btn btn-outline-primary" id="load-package" title="B2C: system supply line + installation service line">Fill as B2C package</button></div>
             <div class="form-text">B2B: <strong>Load items</strong> lists every item. B2C: <strong>Fill as B2C package</strong> adds "system supply" + "installation service" lines. Either way the dispatch / delivery note loads the full kit.</div></div>
@@ -83,46 +74,8 @@ foreach ($kits as $k) {
     const cust = document.querySelector('[name=customer_id]'), pf = document.getElementById('print_format');
     cust.addEventListener('change', () => { const t = cust.selectedOptions[0]?.dataset.type; if (t) pf.value = t === 'b2b' ? 'itemwise' : 'cumulative'; });
 })();
-const KITS = <?= json_encode($kitJson) ?>;
-document.getElementById('load-package').addEventListener('click', function () {
-    const kit = KITS[document.getElementById('kit').value];
-    if (!kit) { alert('Choose the kit (system size) first.'); return; }
-    const table = document.getElementById('lines');
-    const typeSel = document.querySelector('[name=installation_type_id]');
-    const type = typeSel && typeSel.value ? typeSel.selectedOptions[0].text + ' ' : '';
-    table.querySelector('tbody').innerHTML = '';
-    const add = function (desc, hsn, rate, tax) {
-        document.querySelector('[data-add-row="#lines"]').click();
-        const tr = table.querySelector('tbody tr:last-child');
-        tr.querySelector('[data-field="description"]').value = desc;
-        tr.querySelector('[data-field="hsn"]').value = hsn;
-        tr.querySelector('[data-field="qty"]').value = 1;
-        tr.querySelector('[data-field="rate"]').value = rate;
-        tr.querySelector('[data-field="tax_percent"]').value = tax;
-    };
-    add('Supply of ' + kit.kw + ' kW ' + type + 'Solar Power System', '8541', kit.value.toFixed(2), kit.tax);
-    add('Installation & commissioning service', '9954', '0.00', 18);
-    const cap = document.getElementById('capacity_kw'); if (!cap.value) cap.value = kit.kw;
-    const pf = document.getElementById('print_format'); if (pf) pf.value = 'cumulative';
-    table.dispatchEvent(new Event('input', {bubbles: true}));
-});
-document.getElementById('load-kit').addEventListener('click', function () {
-    const kit = KITS[document.getElementById('kit').value];
-    if (!kit) return;
-    const table = document.getElementById('lines');
-    table.querySelector('tbody').innerHTML = '';
-    kit.items.forEach(function (ki) {
-        document.querySelector('[data-add-row="#lines"]').click();
-        const tr = table.querySelector('tbody tr:last-child');
-        const sel = tr.querySelector('.item-select');
-        sel.value = ki.item_id; sel.dispatchEvent(new Event('change', {bubbles: true}));
-        tr.querySelector('[data-field="qty"]').value = parseFloat(ki.qty);
-    });
-    const cap = document.getElementById('capacity_kw');
-    if (!cap.value) cap.value = kit.kw;
-    table.dispatchEvent(new Event('input', {bubbles: true}));
-});
 </script>
+<?= view('admin/partials/kit_loader', ['kits' => $kits]) ?>
 <script>
 // EB / meter charges: default from the customer; amount only when the customer pays.
 (function () {

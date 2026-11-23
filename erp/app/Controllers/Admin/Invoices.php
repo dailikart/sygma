@@ -63,8 +63,20 @@ class Invoices extends AdminController
     {
         $this->requirePermission('invoices.manage');
         $customerId = (int) $this->request->getGet('customer');
+        $pre        = [];
+        $rows       = [];
+        if ($qid = (int) $this->request->getGet('quotation')) {
+            $quote = $this->findOr404('quotations', $qid);
+            $customerId = (int) $quote['customer_id'];
+            $pre = ['quotation_id' => $quote['id'], 'quote_no' => $quote['quote_no'], 'subsidy_type' => $quote['subsidy_type'], 'installation_type_id' => $quote['installation_type_id'],
+                'capacity_kw' => $quote['capacity_kw'], 'kit_id' => $quote['kit_id'], 'print_format' => $quote['print_format'],
+                'eb_charges_by' => $quote['eb_charges_by'], 'eb_charges_amount' => $quote['eb_charges_amount']];
+            $rows = db_connect()->table('quotation_items')->where('quotation_id', $quote['id'])->orderBy('id')->get()->getResultArray();
+        }
 
         return $this->render('invoices/form', [
+            'pre'       => $pre,
+            'rows'      => $rows,
             'customers' => db_connect()->table('customers')->select('id, name, type, city, state, eb_charges_by, eb_charges_amount')->where('deleted_at', null)->orderBy('name')->get()->getResultArray(),
             'items'     => db_connect()->table('items')->where(['is_active' => 1, 'deleted_at' => null])->orderBy('name')->get()->getResultArray(),
             'kits'      => db_connect()->table('kits')->where('is_active', 1)->orderBy('capacity_kw')->get()->getResultArray(),
@@ -117,6 +129,9 @@ class Invoices extends AdminController
                 'created_by'   => auth()->id(), 'created_at' => $now, 'updated_at' => $now,
             ]);
             $invoiceId = (int) $db->insertID();
+            if ($qid = (int) ($p['quotation_id'] ?? 0)) {
+                $db->table('quotations')->where('id', $qid)->where('invoice_id', null)->update(['invoice_id' => $invoiceId, 'status' => 'converted', 'customer_id' => $customer['id'], 'updated_at' => $now]);
+            }
             foreach ($lines as $l) {
                 $db->table('invoice_items')->insert([
                     'invoice_id' => $invoiceId, 'item_id' => ($l['item_id'] ?? '') ?: null,

@@ -718,3 +718,6 @@ input[type="range"]::-moz-range-thumb { width: 18px; height: 18px; border-radius
 /* Install-on-phone note (apps section) */
 .install-note { margin-top: 18px; font-size: 15px; color: var(--text); background: var(--bg-alt); border-radius: 12px; padding: 12px 14px; }
 .install-note em { font-style: normal; font-weight: 600; }
+
+/* Spam trap field: hidden from people, filled only by bots */
+.hp-field { position: absolute !important; left: -9999px !important; width: 1px; height: 1px; opacity: 0; }

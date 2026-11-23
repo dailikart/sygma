@@ -324,14 +324,25 @@
   });
   function say(el, cls, text) { el.className = el.className.replace(/\s?(ok|err)\b/g, '') + ' ' + cls; el.textContent = text; }
 
-  /* Hero quick form → prefill and jump to the full demo form */
+  /* Send a form to book-demo.php (emails the team + saves a copy). */
+  function sendForm(form, kind) {
+    var data = new FormData(form);
+    data.append('kind', kind);
+    return fetch('book-demo.php', { method: 'POST', body: data })
+      .then(function (r) { return r.json().catch(function () { return { ok: false }; }); })
+      .catch(function () { return { ok: false }; });
+  }
+  var CALL_US = ' Please call us on +91 75400 96575.';
+
+  /* Hero quick form → send as a callback request, then prefill the full demo form */
   var heroForm = $('#hero-form');
   var demoForm = $('#demo-form');
   heroForm.addEventListener('submit', function (e) {
     e.preventDefault();
     var msg = $('#hero-form-msg');
     if (!validate(heroForm)) { say(msg, 'err', 'Please enter a valid mobile number and email.'); return; }
-    say(msg, 'ok', 'Great! Just a few more details below.');
+    sendForm(heroForm, 'callback');
+    say(msg, 'ok', 'Thanks! We will call you back. Add a few details below to book a demo.');
     demoForm.elements.phone.value = heroForm.elements.phone.value.trim();
     demoForm.elements.email.value = heroForm.elements.email.value.trim();
     demo.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth' });
@@ -343,11 +354,19 @@
     e.preventDefault();
     var msg = $('#form-msg');
     if (!validate(demoForm)) { say(msg, 'err', 'Please fill in the highlighted fields.'); return; }
-    // TODO: send to your backend / CRM, e.g.:
-    // fetch('/demo/request', { method: 'POST', body: new FormData(demoForm) })
-    say(msg, 'ok', 'Thank you! Our team will call you within one business day.');
-    demoForm.reset();
-    heroForm.reset();
+    var btn = $('button[type="submit"]', demoForm);
+    btn.disabled = true;
+    say(msg, 'ok', 'Sending…');
+    sendForm(demoForm, 'demo').then(function (res) {
+      btn.disabled = false;
+      if (res.ok) {
+        say(msg, 'ok', 'Thank you! Our team will call you within one business day.');
+        demoForm.reset();
+        heroForm.reset();
+      } else {
+        say(msg, 'err', (res.error || 'Sorry, your request could not be sent.') + CALL_US);
+      }
+    });
   });
 
   /* Newsletter */
@@ -356,9 +375,13 @@
     e.preventDefault();
     var msg = $('#nl-msg');
     if (!validate(nl)) { msg.textContent = 'Please enter a valid email address.'; return; }
-    // TODO: connect to your email marketing tool.
-    msg.textContent = 'Subscribed! Look out for our next issue.';
-    nl.reset();
+    var emailField = $('input[type="email"]', nl);
+    if (!emailField.name) emailField.name = 'email';
+    msg.textContent = 'Sending…';
+    sendForm(nl, 'newsletter').then(function (res) {
+      msg.textContent = res.ok ? 'Subscribed! Look out for our next issue.' : (res.error || 'Sorry, that did not work.') + CALL_US;
+      if (res.ok) nl.reset();
+    });
   });
 
   /* ---------- Footer year ---------- */

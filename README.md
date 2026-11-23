@@ -45,7 +45,7 @@ Upload the whole repo to `public_html`: the website is served at `/` and the ERP
 ## Before going live
 
 - **Placeholder content**: social links are placeholders — replace with real data.
-- **Forms**: the demo form, hero quick form and newsletter only validate in the browser. Wire them to your backend/CRM at the `TODO` comments in `assets/js/main.js` (e.g. a CodeIgniter controller endpoint).
+- **Forms**: Book a demo, Request a callback and Newsletter post to `book-demo.php`, which emails each request to dailikart@gmail.com (change `NOTIFY_TO` at the top) and saves it to `sygma-requests/requests.csv` next to `public_html` (download it from File Manager; it is not reachable from the web).
 - **Product video**: set `data-src` on `#video-frame` in `index.html` to a YouTube embed URL (`https://www.youtube.com/embed/VIDEO_ID`). Until then a "coming soon" card is shown.
 - **Calculator assumptions** (`assets/js/main.js`): subsidy slabs, 0.82 kg CO₂/kWh grid factor, 0.5%/yr degradation and 3%/yr tariff escalation — adjust to your market.
 - **Brand colours**: CSS variables at the top of `assets/css/style.css`.

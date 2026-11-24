@@ -324,6 +324,13 @@
   });
   function say(el, cls, text) { el.className = el.className.replace(/\s?(ok|err)\b/g, '') + ' ' + cls; el.textContent = text; }
 
+  /* Plain-language list of what still needs fixing in a form. */
+  function whatIsWrong(form) {
+    var labels = { name: 'your full name', company: 'your company name', phone: 'a valid mobile number (e.g. 98765 43210)', email: 'a valid email (e.g. name@company.com)', type: 'your business type' };
+    var missing = Array.prototype.map.call(form.querySelectorAll('.invalid'), function (f) { return labels[f.name] || 'the highlighted field'; });
+    return missing.length ? 'Please enter ' + missing.join(' and ') + '.' : 'Please fill in the highlighted fields.';
+  }
+
   /* Send a form to book-demo.php (emails the team + saves a copy). */
   function sendForm(form, kind) {
     var data = new FormData(form);
@@ -353,7 +360,7 @@
   demoForm.addEventListener('submit', function (e) {
     e.preventDefault();
     var msg = $('#form-msg');
-    if (!validate(demoForm)) { say(msg, 'err', 'Please fill in the highlighted fields.'); return; }
+    if (!validate(demoForm)) { say(msg, 'err', whatIsWrong(demoForm)); return; }
     var btn = $('button[type="submit"]', demoForm);
     btn.disabled = true;
     say(msg, 'ok', 'Sending…');

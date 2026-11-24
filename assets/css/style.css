@@ -89,6 +89,7 @@ button { font: inherit; cursor: pointer; color: inherit; }
 .brand { display: inline-flex; align-items: center; gap: 10px; font-family: var(--font-head); font-weight: 700; font-size: 21px; color: var(--navy); letter-spacing: -.02em; }
 .brand b { font-weight: 800; background: var(--grad); -webkit-background-clip: text; background-clip: text; color: transparent; margin-left: 2px; }
 .brand.light { color: #fff; }
+.brand .wordmark { height: 40px; width: auto; }
 .brand-suite { font-style: normal; font-weight: 600; margin-left: 6px; font-size: .62em; letter-spacing: .08em; text-transform: uppercase; padding: 3px 7px; border-radius: 6px; border: 1.5px solid currentColor; opacity: .85; position: relative; top: -2px; }
 @media (max-width: 360px) { .brand-suite { display: none; } }
 .main-nav { display: flex; align-items: center; gap: 4px; }

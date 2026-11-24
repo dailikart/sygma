@@ -15,7 +15,7 @@ class AppManifest extends BaseController
         helper('app');
         $name  = trim((string) setting('Solar.companyName')) ?: 'Sygma Solar Suite';
         $color = self::THEMES[(string) setting('Solar.theme')] ?? '#1f2937';
-        $v     = substr(md5((string) setting('Solar.logoPath') . $color), 0, 8);
+        $v     = substr(md5((string) setting('Solar.logoPath') . $color . 'sygma-logo-1'), 0, 8);
 
         return $this->response->setHeader('Content-Type', 'application/manifest+json; charset=utf-8')->setHeader('Cache-Control', 'no-cache')
             ->setBody(json_encode([
@@ -41,7 +41,7 @@ class AppManifest extends BaseController
             ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT));
     }
 
-    /** 192.png, 512.png, 512-maskable.png (logo on white, or a sun on the theme colour). */
+    /** 192.png, 512.png, 512-maskable.png: company logo (or the Sygma Solar Suite logo) on white. */
     public function icon(string $file)
     {
         helper('app');
@@ -52,9 +52,10 @@ class AppManifest extends BaseController
         $maskable = ! empty($m[2]);
         $logo     = (string) setting('Solar.logoPath');
         $color    = self::THEMES[(string) setting('Solar.theme')] ?? '#1f2937';
-        $cache    = WRITEPATH . 'cache/app-icon-' . md5($logo . $color . $file) . '.png';
+        $cache    = WRITEPATH . 'cache/app-icon-v2-' . md5($logo . $color . $file) . '.png';
         if (! is_file($cache)) {
-            file_put_contents($cache, $this->draw($size, $maskable, $logo !== '' ? WRITEPATH . 'uploads/' . $logo : '', $color));
+            // Company logo from Settings, else the Sygma Solar Suite logo.
+            file_put_contents($cache, $this->draw($size, $maskable, $logo !== '' ? WRITEPATH . 'uploads/' . $logo : FCPATH . 'logo.png', $color));
         }
 
         return $this->response->setHeader('Content-Type', 'image/png')->setHeader('Cache-Control', 'public, max-age=604800')->setBody(file_get_contents($cache));

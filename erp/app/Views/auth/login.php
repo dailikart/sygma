@@ -6,7 +6,7 @@
 <?php $company = (string) setting('Solar.companyName'); ?>
 <div class="auth-card">
     <div class="d-flex align-items-center gap-3 mb-4">
-        <div class="icon-tile"><i class="bi bi-brightness-high"></i></div>
+        <div class="icon-tile"><img src="<?= base_url('logo-sm.png') ?>" alt="" width="40" height="40"></div>
         <div><h2>Welcome Back</h2><div class="sub">Sign in to <?= esc($company) ?></div></div>
     </div>
 

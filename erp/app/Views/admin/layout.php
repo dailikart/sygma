@@ -15,8 +15,8 @@
     <aside class="sidebar offcanvas-lg offcanvas-start" tabindex="-1" id="sidebar">
         <div class="sidebar-brand d-flex align-items-center justify-content-between">
             <a href="<?= site_url('admin') ?>" class="text-white text-decoration-none fw-bold d-flex align-items-center gap-2">
-                <?php if (setting('Solar.logoPath')): ?><img src="<?= site_url('branding/logo') ?>" alt=""><?php else: ?><i class="bi bi-sun text-warning"></i><?php endif ?>
-                <span class="text-truncate" style="max-width:160px"><?= esc(setting('Solar.logoPath') ? (string) setting('Solar.companyName') : 'Sygma Solar Suite') ?></span></a>
+                <?php if (setting('Solar.logoPath')): ?><img src="<?= site_url('branding/logo') ?>" alt=""><?php else: ?><img src="<?= base_url('logo-sm.png') ?>" alt="" class="brand-mark"><?php endif ?>
+                <?php if (setting('Solar.logoPath')): ?><span class="text-truncate" style="max-width:160px"><?= esc((string) setting('Solar.companyName')) ?></span><?php else: ?><img src="<?= base_url('wordmark-light.png') ?>" alt="Sygma Solar Suite" class="brand-wordmark"><?php endif ?></a>
             <button type="button" class="btn-close btn-close-white d-lg-none" data-bs-dismiss="offcanvas" data-bs-target="#sidebar"></button>
         </div>
         <?= view('admin/partials/menu') ?>

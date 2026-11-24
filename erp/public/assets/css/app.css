@@ -11,6 +11,8 @@ body[data-theme="solar"]   { --sb-bg: #1c1917; --sb-hover: #44403c; --sb-text: #
 .btn-outline-primary { --bs-btn-color: var(--brand); --bs-btn-border-color: var(--brand); --bs-btn-hover-bg: var(--brand); --bs-btn-hover-border-color: var(--brand); --bs-btn-active-bg: var(--brand-dark); }
 a { color: var(--brand); } .text-primary { color: var(--brand) !important; } .border-primary { border-color: var(--brand) !important; }
 .sidebar-brand img { max-height: 34px; max-width: 150px; background: #fff; border-radius: 4px; padding: 2px; }
+.sidebar-brand img.brand-mark { background: none; padding: 0; height: 34px; width: 34px; }
+.sidebar-brand img.brand-wordmark { background: none; padding: 0; height: 30px; width: auto; max-width: 150px; }
 body { background: var(--page-bg); font-size: .925rem; }
 .sidebar { width: var(--sidebar-w); min-height: 100vh; background: var(--sb-bg) !important; color: var(--sb-text); }
 @media (min-width: 992px) { .sidebar { position: sticky; top: 0; height: 100vh; overflow-y: auto; flex-shrink: 0; } }

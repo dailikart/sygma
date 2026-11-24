@@ -48,6 +48,8 @@ $tagline = (string) (setting('Solar.companyTagline') ?: 'Powering homes with the
         .brand-logo { width: min(300px, 70vw); aspect-ratio: 1; margin: 0 auto 1.2rem; border-radius: 6px; display: flex; align-items: center; justify-content: center;
             background: linear-gradient(145deg, #fde68a, #f59e0b); box-shadow: 0 18px 40px rgba(180, 110, 0, .25); overflow: hidden; }
         .brand-logo img { width: 100%; height: 100%; object-fit: contain; background: #fff; }
+        .brand-logo:has(.brand-mark) { background: #fff; }
+        .brand-logo img.brand-mark { padding: 8%; }
         .brand-logo .bi { font-size: 7rem; color: #fff; text-shadow: 0 4px 18px rgba(170, 90, 0, .45); }
         .brand h1 { font-weight: 800; font-size: clamp(1.8rem, 3.4vw, 2.6rem); color: var(--sun-teal); margin: 0; }
         .brand .tag { text-transform: uppercase; letter-spacing: .22em; font-weight: 700; color: var(--sun-amber); font-size: clamp(.75rem, 1.2vw, .95rem); margin: .5rem 0 1rem; }
@@ -83,7 +85,7 @@ $tagline = (string) (setting('Solar.companyTagline') ?: 'Powering homes with the
         <div class="container">
             <div class="row align-items-center g-4">
                 <div class="col-lg-6 brand">
-                    <div class="brand-logo"><?php if (setting('Solar.logoPath')): ?><img src="<?= site_url('branding/logo') ?>" alt="<?= esc($company) ?>"><?php else: ?><i class="bi bi-sun-fill"></i><?php endif ?></div>
+                    <div class="brand-logo"><?php if (setting('Solar.logoPath')): ?><img src="<?= site_url('branding/logo') ?>" alt="<?= esc($company) ?>"><?php else: ?><img src="<?= base_url('logo.png') ?>" alt="Sygma Solar Suite" class="brand-mark"><?php endif ?></div>
                     <h1><?= esc($company) ?></h1>
                     <div class="tag"><?= esc($tagline) ?></div>
                     <p>Complete solar project management, from enquiry to subsidy.</p>

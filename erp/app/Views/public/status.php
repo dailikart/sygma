@@ -60,7 +60,7 @@ $due = $invoice ? round((float) $invoice['total'] - (float) $invoice['amount_pai
 <body>
 <div class="wrap">
     <div class="brand">
-        <?php if (setting('Solar.logoPath')): ?><img src="<?= site_url('branding/logo') ?>" alt=""><?php else: ?><div class="logo-fallback"><i class="bi bi-sun-fill"></i></div><?php endif ?>
+        <?php if (setting('Solar.logoPath')): ?><img src="<?= site_url('branding/logo') ?>" alt=""><?php else: ?><img src="<?= base_url('logo-sm.png') ?>" alt=""><?php endif ?>
         <div><h1><?= esc($company) ?></h1><div class="small-note">Your solar project status</div></div>
     </div>
 

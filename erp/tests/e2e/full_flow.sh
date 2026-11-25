@@ -162,6 +162,8 @@ has "IGST input ledger posted" "$(q "select group_concat(l.name) from voucher_en
 post "$S" "admin/purchase-returns/new?purchase=1" admin/purchase-returns -F supplier_id=1 -F purchase_id=1 -F location_id=1 -F doc_date="$D" \
   -F 'items[0][item_id]=1' -F 'items[0][qty]=2' -F 'items[0][rate]=9000' -F 'items[0][tax_percent]=12' -F notes="Cracked glass" >/dev/null
 eq "stock after purchases & return (panels/inv3/inv5/str/cable/battery)" "$(q "select group_concat(s order by item_id) from (select item_id, sum(qty)+0 s from stock_movements group by item_id) x")" "38,3,2,6,300,10"
+eq "lots: each purchase is a lot with its supplier bill and PO; the return took from its own bill" "$(q "select group_concat(concat(bill_no,':',ifnull(po_no,'-'),':',qty_in+0,'/',qty_left+0) order by id) from stock_lots where item_id=1")" "ABC-101:PO/$(php -r 'echo (date("n")>=4?date("Y"):date("Y")-1)."-".substr((date("n")>=4?date("Y"):date("Y")-1)+1,2);')/0001:24/22,ABC-102:PO/$(php -r 'echo (date("n")>=4?date("Y"):date("Y")-1)."-".substr((date("n")>=4?date("Y"):date("Y")-1)+1,2);')/0001:16/16"
+has "purchase page shows where its stock went" "$(curl -s -b "$S" "$B/admin/purchases/1")" "Where this stock went"
 r=$(post "$S" "admin/purchase-returns/new?purchase=1" admin/purchase-returns -F supplier_id=1 -F location_id=1 -F doc_date="$D" -F 'items[0][item_id]=1' -F 'items[0][qty]=5' -F 'items[0][rate]=9000' -F 'items[0][tax_percent]=12')
 has "return without a purchase is refused" "$(flash "$S" "admin/purchase-returns/new?purchase=1")" "Choose the purchase"
 has "new return first asks which purchase" "$(curl -s -b "$S" "$B/admin/purchase-returns/new")" "ABC-101"
@@ -280,6 +282,10 @@ eq "delivery note details saved" "$(q "select concat(dispatched_through,'/',dest
 eq "delivery note PDF" "$(curl -s -b "$S" -o "$W/dn.pdf" -w '%{content_type}' "$B/admin/dispatches/$DSP1/delivery-note") $(head -c4 "$W/dn.pdf")" "application/pdf %PDF"
 r=$(post "$S" admin/dispatches/$DSP1 admin/dispatches/$DSP1/delete); has "dispatched load cannot be deleted" "$(flash "$S" admin/dispatches/$DSP1)" "Only a draft"
 eq "stock out + in transit" "$(q "select sum(qty)+0 from stock_movements where item_id=1")|$(q "select status from dispatches where id=$DSP1")" "32|dispatched"
+eq "dispatch took the 6 panels from the oldest lot (FIFO)" "$(q "select group_concat(concat(l.bill_no,':',lm.qty+0)) from stock_lot_moves lm join stock_lots l on l.id=lm.lot_id join stock_movements m on m.id=lm.movement_id where m.ref_type='dispatch' and m.ref_id=$DSP1 and l.item_id=1")" "ABC-101:6"
+has "dispatch page shows which purchase bill the stock came from" "$(curl -s -b "$S" "$B/admin/dispatches/$DSP1")" "ABC-101"
+LP=$(curl -s -b "$S" "$B/admin/stock/item/1/lots"); has "item lots page: bill, PO and where it went" "$LP" "ABC-102"; has "…with the dispatch" "$LP" "$(q "select dispatch_no from dispatches where id=$DSP1")"
+has "stock ageing report lists open lots" "$(curl -s -b "$S" "$B/admin/stock/lots")" "ABC-101"
 post "$W/driver1" admin/dispatches/$DSP1 admin/dispatches/$DSP1/deliver -F delivery_note=x >/dev/null; has "delivery needs a photo" "$(flash "$W/driver1" admin/dispatches/$DSP1)" "photo"
 post "$W/driver1" admin/dispatches/$DSP1 admin/dispatches/$DSP1/deliver -F "photo=@$W/photo.jpg" -F delivery_note="Received by Murugan" >/dev/null
 eq "delivered → installation active, installer notified" "$(q "select current_stage from projects where id=1")|$(q "select count(*) from notifications n join users u on u.id=n.user_id where u.username='fitter1'")" "installation|2"
@@ -656,7 +662,7 @@ has "lead form offers Google Ads as a source" "$(curl -s -b "$M" "$B/admin/leads
 
 # ── project profit ─────────────────────────────────────────────────────────
 section "Project profit report"
-EXP_P1=$(q "select round(i.subtotal - ifnull((select sum(di.qty * ifnull((select sum(pi.qty*pi.rate)/sum(pi.qty) from purchase_items pi where pi.item_id=di.item_id), it.purchase_price)) from dispatch_items di join dispatches d on d.id=di.dispatch_id join items it on it.id=di.item_id where d.project_id=p.id and d.status in ('dispatched','delivered')),0) - ifnull((select sum(amount) from expenses where project_id=p.id),0), 2) from projects p join invoices i on i.id=p.invoice_id where p.id=1")
+EXP_P1=$(q "select round(i.subtotal - ifnull((select sum(lm.qty * l.rate) from stock_lot_moves lm join stock_lots l on l.id=lm.lot_id join stock_movements m on m.id=lm.movement_id join dispatches d on d.id=m.ref_id and m.ref_type='dispatch' where d.project_id=p.id),0) - ifnull((select sum(amount) from expenses where project_id=p.id),0), 2) from projects p join invoices i on i.id=p.invoice_id where p.id=1")
 PR=$(curl -s -b "$A" "$B/admin/reports/project-profit?from=2000-01-01&to=$D")
 has "report lists project 1" "$PR" "admin/projects/1\""
 has "project 1 profit = invoice before GST − material − expenses (₹$EXP_P1)" "$PR" "$(q "select format($EXP_P1,2,'en_IN')")"
@@ -750,6 +756,17 @@ r=$(post "$A" admin/items admin/items/1/delete); has "item with stock cannot be 
 post "$A" admin/items admin/items/$DI/delete >/dev/null
 eq "item with zero stock deleted (hidden, history kept)" "$(q "select concat(deleted_at is not null,'/',is_active) from items where id=$DI")" "1/0"
 eq "books still balance after purchase deletes" "$(q "select round(sum(debit)-sum(credit),2)+0 from voucher_entries")" "0"
+# lots: a purchase whose stock was already used cannot be deleted even if other stock covers the quantity
+post "$A" admin/purchases/new admin/purchases -F supplier_id=1 -F doc_date="$D" -F bill_no=LOT-1 -F location_id=1 -F 'items[0][item_id]=6' -F 'items[0][qty]=10' -F 'items[0][rate]=50' -F 'items[0][tax_percent]=18' >/dev/null; LP1=$(q "select max(id) from purchases")
+post "$A" admin/purchases/new admin/purchases -F supplier_id=1 -F doc_date="$D" -F bill_no=LOT-2 -F location_id=1 -F 'items[0][item_id]=6' -F 'items[0][qty]=10' -F 'items[0][rate]=60' -F 'items[0][tax_percent]=18' >/dev/null; LP2=$(q "select max(id) from purchases")
+OLDLEFT=$(q "select sum(qty_left)+0 from stock_lots where item_id=6 and location_id=1 and id < (select min(id) from stock_lots where purchase_id=$LP1)")
+post "$A" admin/stock/adjust admin/stock/adjust -F location_id=1 -F type=adjustment -F note="Damaged" -F 'items[0][item_id]=6' -F "items[0][qty]=-$(php -r 'echo (float)$argv[1]+3;' "$OLDLEFT")" >/dev/null
+eq "adjustment used old stock first, then 3 of LOT-1" "$(q "select concat(qty_left+0) from stock_lots where purchase_id=$LP1")|$(q "select qty_left+0 from stock_lots where purchase_id=$LP2")" "7|10"
+r=$(post "$A" admin/purchases/$LP1 admin/purchases/$LP1/delete); has "purchase whose lot is used cannot be deleted" "$(flash "$A" admin/purchases/$LP1)" "already used in a stock adjustment"
+eq "…nothing changed" "$(q "select count(*) from purchases where id=$LP1")|$(q "select qty_left+0 from stock_lots where purchase_id=$LP1")" "1|7"
+post "$A" admin/purchases/$LP2 admin/purchases/$LP2/delete >/dev/null
+eq "unused purchase deleted with its lot" "$(q "select count(*) from stock_lots where purchase_id=$LP2")" "0"
+eq "lots match the stock ledger for every item and store" "$(q "select count(*) from (select m.item_id, m.location_id, sum(m.qty) s from stock_movements m group by m.item_id, m.location_id) b left join (select item_id, location_id, sum(qty_left) l from stock_lots group by item_id, location_id) x on x.item_id=b.item_id and x.location_id=b.location_id where abs(b.s - ifnull(x.l,0)) > 0.001")" "0"
 eq "accounts user cannot delete purchases (permission)" "$(post "$W/acct1" admin/expenses/new admin/purchases/1/delete | cut -d' ' -f1)" "403"
 eq "…and the purchase is still there" "$(q "select count(*) from purchases where id=1")" "1"
 
@@ -837,7 +854,7 @@ section "Every admin page loads for the Super Admin"
 PAGES="admin admin/designs admin/designs/new admin/tasks admin/notifications admin/profile admin/users admin/users/new admin/roles admin/settings admin/user-log admin/message-log admin/whatsapp-templates
 admin/leads admin/leads/1 admin/leads/new admin/customers admin/customers/1 admin/customers/2 admin/invoices admin/invoices/1 admin/invoices/2 admin/invoices/new admin/payments
 admin/projects admin/projects/1 admin/projects/2 admin/dispatches admin/dispatches/2 admin/amc admin/amc-plans admin/amc/contracts/1
-admin/stock admin/stock/item/1 admin/stock/adjust admin/items admin/items/new admin/items/1/edit admin/kits admin/kits/1/edit admin/installation-types admin/item-categories admin/locations
+admin/stock admin/stock/item/1 admin/stock/item/1/lots admin/stock/lots admin/stock/adjust admin/items admin/items/new admin/items/1/edit admin/kits admin/kits/1/edit admin/installation-types admin/item-categories admin/locations
 admin/suppliers admin/purchase-orders admin/purchase-orders/1 admin/purchase-orders/new admin/purchases admin/purchases/1 admin/purchases/new admin/purchase-returns admin/purchase-returns/1
 admin/incomes admin/incomes/new admin/expenses admin/expenses/new admin/supplier-payments admin/income-heads admin/expense-heads admin/bank-accounts admin/ledgers
 admin/accounts/day-book admin/accounts/trial-balance admin/accounts/journal admin/reports/income-expense admin/reports/usage admin/reports/suppliers admin/reports/projects

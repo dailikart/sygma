@@ -30,6 +30,7 @@ class Stock extends AdminController
             'locId'      => $locId,
             'inStockOnly' => (bool) $this->request->getGet('instock'),
             'balances'   => StockLib::balances(),
+            'fifoValue'  => \App\Libraries\Lots::valueByItem($locId ?: null),
             'transit'    => StockLib::inTransit(),
             'categories' => options('item_categories'),
         ]);
@@ -44,6 +45,30 @@ class Stock extends AdminController
             ->orderBy('m.id')->get()->getResultArray();
 
         return $this->render('stock/ledger', ['item' => $item, 'rows' => $rows]);
+    }
+
+    /** Every lot of one item: which purchase / supplier invoice / PO it came from and where it went. */
+    public function lots($itemId)
+    {
+        $this->requirePermission('inventory.view');
+        $item = $this->findOr404('items', $itemId);
+
+        return $this->render('stock/lots', ['item' => $item, 'lots' => \App\Libraries\Lots::forItem((int) $item['id'])]);
+    }
+
+    /** Stock on hand lot by lot, with age and FIFO value (stock ageing). */
+    public function lotReport()
+    {
+        $this->requirePermission('inventory.view');
+        $loc = (int) $this->request->getGet('location');
+        $cat = (int) $this->request->getGet('category');
+
+        return $this->render('stock/lot_report', [
+            'lots'       => \App\Libraries\Lots::open($loc ?: null, $cat ?: null),
+            'locations'  => options('locations', 'name', false),
+            'categories' => options('item_categories'),
+            'locId'      => $loc,
+        ]);
     }
 
     /** Admin ("Delete entries"): remove a wrong opening-stock / adjustment line. */
@@ -61,6 +86,11 @@ class Stock extends AdminController
         $have = StockLib::balance((int) $m['item_id'], (int) $m['location_id']);
         if ((float) $m['qty'] > 0 && $have - (float) $m['qty'] < -0.0001) {
             return $this->back(sprintf('Cannot delete: %s of this stock is already used (in store now %s). Stock would go negative.', $m['name'], qty($have)));
+        }
+        try {
+            \App\Libraries\Lots::undo([(int) $m['id']]);
+        } catch (\RuntimeException $e) {
+            return $this->back($e->getMessage());
         }
         $db->table('stock_movements')->where('id', $m['id'])->delete();
         \App\Libraries\Workflow::log('item', (int) $m['item_id'], 'stock_entry_deleted', sprintf('%s line of %s %s (%s) deleted', ucfirst($m['type']), qty($m['qty']), $m['unit'], $m['name']));

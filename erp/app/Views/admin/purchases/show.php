@@ -34,4 +34,22 @@
         <tr class="fw-bold"><td class="text-end">Total</td><td class="text-end"><?= money($doc['total']) ?></td></tr></table></div></div>
     <?php $note = $doc['notes'] ?? $doc['reason'] ?? ''; if ($note): ?><p class="small text-muted mb-0"><?= nl2br(esc($note)) ?></p><?php endif ?>
 </div>
+<?php if (! empty($lotsOf)): $names = array_column($lines, 'name', 'item_id'); ?>
+<div class="card mt-3"><div class="card-header fw-semibold"><i class="bi bi-diagram-3"></i> Where this stock went</div><div class="table-responsive"><table class="table table-sm align-middle mb-0">
+    <thead><tr><th>Item</th><th>Store</th><th class="text-end">Received</th><th class="text-end">Used</th><th class="text-end">Still in store</th><th>Went to</th></tr></thead><tbody>
+    <?php foreach ($lotsOf as $itemId => $lots): foreach ($lots as $l): ?>
+        <tr><td><a href="<?= site_url('admin/stock/item/' . $itemId . '/lots') ?>"><?= esc($names[$itemId] ?? ('#' . $itemId)) ?></a></td><td><small><?= esc((string) $l['location']) ?></small></td>
+            <td class="text-end"><?= qty($l['qty_in']) ?></td><td class="text-end"><?= qty($l['qty_in'] - $l['qty_left']) ?></td><td class="text-end fw-semibold"><?= qty($l['qty_left']) ?></td>
+            <td><?= view('admin/stock/_lot_uses', ['used' => $l['used']]) ?: '<span class="text-muted small">Not used yet</span>' ?></td></tr>
+    <?php endforeach; endforeach ?>
+</tbody></table></div></div>
+<?php endif ?>
+<?php if (! empty($takenFrom)): $names = array_column($lines, 'name', 'item_id'); ?>
+<div class="card mt-3"><div class="card-header fw-semibold"><i class="bi bi-diagram-3"></i> Returned from</div><div class="table-responsive"><table class="table table-sm align-middle mb-0">
+    <thead><tr><th>Item</th><th class="text-end">Qty</th><th>Lot (purchase · supplier bill · PO)</th><th class="text-end">Rate</th></tr></thead><tbody>
+    <?php foreach ($takenFrom as $itemId => $lots): foreach ($lots as $l): ?>
+        <tr><td><?= esc($names[$itemId] ?? ('#' . $itemId)) ?></td><td class="text-end"><?= qty($l['taken']) ?></td><td><?= view('admin/stock/_lot_source', ['lot' => $l]) ?></td><td class="text-end"><?= money($l['rate'], false) ?></td></tr>
+    <?php endforeach; endforeach ?>
+</tbody></table></div></div>
+<?php endif ?>
 <?= $this->endSection() ?>

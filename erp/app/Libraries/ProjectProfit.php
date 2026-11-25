@@ -58,10 +58,19 @@ class ProjectProfit
             return [];
         }
         $ids = array_keys($out);
+        // Material at the real cost of the stock lots used (FIFO); anything not traced to a lot at the average rate.
+        $lotted = [];
+        foreach ($db->table('stock_lot_moves lm')->select('d.project_id, l.item_id, SUM(lm.qty) AS q, SUM(lm.qty * l.rate) AS v', false)
+            ->join('stock_lots l', 'l.id = lm.lot_id')->join('stock_movements sm', 'sm.id = lm.movement_id')
+            ->join('dispatches d', "d.id = sm.ref_id AND sm.ref_type = 'dispatch'")->whereIn('d.project_id', $ids)
+            ->groupBy('d.project_id, l.item_id')->get()->getResultArray() as $r) {
+            $lotted[(int) $r['project_id']][(int) $r['item_id']] = [(float) $r['q'], (float) $r['v']];
+        }
         foreach ($db->table('dispatch_items di')->select('d.project_id, di.item_id, SUM(di.qty) AS q')
             ->join('dispatches d', 'd.id = di.dispatch_id')->whereIn('d.status', ['dispatched', 'delivered'])
             ->whereIn('d.project_id', $ids)->groupBy('d.project_id, di.item_id')->get()->getResultArray() as $r) {
-            $out[(int) $r['project_id']]['material'] += (float) $r['q'] * ($rates[(int) $r['item_id']] ?? 0);
+            [$lq, $lv] = $lotted[(int) $r['project_id']][(int) $r['item_id']] ?? [0.0, 0.0];
+            $out[(int) $r['project_id']]['material'] += $lv + max(0, (float) $r['q'] - $lq) * ($rates[(int) $r['item_id']] ?? 0);
         }
         foreach ($db->table('expenses')->select('project_id, SUM(amount) AS a')->whereIn('project_id', $ids)->groupBy('project_id')->get()->getResultArray() as $r) {
             $out[(int) $r['project_id']]['expenses'] = (float) $r['a'];

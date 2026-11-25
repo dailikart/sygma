@@ -293,6 +293,7 @@ class Dispatches extends AdminController
                 ->join('items i', 'i.id = di.item_id')->join('item_categories c', 'c.id = i.category_id', 'left')
                 ->where('di.dispatch_id', $id)->orderBy('c.name')->orderBy('i.name')->get()->getResultArray(),
             'photos'   => $db->table('project_files')->where(['project_id' => $p['id'], 'label' => 'delivery_photo'])->get()->getResultArray(),
+            'taken'    => \App\Libraries\Lots::takenBy('dispatch', (int) $d['id']),
         ];
     }
 }

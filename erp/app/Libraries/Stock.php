@@ -71,7 +71,8 @@ class Stock
             }
         }
 
-        db_connect()->table('stock_movements')->insert([
+        $db = db_connect();
+        $db->table('stock_movements')->insert([
             'item_id'     => $itemId,
             'location_id' => $locationId,
             'qty'         => $qty,
@@ -82,11 +83,16 @@ class Stock
             'created_by'  => auth()->id(),
             'created_at'  => date('Y-m-d H:i:s'),
         ]);
+        // FIFO lots: where this stock came from / which lots it was taken from.
+        Lots::onMove((int) $db->insertID(), $itemId, $locationId, $qty, $type, $refType, $refId);
     }
 
     /** Deletes the movements of a document (used when it is cancelled/deleted). */
     public static function reverse(string $refType, int $refId): void
     {
-        db_connect()->table('stock_movements')->where(['ref_type' => $refType, 'ref_id' => $refId])->delete();
+        $db  = db_connect();
+        $ids = array_column($db->table('stock_movements')->select('id')->where(['ref_type' => $refType, 'ref_id' => $refId])->get()->getResultArray(), 'id');
+        Lots::undo($ids); // refuses if stock from this document is already used elsewhere
+        $db->table('stock_movements')->where(['ref_type' => $refType, 'ref_id' => $refId])->delete();
     }
 }

@@ -50,7 +50,7 @@ Default password for all: `Demo@12345`. **Set your own team password** with `dem
 Leads (open, interested, lost, converted), B2B and B2C customers with KYC documents,
 6 invoices (subsidy / non-subsidy, CGST+SGST and IGST, bank loan with disbursements),
 part and full payments, 2 completed projects and 4 active ones at **survey, dispatch,
-installation and DCR**, quotations / proposals (with share link), service complaints,
+installation and DCR**, a **3D roof design** (Deepa Raghavan, 12 kW, with water tank, staircase room and tree), quotations / proposals (with share link), service complaints,
 customer status-page links, leads from IndiaMART / Facebook / Google Ads, purchases,
 purchase return, supplier payments, stock in two locations, AMC contracts with visits,
 income / expense entries and the full ledger. The IndiaMART / Meta / Google

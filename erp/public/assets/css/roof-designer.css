@@ -1,0 +1,36 @@
+/* 3D roof designer (app/Views/admin/designs/editor.php) */
+.rd-stage { position: relative; height: 600px; background: #eef2f6; }
+@media (max-width: 991.98px) { .rd-stage { height: 460px; } }
+.rd-plan, .rd-3d { position: absolute; inset: 0; }
+.rd-plan svg { width: 100%; height: 100%; display: block; touch-action: none; user-select: none; }
+.rd-3d canvas { display: block; width: 100% !important; height: 100% !important; }
+.rd-plan .grid line { stroke: #d6dde6; stroke-width: .02; }
+.rd-plan .grid line.major { stroke: #c2ccd8; stroke-width: .04; }
+.rd-plan .roof { fill: #f6f3ec; stroke: #64748b; stroke-width: .08; }
+.rd-plan .roof.drawing { fill: rgba(13, 110, 253, .06); stroke: #0d6efd; stroke-dasharray: .3 .2; }
+.rd-plan .setback { fill: none; stroke: #f59e0b; stroke-width: .04; stroke-dasharray: .25 .2; }
+.rd-plan .vh { fill: #fff; stroke: #0d6efd; stroke-width: .08; cursor: grab; }
+.rd-plan .vh:hover { fill: #0d6efd; }
+.rd-plan .edge-label { font: .55px Inter, system-ui, sans-serif; fill: #334155; cursor: pointer; paint-order: stroke; stroke: #fff; stroke-width: .12; }
+.rd-plan .edge-label:hover { fill: #0d6efd; }
+.rd-plan .obs { fill: #cbd5e1; stroke: #475569; stroke-width: .06; cursor: move; }
+.rd-plan .obs.tree { fill: rgba(22, 163, 74, .35); stroke: #15803d; }
+.rd-plan .obs.sel { stroke: #0d6efd; stroke-width: .12; }
+.rd-plan .obs-label { font: .5px Inter, system-ui, sans-serif; fill: #1e293b; pointer-events: none; }
+.rd-plan .panel { fill: #1e3a8a; stroke: #93c5fd; stroke-width: .03; cursor: pointer; }
+.rd-plan .panel:hover { fill: #2563eb; }
+.rd-plan .panel.off { fill: rgba(148, 163, 184, .15); stroke: #94a3b8; stroke-dasharray: .12 .08; }
+.rd-plan .shadow { fill: rgba(15, 23, 42, .28); pointer-events: none; }
+.rd-plan .north { font: bold .7px Inter, system-ui, sans-serif; fill: #ef4444; }
+.rd-plan .scale { font: .45px Inter, system-ui, sans-serif; fill: #475569; }
+.rd-plan .draw-pt { fill: #0d6efd; }
+.rd-kpis { display: grid; grid-template-columns: 1fr 1fr; gap: .5rem; }
+.rd-kpis > div { background: #f8fafc; border-radius: 10px; padding: .45rem .6rem; }
+.rd-kpis small { display: block; color: #64748b; font-size: .72rem; }
+.rd-kpis b { font-size: 1.05rem; }
+.rd-month-chart text { font: 9px Inter, system-ui, sans-serif; fill: #64748b; }
+.rd-month-chart rect { fill: #f59e0b; }
+.rd-side .form-label { color: #475569; }
+#obsList .obs-row { display: grid; grid-template-columns: 1fr repeat(3, 52px) 26px; gap: 4px; align-items: center; padding: 4px 0; border-bottom: 1px solid #f1f5f9; }
+#obsList .obs-row.sel { background: #eff6ff; }
+#obsList input { padding: 1px 4px; font-size: .78rem; }

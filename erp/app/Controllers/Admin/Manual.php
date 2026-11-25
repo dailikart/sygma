@@ -18,6 +18,7 @@ class Manual extends AdminController
         'setup'           => ['First-time setup', 'bi-gear-wide-connected', 'Basics', 'Super Admin', []],
         'leads'           => ['Leads & follow-ups', 'bi-megaphone', 'Sales', 'Marketing / Sales', ['admin/leads']],
         'customers'       => ['Customers & documents', 'bi-people', 'Sales', 'Marketing / Sales', ['admin/customers', 'admin/documents', 'admin/files']],
+        'roof-design'     => ['3D roof design', 'bi-badge-3d', 'Sales', 'Marketing / Sales, Surveyor', ['admin/designs']],
         'quotations'      => ['Quotations / proposals', 'bi-file-earmark-text', 'Sales', 'Marketing / Sales', ['admin/quotations']],
         'invoices'        => ['Invoices', 'bi-receipt', 'Sales', 'Marketing / Sales, Accounts', ['admin/invoices']],
         'payments'        => ['Payments, receipts & bank loans', 'bi-cash', 'Sales', 'Accounts', ['admin/payments']],

@@ -765,6 +765,40 @@ eq "service worker and offline page are served" "$(curl -s -o /dev/null -w '%{ht
 has "login page links the manifest" "$(curl -s "$B/login")" 'rel="manifest"'
 has "menu offers Install app" "$(curl -s -b "$A" "$B/admin")" "Install app on this device"
 
+# ── 3D roof design ────────────────────────────────────────────────────────
+section "3D roof design: save, shading figures, quotation from design"
+DL=$QL
+has "lead page offers the 3D roof design" "$(curl -s -b "$M" "$B/admin/leads/$DL")" "admin/designs/new?lead=$DL"
+has "designer opens for the lead" "$(curl -s -b "$M" "$B/admin/designs/new?lead=$DL")" 'id="rd-init"'
+Y=$(curl -s -b "$M" "$B/admin/designs/yield?lat=11.34&lng=77.72&tilt=10&azimuth=180")
+eq "solar yield answer (kWh per kWp > 800, 12 months)" "$(php -r '$y=json_decode($argv[1],true); echo ($y["kwh_per_kwp"]>800?"ok":"low"),"|",count($y["monthly"]);' "$Y")" "ok|12"
+PNG=$(php -r '$i=imagecreatetruecolor(8,8); ob_start(); imagepng($i); echo "data:image/png;base64,".base64_encode(ob_get_clean());')
+djson() { php -r '$a=["name"=>$argv[1],"lead_id"=>(int)$argv[2],"latitude"=>11.34,"longitude"=>77.72,"data"=>["version"=>1,"roof"=>["pts"=>[[-6,-5],[6,-5],[6,5],[-6,5]],"h"=>6,"parapet"=>0.9],"obs"=>[],"p"=>["watt"=>545,"tilt"=>10,"az"=>180],"removed"=>[]],"panel_item_id"=>1,"panel_watt"=>545,"panel_count"=>(int)$argv[3],"kwh_per_kwp"=>1460,"shading_loss"=>2,"monthly_kwh"=>array_fill(0,12,600),"yield_source"=>"estimate","snapshot"=>$argv[4]]; echo json_encode($a);' "$@"; }
+dpost() { local j=$1 u=$2 body=$3; curl -s -b "$j" -c "$j" -H "Content-Type: application/json" -H "X-CSRF-TOKEN: $(tok "$j" admin/leads/new)" -H "X-Requested-With: XMLHttpRequest" --data-binary "$body" "$B/$u"; }
+R1=$(dpost "$M" admin/designs/save "$(djson '' "$DL" 10 "$PNG")")
+has "design without a name is refused" "$R1" "Give the design a name"
+R1=$(dpost "$M" admin/designs/save "$(djson 'Quote Lead Kumar · roof' "$DL" 10 "$PNG")")
+eq "design saved with a number" "$(php -r '$r=json_decode($argv[1],true); echo ($r["ok"]??false)?"ok":"no","|",substr((string)($r["design_no"]??""),0,3);' "$R1")" "ok|RD/"
+DS=$(q "select max(id) from roof_designs")
+eq "kW = panels × watt; kWh = kW × yield × (1 − shading)" "$(q "select concat(panel_count,'|',capacity_kw+0,'|',kwh_year+0,'|',lead_id) from roof_designs where id=$DS")" "10|5.45|7797.90|$DL"
+eq "3D picture saved and served as PNG" "$(curl -s -b "$M" -o /dev/null -w '%{http_code} %{content_type}' "$B/admin/designs/$DS/snapshot")" "200 image/png"
+dpost "$M" "admin/designs/save/$DS" "$(djson 'Quote Lead Kumar · roof' "$DL" 12 "$PNG")" >/dev/null
+eq "design edited: 12 panels = 6.54 kW, still one design" "$(q "select concat(panel_count,'|',capacity_kw+0) from roof_designs where id=$DS")|$(q "select count(*) from roof_designs where deleted_at is null")" "12|6.54|1"
+eq "Create quotation goes to the pre-filled form" "$(curl -s -b "$M" -o /dev/null -w '%{redirect_url}' "$B/admin/designs/$DS/quotation" | sed 's#.*/admin/##')" "quotations/new?design=$DS&lead=$DL"
+QF=$(curl -s -b "$M" "$B/admin/quotations/new?design=$DS&lead=$DL")
+has "quotation form carries the design" "$QF" "name=\"roof_design_id\" value=\"$DS\""
+has "…with the design's kW" "$QF" 'value="6.54"'
+post "$M" "admin/quotations/new?design=$DS" admin/quotations -F lead_id=$DL -F roof_design_id=$DS -F party_name="Quote Lead Kumar" -F party_phone=9555500001 -F quote_date="$D" -F subsidy_type=subsidy -F customer_type=b2c -F capacity_kw=6.54 -F units_per_kw_day=3.27 -F tariff=6.5 \
+  -F 'items[0][description]=6.54 kW On-grid Solar Power System' -F 'items[0][qty]=1' -F 'items[0][rate]=330000' -F 'items[0][tax_percent]=12' >/dev/null
+QD=$(q "select max(id) from quotations")
+eq "quotation linked to the design, 3D picture attached" "$(q "select concat(roof_design_id,'|',design_path like 'quotations/design-%') from quotations where id=$QD")|$(q "select quotation_id from roof_designs where id=$DS")" "$DS|1|$QD"
+has "quotation page links back to the design" "$(curl -s -b "$M" "$B/admin/quotations/$QD")" "admin/designs/$DS"
+eq "quotation PDF with the layout picture" "$(curl -s -b "$M" -o "$W/qd.pdf" -w '%{content_type}' "$B/admin/quotations/$QD/pdf") $(grep -ac '/Subtype /Image' "$W/qd.pdf" | awk '{print ($1>0)?"image":"none"}')" "application/pdf image"
+eq "designs list shows the design" "$(curl -s -b "$M" "$B/admin/designs" | grep -c "admin/designs/$DS\"")" "1"
+eq "surveyor may design, accounts may not" "$(code "$W/suresh" admin/designs) $(code "$W/acct1" admin/designs) $(code "$W/acct1" "admin/designs/$DS")" "200 403 403"
+post "$M" "admin/designs/$DS" "admin/designs/$DS/delete" >/dev/null
+eq "design deleted (kept for history, gone from the list)" "$(q "select deleted_at is not null from roof_designs where id=$DS")|$(code "$M" "admin/designs/$DS")" "1|404"
+
 # ── browser: type-to-search dropdowns ─────────────────────────────────────
 section "Type-to-search dropdowns (real browser)"
 if node -e "require('playwright')" 2>/dev/null; then
@@ -789,7 +823,7 @@ check kumar   admin/stock=200 admin/dispatches=200 admin/invoices=403
 
 # ── every page ─────────────────────────────────────────────────────────────
 section "Every admin page loads for the Super Admin"
-PAGES="admin admin/tasks admin/notifications admin/profile admin/users admin/users/new admin/roles admin/settings admin/user-log admin/message-log admin/whatsapp-templates
+PAGES="admin admin/designs admin/designs/new admin/tasks admin/notifications admin/profile admin/users admin/users/new admin/roles admin/settings admin/user-log admin/message-log admin/whatsapp-templates
 admin/leads admin/leads/1 admin/leads/new admin/customers admin/customers/1 admin/customers/2 admin/invoices admin/invoices/1 admin/invoices/2 admin/invoices/new admin/payments
 admin/projects admin/projects/1 admin/projects/2 admin/dispatches admin/dispatches/2 admin/amc admin/amc-plans admin/amc/contracts/1
 admin/stock admin/stock/item/1 admin/stock/adjust admin/items admin/items/new admin/items/1/edit admin/kits admin/kits/1/edit admin/installation-types admin/item-categories admin/locations

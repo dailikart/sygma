@@ -10,7 +10,8 @@ $menu = [
         ['Leads', 'admin/leads', ['leads.view']],
         ['Customers', 'admin/customers', ['customers.view']],
     ]],
-    ['Sales', null, 'bi-receipt', ['invoices.view', 'payments.manage', 'quotations.view', 'quotations.manage'], [
+    ['Sales', null, 'bi-receipt', ['invoices.view', 'payments.manage', 'quotations.view', 'quotations.manage', 'designs.view', 'designs.manage'], [
+        ['3D Roof Designs', 'admin/designs', ['designs.view', 'designs.manage']],
         ['Quotations', 'admin/quotations', ['quotations.view', 'quotations.manage']],
         ['Invoices', 'admin/invoices', ['invoices.view']],
         ['Payments', 'admin/payments', ['invoices.view', 'payments.manage']],

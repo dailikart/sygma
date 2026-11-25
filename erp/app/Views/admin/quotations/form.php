@@ -6,6 +6,13 @@
 <?= csrf_field() ?>
 <input type="hidden" name="lead_id" id="lead_id" value="<?= esc((string) $v('lead_id')) ?>">
 <input type="hidden" name="customer_id" id="customer_id" value="<?= esc((string) $v('customer_id')) ?>">
+<?php if (! empty($q['roof_design_id']) && empty($id)): $di = $q['design_info'] ?? null; ?>
+<input type="hidden" name="roof_design_id" value="<?= (int) $q['roof_design_id'] ?>">
+<?php if ($di): ?><div class="alert alert-info py-2 small d-flex gap-2 align-items-center"><i class="bi bi-badge-3d fs-5"></i>
+    <div>From 3D design <b><?= esc($di['design_no']) ?></b>: <?= (int) $di['panel_count'] ?> × <?= qty($di['panel_watt']) ?> W = <b><?= qty($di['capacity_kw']) ?> kW</b>,
+    <?= number_format((float) $di['kwh_year']) ?> kWh/year (shading <?= qty($di['shading_loss']) ?>%). <?= ! empty($q['kit_id']) ? 'The kit for this size is selected: click <b>Fill as B2C package</b> or <b>Load items</b>.' : 'No kit of this size yet: choose a kit or add the lines below.' ?>
+    The 3D picture is attached to the quotation automatically.</div></div><?php endif ?>
+<?php endif ?>
 <div class="card card-body mb-3">
     <div class="d-flex flex-wrap gap-2 align-items-center mb-2">
         <h6 class="mb-0">Quotation for</h6>

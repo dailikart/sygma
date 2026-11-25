@@ -103,4 +103,9 @@ I=$(invoice "$C4" non_subsidy 3 1 175000); pay "$I" 90000; P=$(proj "$I"); surve
 I=$(invoice "$C2" subsidy 3 1 190000); pay "$I" 190000; P=$(proj "$I"); survey "$P" 3; dispatch "$P" "$I"; install "$P"; step "$(q "select project_no from projects where id=$P") Karthik – $(q "select current_stage from projects where id=$P")"
 
 echo "Active projects now: $(q "select group_concat(concat(project_no,':',current_stage) separator ', ') from projects where status='active'")"
+
+echo "3D roof design for Deepa Raghavan (from docs/database/fixtures)"
+DLEAD=$(q "select id from leads where name='Deepa Raghavan' and deleted_at is null limit 1")
+php -r '$d=json_decode(file_get_contents($argv[1]),true); $d["lead_id"]=(int)$argv[3]; $d["snapshot"]="data:image/png;base64,".base64_encode(file_get_contents($argv[2])); echo json_encode($d);' docs/database/fixtures/demo-design.json docs/database/fixtures/demo-design.png "$DLEAD" > "$W/design.json"
+curl -s -b "$M" -c "$M" -H "Content-Type: application/json" -H "X-CSRF-TOKEN: $(tok "$M" admin/leads/new)" -H "X-Requested-With: XMLHttpRequest" --data-binary @"$W/design.json" "$B/admin/designs/save" | php -r '$r=json_decode(stream_get_contents(STDIN),true); echo "  • ", ($r["ok"]??false) ? $r["design_no"]." · ".$r["capacity_kw"]." kW · ".round($r["kwh_year"])." kWh/year" : "FAILED: ".json_encode($r), "\n";'
 grep -iE "CRITICAL|ERROR" "writable/logs/log-$D.log" 2>/dev/null | tail -3 || true

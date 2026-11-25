@@ -55,6 +55,9 @@ class Quotations extends AdminController
             $c    = $this->findOr404('customers', $custId);
             $head = array_merge($head, ['customer_id' => $c['id']] + $this->partyFromCustomer($c));
         }
+        if ($designId = (int) $this->request->getGet('design')) {
+            $head = $this->fromDesign($head, $designId);
+        }
         if (($head['customer_type'] ?? 'b2c') === 'b2b') {
             $head['print_format'] = 'itemwise';
         }
@@ -82,6 +85,7 @@ class Quotations extends AdminController
         $this->saveLines($id, $lines);
         $db->transComplete();
         $this->saveDesign($id);
+        $this->linkRoofDesign($id, (int) $this->request->getPost('roof_design_id'));
         Workflow::log('quotation', $id, 'created', 'Quotation created for ' . $head['party_name'] . ' (' . money($head['total']) . ')');
 
         return redirect()->to('admin/quotations/' . $id)->with('message', 'Quotation saved.');
@@ -264,6 +268,53 @@ class Quotations extends AdminController
     {
         if (in_array($q['status'], ['draft', 'sent'], true)) {
             db_connect()->table('quotations')->where('id', $q['id'])->update(['status' => 'sent'] + ($q['sent_at'] ? [] : ['sent_at' => date('Y-m-d H:i:s')]));
+        }
+    }
+
+    /** Quotation pre-filled from a 3D roof design: kW, matching kit, real generation. */
+    private function fromDesign(array $head, int $designId): array
+    {
+        $d = db_connect()->table('roof_designs')->where(['id' => $designId, 'deleted_at' => null])->get()->getRowArray();
+        if (! $d || $d['capacity_kw'] <= 0) {
+            return $head;
+        }
+        $kw  = (float) $d['capacity_kw'];
+        $kit = db_connect()->table('kits')->where('is_active', 1)->where('capacity_kw >=', $kw - 0.01)->orderBy('capacity_kw')->limit(1)->get()->getRowArray();
+        $head = array_merge($head, [
+            'roof_design_id' => $d['id'], 'design_info' => $d, 'capacity_kw' => $kw,
+            'units_per_kw_day' => $d['kwh_year'] > 0 ? round((float) $d['kwh_year'] / ($kw * 365), 2) : ($head['units_per_kw_day'] ?? 4),
+        ]);
+        if ($kit) {
+            $head['kit_id'] = $kit['id'];
+        }
+        if (empty($head['lead_id']) && $d['lead_id']) {
+            $head['lead_id'] = $d['lead_id'];
+        }
+
+        return $head;
+    }
+
+    /** After saving: link the design, and use its 3D picture as the quotation's design image (unless a file was uploaded). */
+    private function linkRoofDesign(int $quotationId, int $designId): void
+    {
+        if ($designId < 1) {
+            return;
+        }
+        $db = db_connect();
+        $d  = $db->table('roof_designs')->where(['id' => $designId, 'deleted_at' => null])->get()->getRowArray();
+        if (! $d) {
+            return;
+        }
+        $db->table('quotations')->where('id', $quotationId)->update(['roof_design_id' => $d['id']]);
+        $db->table('roof_designs')->where('id', $d['id'])->update(['quotation_id' => $quotationId]);
+        $q = $db->table('quotations')->select('design_path')->where('id', $quotationId)->get()->getRowArray();
+        $src = WRITEPATH . 'uploads/' . $d['snapshot_path'];
+        if (empty($q['design_path']) && $d['snapshot_path'] && is_file($src)) {
+            is_dir(WRITEPATH . 'uploads/quotations') || mkdir(WRITEPATH . 'uploads/quotations', 0775, true);
+            $rel = 'quotations/design-' . $quotationId . '-' . time() . '.png';
+            if (copy($src, WRITEPATH . 'uploads/' . $rel)) {
+                $db->table('quotations')->where('id', $quotationId)->update(['design_path' => $rel]);
+            }
         }
     }
 

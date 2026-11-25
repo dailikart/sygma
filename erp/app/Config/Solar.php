@@ -28,6 +28,7 @@ class Solar extends BaseConfig
 
     /** Number prefixes. The financial year and a running number are added. */
     public string $quotePrefix    = 'QT';
+    public string $designPrefix   = 'RD';
     public string $invoicePrefix  = 'INV';
     public string $receiptPrefix  = 'RCT';
     public string $projectPrefix  = 'PRJ';

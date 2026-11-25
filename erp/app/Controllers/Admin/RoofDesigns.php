@@ -18,7 +18,7 @@ class RoofDesigns extends AdminController
     {
         $this->requirePermission('designs.view', 'designs.manage');
         $b = db_connect()->table('roof_designs d')
-            ->select('d.*, l.name AS lead_name, q.quote_no')
+            ->select("d.*, l.name AS lead_name, q.quote_no, (SELECT COUNT(*) FROM roof_design_photos ph WHERE ph.design_id = d.id AND ph.kind = 'site') AS photo_count", false)
             ->join('leads l', 'l.id = d.lead_id', 'left')
             ->join('quotations q', 'q.id = d.quotation_id', 'left')
             ->where('d.deleted_at', null);
@@ -107,6 +107,12 @@ class RoofDesigns extends AdminController
         if (! empty($in['snapshot'])) {
             $this->saveSnapshot($designId, (string) $in['snapshot'], $existing['snapshot_path'] ?? null);
         }
+        // Photos uploaded before the first save belong to this design now.
+        $ids = array_filter(array_map('intval', (array) ($in['photo_ids'] ?? [])));
+        if ($ids) {
+            $db->table('roof_design_photos')->whereIn('id', $ids)->where('design_id', null)->where('created_by', auth()->id())
+                ->update(['design_id' => $designId]);
+        }
         $saved = $this->design($designId);
 
         return $this->response->setJSON(['ok' => true, 'id' => $designId, 'design_no' => $saved['design_no'],
@@ -160,7 +166,144 @@ class RoofDesigns extends AdminController
         return redirect()->to('admin/quotations/new?design=' . $d['id'] . ($d['lead_id'] ? '&lead=' . $d['lead_id'] : ''));
     }
 
+    /** Upload a photo: 'plan' (top view to trace) or 'site' (reference). Answers JSON. */
+    public function photoUpload()
+    {
+        $this->requirePermission('designs.manage');
+        $file = $this->request->getFile('photo');
+        if ($file === null || ! $file->isValid()) {
+            return $this->fail('Choose a photo to upload.');
+        }
+        if ($file->getSizeByUnit('mb') > 25) {
+            return $this->fail('The photo is larger than 25 MB.');
+        }
+        $info = @getimagesize($file->getTempName());
+        if (! $info || ! in_array($info[2], [IMAGETYPE_JPEG, IMAGETYPE_PNG, IMAGETYPE_WEBP], true)) {
+            return $this->fail('Only JPG, PNG or WEBP photos. (iPhone: Settings → Camera → Formats → Most Compatible.)');
+        }
+        $kind = $this->request->getPost('kind') === 'plan' ? 'plan' : 'site';
+        $designId = (int) $this->request->getPost('design_id') ?: null;
+        if ($designId && ! db_connect()->table('roof_designs')->where(['id' => $designId, 'deleted_at' => null])->countAllResults()) {
+            $designId = null;
+        }
+        [$img, $gps] = $this->readPhoto($file->getTempName(), $info[2]);
+        if (! $img) {
+            return $this->fail('This photo could not be read.');
+        }
+        $img = $this->limitSize($img, $kind === 'plan' ? 2600 : 1800);
+        $dir = WRITEPATH . 'uploads/designs/photos';
+        is_dir($dir) || mkdir($dir, 0775, true);
+        $rel = 'designs/photos/' . date('Ymd-His') . '-' . bin2hex(random_bytes(5)) . '.jpg';
+        imagejpeg($img, WRITEPATH . 'uploads/' . $rel, 85);
+        $w = imagesx($img);
+        $h = imagesy($img);
+        imagedestroy($img);
+        $db = db_connect();
+        $db->table('roof_design_photos')->insert([
+            'design_id' => $designId, 'kind' => $kind, 'path' => $rel,
+            'caption' => mb_substr(trim((string) $this->request->getPost('caption')), 0, 150) ?: null,
+            'width' => $w, 'height' => $h, 'latitude' => $gps[0] ?? null, 'longitude' => $gps[1] ?? null,
+            'created_by' => auth()->id(), 'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s'),
+        ]);
+        $row = $db->table('roof_design_photos')->where('id', $db->insertID())->get()->getRowArray();
+
+        return $this->response->setJSON(['ok' => true] + $this->photoJson($row));
+    }
+
+    public function photo($id)
+    {
+        $this->requirePermission('designs.view', 'designs.manage', 'quotations.view');
+        $ph   = db_connect()->table('roof_design_photos')->where('id', (int) $id)->get()->getRowArray();
+        $path = $ph ? WRITEPATH . 'uploads/' . $ph['path'] : '';
+        if (! $ph || ! is_file($path) || ($ph['design_id'] === null && (int) $ph['created_by'] !== (int) auth()->id())) {
+            throw PageNotFoundException::forPageNotFound();
+        }
+
+        return $this->response->setHeader('Content-Type', 'image/jpeg')->setHeader('Cache-Control', 'private, max-age=86400')->setBody(file_get_contents($path));
+    }
+
+    public function photoDelete($id)
+    {
+        $this->requirePermission('designs.manage');
+        $db = db_connect();
+        $ph = $db->table('roof_design_photos')->where('id', (int) $id)->get()->getRowArray();
+        if (! $ph || ($ph['design_id'] === null && (int) $ph['created_by'] !== (int) auth()->id())) {
+            return $this->fail('Photo not found.');
+        }
+        @unlink(WRITEPATH . 'uploads/' . $ph['path']);
+        $db->table('roof_design_photos')->where('id', $ph['id'])->delete();
+
+        return $this->response->setJSON(['ok' => true]);
+    }
+
     // ------------------------------------------------------------------
+
+    private function photoJson(array $ph): array
+    {
+        return ['id' => (int) $ph['id'], 'kind' => $ph['kind'], 'url' => site_url('admin/designs/photos/' . $ph['id']),
+            'w' => (int) $ph['width'], 'h' => (int) $ph['height'], 'caption' => (string) $ph['caption'],
+            'lat' => $ph['latitude'] !== null ? (float) $ph['latitude'] : null, 'lng' => $ph['longitude'] !== null ? (float) $ph['longitude'] : null];
+    }
+
+    /** GD image, turned upright using the camera's EXIF orientation, plus the GPS position if the photo has one. */
+    private function readPhoto(string $file, int $type): array
+    {
+        $img = match ($type) {
+            IMAGETYPE_JPEG => @imagecreatefromjpeg($file),
+            IMAGETYPE_PNG  => @imagecreatefrompng($file),
+            IMAGETYPE_WEBP => @imagecreatefromwebp($file),
+            default        => false,
+        };
+        $gps = [];
+        if ($img && $type === IMAGETYPE_JPEG && function_exists('exif_read_data')) {
+            $exif = @exif_read_data($file);
+            $rot  = [3 => 180, 6 => -90, 8 => 90][(int) ($exif['Orientation'] ?? 1)] ?? 0;
+            if ($rot) {
+                $img = imagerotate($img, $rot, 0);
+            }
+            $deg = static function ($v, $ref) {
+                if (! is_array($v) || count($v) < 3) {
+                    return null;
+                }
+                $f = static fn ($x) => str_contains((string) $x, '/') ? (static fn ($p) => $p[1] ? $p[0] / $p[1] : 0)(array_map('floatval', explode('/', $x))) : (float) $x;
+                $d = $f($v[0]) + $f($v[1]) / 60 + $f($v[2]) / 3600;
+
+                return in_array($ref, ['S', 'W'], true) ? -$d : $d;
+            };
+            $lat = $deg($exif['GPSLatitude'] ?? null, $exif['GPSLatitudeRef'] ?? 'N');
+            $lng = $deg($exif['GPSLongitude'] ?? null, $exif['GPSLongitudeRef'] ?? 'E');
+            if ($lat !== null && $lng !== null && ($lat != 0.0 || $lng != 0.0)) {
+                $gps = [round($lat, 6), round($lng, 6)];
+            }
+        }
+        if ($img && $type === IMAGETYPE_PNG) {
+            // flatten transparency onto white so screenshots look right as JPEG
+            $bg = imagecreatetruecolor(imagesx($img), imagesy($img));
+            imagefill($bg, 0, 0, imagecolorallocate($bg, 255, 255, 255));
+            imagecopy($bg, $img, 0, 0, 0, 0, imagesx($img), imagesy($img));
+            imagedestroy($img);
+            $img = $bg;
+        }
+
+        return [$img ?: null, $gps];
+    }
+
+    private function limitSize($img, int $max)
+    {
+        $w = imagesx($img);
+        $h = imagesy($img);
+        if (max($w, $h) <= $max) {
+            return $img;
+        }
+        $k  = $max / max($w, $h);
+        $nw = (int) round($w * $k);
+        $nh = (int) round($h * $k);
+        $out = imagecreatetruecolor($nw, $nh);
+        imagecopyresampled($out, $img, 0, 0, 0, 0, $nw, $nh, $w, $h);
+        imagedestroy($img);
+
+        return $out;
+    }
 
     private function editor(array $design): string
     {
@@ -174,8 +317,12 @@ class RoofDesigns extends AdminController
         }
         $lead = $design['lead_id'] ? $db->table('leads')->select('id, name, phone, address, city, required_kw')->where('id', $design['lead_id'])->get()->getRowArray() : null;
 
+        $photos = $design['id'] ? $db->table('roof_design_photos')->where('design_id', $design['id'])->orderBy('id')->get()->getResultArray() : [];
+
         return $this->render('designs/editor', [
             'design'   => $design,
+            'photos'   => array_map(fn ($ph) => $this->photoJson($ph), $photos),
+            'mapsKey'  => trim((string) setting('Solar.googleMapsKey')) ?: trim((string) env('google.mapsKey', '')),
             'lead'     => $lead,
             'panels'   => $panels,
             'canEdit'  => can('designs.manage'),

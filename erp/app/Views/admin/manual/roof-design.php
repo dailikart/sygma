@@ -10,6 +10,31 @@
     <li>Click <span class="btnname">Run shading analysis</span>. The whole year is checked hour by hour; <em>Shading colours</em> shows each panel from green (no loss) to red (heavy loss).</li>
     <li><span class="btnname">Save</span>. The design gets a number like <code>RD/2026-27/0001</code> and a 3D picture.</li>
 </ol>
+<h4>Draw over a photo of the roof</h4>
+<p>A photo taken from above makes tracing exact: a drone photo, a photo from a taller building next door, or a scan of the building plan.</p>
+<ol class="steps">
+    <li>In <strong>Photos</strong> click <span class="btnname">Upload photo</span>. It appears under the plan.</li>
+    <li>Click <span class="btnname">Set scale</span>, click two points on the photo whose real distance you know (e.g. the two ends of the parapet) and type the metres. The photo now has the right size.</li>
+    <li>Use <em>Turn photo</em> until north is up (the red N), and <span class="btnname">Move photo</span> to slide it if needed. <em>See-through</em> fades it.</li>
+    <li>Click <span class="btnname">Draw outline</span> and click the roof corners on the photo; move the tank and staircase room onto their places in the photo.</li>
+</ol>
+<p>The photo is saved with the design and also shows in the 3D view (on the roof and the ground around it).</p>
+<h4>Site photos</h4>
+<p>In <strong>Photos → Add photos</strong> attach any number of photos for the team: roof, tank, staircase, EB meter, the view south. On a phone this opens the camera. If a photo has a GPS position and the design has no location yet, you are asked whether to use it.</p>
+<h4>Google map, satellite and roof detection</h4>
+<p>With a Google Maps key in <span class="path">Settings → Google Maps (3D roof design)</span>:</p>
+<ul>
+    <li><i class="bi bi-map"></i> <strong>Find on map</strong>: search the address, drag the map until the red cross is on the roof, <span class="btnname">Use this spot</span>. The location is set and the satellite photo appears under the plan at the right scale, north up.</li>
+    <li><span class="btnname">Satellite</span>: show the satellite photo for the site location. It is shown live from Google and is not saved in the design or the 3D picture (Google's terms).</li>
+    <li><span class="btnname">Detect roof</span>: Google Solar finds the building and gives the roof outline (approximate, as a box around the roof parts), whether it is flat or sloped, and Google's own estimate of panels and kWh. Drag the corners to match the photo exactly. Not every building in India is covered yet; if it is not, trace it over the satellite photo.</li>
+</ul>
+<h5>Getting the Google key (once, by the administrator)</h5>
+<ol class="steps">
+    <li>Open <code>console.cloud.google.com</code>, create a project (e.g. "Sygma Solar Suite") and add a <strong>billing account</strong>. Google gives a free monthly allowance for each API; set a budget alert under Billing.</li>
+    <li><span class="path">APIs &amp; Services → Library</span>: enable <strong>Maps JavaScript API</strong>, <strong>Places API (New)</strong>, <strong>Maps Static API</strong>, <strong>Solar API</strong> and <strong>Geocoding API</strong>.</li>
+    <li><span class="path">APIs &amp; Services → Credentials → Create credentials → API key</span>. Edit the key: <em>Application restrictions → Websites</em>: add your ERP address, e.g. <code>https://sygma.instivision.com/*</code>. <em>API restrictions</em>: the five APIs above.</li>
+    <li>Paste the key in <span class="path">Administration → Settings → Google Maps (3D roof design)</span> and save. (On the demo site, where Settings is view-only, put <code>google.mapsKey = 'your-key'</code> in <code>.env</code> instead.)</li>
+</ol>
 <h4>The results</h4>
 <ul>
     <li><strong>System size</strong> = panels × watt.</li>
@@ -26,5 +51,4 @@
 <ul>
     <li>Who can design is set in <span class="path">Administration → Roles &amp; Access</span> (<em>3D roof designs: view / create</em>). Sales and surveyors have it by default.</li>
     <li>The designer works on a phone, so a surveyor can draw the roof on site.</li>
-    <li>Coming next: the satellite photo of the house under the plan, address search and automatic roof detection (needs a Google Maps key in Settings).</li>
 </ul>

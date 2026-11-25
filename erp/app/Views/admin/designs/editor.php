@@ -11,7 +11,11 @@ $init = [
     'data'      => $design['data'] ? json_decode((string) $design['data'], true) : null,
     'panels'    => $panels,
     'canEdit'   => $canEdit,
+    'photos'    => $photos,
+    'mapsKey'   => $mapsKey,
     'urls'      => [
+        'photoUpload' => site_url('admin/designs/photos'),
+        'photoBase'   => site_url('admin/designs/photos/'),
         'save'      => site_url('admin/designs/save' . ($design['id'] ? '/' . $design['id'] : '')),
         'yield'     => site_url('admin/designs/yield'),
         'quotation' => $design['id'] ? site_url('admin/designs/' . $design['id'] . '/quotation') : null,
@@ -33,6 +37,7 @@ $init = [
         <div class="col-6 col-md-2"><label class="form-label small mb-0">Longitude</label><input id="dLng" type="number" step="0.000001" class="form-control form-control-sm" placeholder="e.g. 77.717"></div>
         <div class="col-md-2 d-flex gap-1">
             <button type="button" id="btnLocate" class="btn btn-sm btn-outline-secondary" title="Use this phone's location (stand on the roof)"><i class="bi bi-geo-alt"></i></button>
+            <button type="button" id="btnMap" class="btn btn-sm btn-outline-secondary" title="Find the house on the satellite map"><i class="bi bi-map"></i></button>
             <?php if ($canEdit): ?><button type="button" id="btnSave" class="btn btn-sm btn-primary flex-grow-1"><i class="bi bi-save"></i> Save</button><?php endif ?>
         </div>
     </div>
@@ -69,6 +74,38 @@ $init = [
                 <button id="btnRotR" class="btn btn-sm btn-outline-secondary" type="button" title="Rotate roof 5° right"><i class="bi bi-arrow-clockwise"></i></button>
             </div>
             <div class="form-text">Drag the corners; click an edge length to type the exact metres. North is up.</div>
+        </div></div>
+
+        <div class="card mb-3"><div class="card-header bg-white fw-semibold py-2"><i class="bi bi-image"></i> Photos</div><div class="card-body py-2">
+            <div class="small fw-semibold mb-1">Top-view photo <span class="text-muted fw-normal">(trace the roof over it)</span></div>
+            <div class="d-flex gap-1 flex-wrap mb-2" id="bgButtons">
+                <label class="btn btn-sm btn-outline-primary mb-0 <?= $canEdit ? '' : 'disabled' ?>"><i class="bi bi-upload"></i> Upload photo<input type="file" id="bgFile" accept="image/jpeg,image/png,image/webp" hidden></label>
+                <button type="button" id="bgGoogle" class="btn btn-sm btn-outline-secondary"><i class="bi bi-globe-asia-australia"></i> Satellite</button>
+                <button type="button" id="btnDetect" class="btn btn-sm btn-outline-success"><i class="bi bi-magic"></i> Detect roof</button>
+            </div>
+            <div id="bgCtl" hidden>
+                <div class="small text-muted mb-1" id="bgInfo"></div>
+                <label class="form-label small mb-0">See-through</label>
+                <input type="range" id="bgOpacity" min="0.15" max="1" step="0.05" class="form-range">
+                <div id="bgUploadCtl">
+                    <label class="form-label small mb-0">Turn photo <span id="bgRotVal">0°</span></label>
+                    <input type="range" id="bgRot" min="-180" max="180" step="0.5" class="form-range">
+                    <div class="d-flex gap-1 flex-wrap">
+                        <button type="button" id="bgScale" class="btn btn-sm btn-outline-primary"><i class="bi bi-rulers"></i> Set scale</button>
+                        <button type="button" id="bgMove" class="btn btn-sm btn-outline-secondary"><i class="bi bi-arrows-move"></i> Move photo</button>
+                    </div>
+                </div>
+                <div class="d-flex gap-1 flex-wrap mt-1">
+                    <button type="button" id="bgHide" class="btn btn-sm btn-outline-secondary"><i class="bi bi-eye-slash"></i> Hide</button>
+                    <button type="button" id="bgRemove" class="btn btn-sm btn-outline-danger"><i class="bi bi-x-lg"></i> Remove</button>
+                </div>
+            </div>
+            <div id="googleInfo" class="small mt-2" hidden></div>
+            <hr class="my-2">
+            <div class="small fw-semibold mb-1">Site photos</div>
+            <label class="btn btn-sm btn-outline-secondary mb-2 <?= $canEdit ? '' : 'disabled' ?>"><i class="bi bi-camera"></i> Add photos<input type="file" id="siteFiles" accept="image/jpeg,image/png,image/webp" multiple hidden></label>
+            <div id="siteGrid" class="rd-photos"></div>
+            <div class="progress mt-1" style="height:4px" hidden id="upProgWrap"><div class="progress-bar" id="upProg" style="width:0%"></div></div>
         </div></div>
 
         <div class="card mb-3"><div class="card-header bg-white fw-semibold py-2"><i class="bi bi-boxes"></i> On the roof</div><div class="card-body py-2">
@@ -159,6 +196,16 @@ $init = [
         </div></div>
     </div>
 </div>
+
+<div class="modal fade" id="mapModal" tabindex="-1"><div class="modal-dialog modal-xl modal-dialog-centered"><div class="modal-content">
+    <div class="modal-header py-2"><h5 class="modal-title h6"><i class="bi bi-map"></i> Find the house</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+    <div class="modal-body p-2">
+        <div id="mapSearchBox" class="mb-2"></div>
+        <div class="position-relative"><div id="mapCanvas" style="height:62vh;border-radius:8px;background:#e2e8f0"></div><div class="rd-crosshair"></div></div>
+        <div class="small text-muted mt-1" id="mapMsg">Search the address or drag the map so the cross is on the roof.</div>
+    </div>
+    <div class="modal-footer py-2"><button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Cancel</button><button type="button" id="mapUse" class="btn btn-primary btn-sm"><i class="bi bi-check2"></i> Use this spot</button></div>
+</div></div></div>
 
 <script type="application/json" id="rd-init"><?= json_encode($init, JSON_HEX_TAG | JSON_HEX_AMP | JSON_UNESCAPED_UNICODE) ?></script>
 <script type="importmap">{"imports": {"three": "<?= base_url('assets/vendor/three/three.module.min.js') ?>", "three/addons/OrbitControls.js": "<?= base_url('assets/vendor/three/OrbitControls.js') ?>"}}</script>

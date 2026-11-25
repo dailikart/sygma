@@ -15,7 +15,7 @@
     <?php foreach ($rows as $r): ?>
         <tr onclick="location.href='<?= site_url('admin/designs/' . $r['id']) ?>'" style="cursor:pointer">
             <td><?php if ($r['snapshot_path']): ?><img src="<?= site_url('admin/designs/' . $r['id'] . '/snapshot') ?>" alt="" style="width:72px;height:48px;object-fit:cover;border-radius:6px"><?php else: ?><div class="bg-light rounded text-center text-muted" style="width:72px;height:48px;line-height:48px"><i class="bi bi-badge-3d"></i></div><?php endif ?></td>
-            <td><a href="<?= site_url('admin/designs/' . $r['id']) ?>" class="fw-semibold"><?= esc($r['design_no']) ?></a><div class="small text-muted"><?= esc($r['name']) ?></div></td>
+            <td><a href="<?= site_url('admin/designs/' . $r['id']) ?>" class="fw-semibold"><?= esc($r['design_no']) ?></a><div class="small text-muted"><?= esc($r['name']) ?><?= (int) $r['photo_count'] ? ' · <i class="bi bi-camera"></i> ' . (int) $r['photo_count'] : '' ?></div></td>
             <td><?= $r['lead_id'] ? '<a href="' . site_url('admin/leads/' . $r['lead_id']) . '" onclick="event.stopPropagation()">' . esc((string) $r['lead_name']) . '</a>' : '<span class="text-muted">—</span>' ?></td>
             <td class="text-end"><?= qty($r['capacity_kw']) ?> kW<div class="small text-muted"><?= (int) $r['panel_count'] ?> × <?= qty($r['panel_watt']) ?> W</div></td>
             <td class="text-end"><?= qty($r['shading_loss']) ?>%</td>

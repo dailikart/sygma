@@ -104,6 +104,9 @@ $routes->group('admin', ['filter' => 'session', 'namespace' => 'App\Controllers\
     $routes->get('designs/yield', 'RoofDesigns::yield');
     $routes->post('designs/save', 'RoofDesigns::save');
     $routes->post('designs/save/(:num)', 'RoofDesigns::save/$1');
+    $routes->post('designs/photos', 'RoofDesigns::photoUpload');
+    $routes->get('designs/photos/(:num)', 'RoofDesigns::photo/$1');
+    $routes->post('designs/photos/(:num)/delete', 'RoofDesigns::photoDelete/$1');
     $routes->get('designs/(:num)', 'RoofDesigns::edit/$1');
     $routes->post('designs/(:num)/delete', 'RoofDesigns::delete/$1');
     $routes->get('designs/(:num)/snapshot', 'RoofDesigns::snapshot/$1');

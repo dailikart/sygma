@@ -29,6 +29,10 @@ const S = {
     sim: saved.sim ? Object.assign(saved.sim, { stale: false }) : null,
     yield: null,
     selected: null,
+    bg: saved.bg || null,              // top-view photo under the plan
+    google: saved.google || null,      // last Google Solar roof detection (facts only)
+    photos: (INIT.photos || []).slice(),
+    scalePts: [],
     mode: 'select',
     drawPts: [],
     dirty: false,
@@ -188,7 +192,7 @@ const ptsAttr = (pts) => pts.map((q) => q[0].toFixed(3) + ',' + (-q[1]).toFixed(
 let view = null;
 
 function fitView() {
-    const all = S.roof.pts.concat(...S.obs.map(obsPoly));
+    const all = S.roof.pts.concat(...S.obs.map(obsPoly), bgCorners());
     const xs = all.map((q) => q[0]), ys = all.map((q) => q[1]);
     const x0 = Math.min(...xs) - 3, x1 = Math.max(...xs) + 3, y0 = Math.min(...ys) - 3, y1 = Math.max(...ys) + 3;
     view = [x0, -y1, x1 - x0, y1 - y0];
@@ -210,6 +214,14 @@ function renderPlan() {
     const defs = el('defs');
     const clip = el('clipPath', { id: 'roofClip' }, defs);
     if (S.roof.pts.length >= 3) el('polygon', { points: ptsAttr(S.roof.pts) }, clip);
+    // top-view photo
+    const bgOn = S.bg && !S.bg.hidden && bgUrl();
+    $('plan').classList.toggle('has-bg', !!bgOn);
+    if (bgOn) {
+        const b = S.bg;
+        el('image', { href: bgUrl(), x: 0, y: 0, width: b.w, height: b.h, preserveAspectRatio: 'none', class: 'bg-photo', opacity: b.opacity ?? 0.75,
+            transform: `translate(${b.cx} ${-b.cy}) rotate(${-(b.rot || 0)}) scale(${b.mpp}) translate(${-b.w / 2} ${-b.h / 2})` });
+    }
     // grid (1 m, every 5 m darker)
     const g = el('g', { class: 'grid' });
     for (let x = Math.floor(vx); x <= vx + vw; x++) el('line', { x1: x, y1: vy, x2: x, y2: vy + vh, class: x % 5 ? '' : 'major' }, g);
@@ -262,6 +274,11 @@ function renderPlan() {
         el('polyline', { points: ptsAttr(S.drawPts), class: 'roof drawing', fill: 'none' });
         S.drawPts.forEach((q) => el('circle', { cx: q[0], cy: -q[1], r: 0.18, class: 'draw-pt' }));
     }
+    // scale being set on the photo
+    if (S.mode === 'scale' && S.scalePts.length) {
+        if (S.scalePts.length === 2) el('line', { x1: S.scalePts[0][0], y1: -S.scalePts[0][1], x2: S.scalePts[1][0], y2: -S.scalePts[1][1], class: 'scale-line' });
+        S.scalePts.forEach((q) => el('circle', { cx: q[0], cy: -q[1], r: 0.2, class: 'scale-pt' }));
+    }
     // north arrow + scale
     const nx = vx + vw - 1.2, ny = vy + 1.4;
     el('path', { d: `M${nx},${ny - 0.9} l0.4,1.2 l-0.4,-0.35 l-0.4,0.35z`, fill: '#ef4444' });
@@ -282,7 +299,8 @@ let drag = null;
 svg.addEventListener('pointerdown', (e) => {
     if (!INIT.canEdit) return;
     const t = e.target;
-    if (S.mode === 'draw') return;
+    if (S.mode === 'draw' || S.mode === 'scale') return;
+    if (S.mode === 'movebg' && S.bg) { const p = toPlan(e); drag = { kind: 'bg', dx: S.bg.cx - p[0], dy: S.bg.cy - p[1] }; svg.setPointerCapture(e.pointerId); e.preventDefault(); return; }
     if (t.dataset.vertex !== undefined) { drag = { kind: 'v', i: +t.dataset.vertex }; svg.setPointerCapture(e.pointerId); e.preventDefault(); }
     else if (t.dataset.obs !== undefined) {
         const o = S.obs.find((x) => x.id === +t.dataset.obs); S.selected = o.id;
@@ -292,14 +310,16 @@ svg.addEventListener('pointerdown', (e) => {
 svg.addEventListener('pointermove', (e) => {
     if (!drag) return;
     const p = toPlan(e);
+    if (drag.kind === 'bg') { S.bg.cx = +(p[0] + drag.dx).toFixed(2); S.bg.cy = +(p[1] + drag.dy).toFixed(2); S.dirty = true; renderPlan(); return; }
     if (drag.kind === 'v') S.roof.pts[drag.i] = p;
     else { drag.o.x = +(p[0] + drag.dx).toFixed(2); drag.o.y = +(p[1] + drag.dy).toFixed(2); }
     changed({ geometry: true, quick: true });
 });
-svg.addEventListener('pointerup', () => { if (drag) { drag = null; changed({ geometry: true }); } });
+svg.addEventListener('pointerup', () => { if (drag) { const k = drag.kind; drag = null; if (k === 'bg') { clearTimeout(rebuildTimer); rebuildTimer = setTimeout(build3d, 50); } else changed({ geometry: true }); } });
 svg.addEventListener('click', (e) => {
     if (!INIT.canEdit) return;
     const t = e.target;
+    if (S.mode === 'scale') { scaleClick(toPlan(e)); return; }
     if (S.mode === 'draw') {
         const p = toPlan(e);
         if (S.drawPts.length >= 3 && Math.hypot(p[0] - S.drawPts[0][0], p[1] - S.drawPts[0][1]) < 0.5) return finishDraw();
@@ -315,7 +335,7 @@ svg.addEventListener('click', (e) => {
 });
 svg.addEventListener('dblclick', () => { if (S.mode === 'draw' && S.drawPts.length >= 3) finishDraw(); });
 document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && S.mode === 'draw') { S.mode = 'select'; S.drawPts = []; hint(''); renderPlan(); }
+    if (e.key === 'Escape' && S.mode !== 'select') { S.mode = 'select'; S.drawPts = []; S.scalePts = []; $('plan').classList.remove('move-bg'); hint(''); renderPlan(); }
     if ((e.key === 'Delete' || e.key === 'Backspace') && S.selected !== null && document.activeElement === document.body) { S.obs = S.obs.filter((o) => o.id !== S.selected); S.selected = null; changed({ geometry: true }); }
 });
 function finishDraw() {
@@ -368,8 +388,8 @@ const sel = $('pSel');
 INIT.panels.forEach((p) => { const o = new Option(`${p.name}`, p.id); o.dataset.watt = p.watt; sel.add(o); });
 sel.add(new Option('Custom panel…', ''));
 function dimsForWatt(w) { return w >= 500 ? [2.278, 1.134] : w >= 400 ? [1.722, 1.134] : [1.65, 0.992]; }
-function loadForm() {
-    $('dLat').value = INIT.latitude ?? ''; $('dLng').value = INIT.longitude ?? '';
+function loadForm(first = false) {
+    if (first) { $('dLat').value = INIT.latitude ?? ''; $('dLng').value = INIT.longitude ?? ''; }
     $('rH').value = S.roof.h; $('rPar').value = S.roof.parapet;
     sel.value = S.p.itemId ? String(S.p.itemId) : '';
     $('pWatt').value = S.p.watt; $('pLen').value = S.p.len; $('pWid').value = S.p.wid; $('pOrient').value = S.p.orient;
@@ -555,6 +575,24 @@ function build3d() {
     bg.rotateX(-Math.PI / 2);
     const building = new THREE.Mesh(bg, [MAT.top, MAT.wall]);
     building.castShadow = true; building.receiveShadow = true; model.add(building);
+    // top-view photo on the ground and on the roof (Google imagery is shown live only, never saved in the picture)
+    const tex = bgTexture();
+    if (tex) {
+        const b = S.bg, Wm = b.w * b.mpp, Hm = b.h * b.mpp;
+        const gmesh = new THREE.Mesh(new THREE.PlaneGeometry(Wm, Hm), new THREE.MeshStandardMaterial({ map: tex, roughness: 1 }));
+        gmesh.rotation.set(-Math.PI / 2, 0, 0); gmesh.rotateOnWorldAxis(new THREE.Vector3(0, 1, 0), (b.rot || 0) * D2R);
+        gmesh.position.copy(v3(b.cx, b.cy, 0.03)); gmesh.receiveShadow = true; model.add(gmesh);
+        const rg = new THREE.ShapeGeometry(new THREE.Shape(ccw.map(([x, y]) => new THREE.Vector2(x, y))));
+        const pos = rg.attributes.position, uv = rg.attributes.uv, r = -(b.rot || 0) * D2R;
+        for (let i = 0; i < pos.count; i++) {
+            const dx = pos.getX(i) - b.cx, dy = pos.getY(i) - b.cy;
+            const lx = dx * Math.cos(r) - dy * Math.sin(r), ly = dx * Math.sin(r) + dy * Math.cos(r);
+            uv.setXY(i, lx / Wm + 0.5, ly / Hm + 0.5);
+        }
+        rg.rotateX(-Math.PI / 2);
+        const rmesh = new THREE.Mesh(rg, new THREE.MeshStandardMaterial({ map: tex, roughness: 1 }));
+        rmesh.position.y = H + 0.012; rmesh.receiveShadow = true; model.add(rmesh);
+    }
     // parapet walls (outside the roof edge)
     const par = +S.roof.parapet || 0, thk = 0.23;
     if (par > 0.01) {
@@ -715,7 +753,9 @@ async function save() {
         const body = {
             name, lead_id: $('dLead').value || null,
             latitude: $('dLat').value || null, longitude: $('dLng').value || null,
-            data: { version: 1, roof: S.roof, obs: S.obs, p: S.p, removed: [...S.removed], sun: S.sun, sim: S.sim ? { perPanel: S.sim.perPanel, monthlyLoss: S.sim.monthlyLoss } : null },
+            data: { version: 1, roof: S.roof, obs: S.obs, p: S.p, removed: [...S.removed], sun: S.sun, sim: S.sim ? { perPanel: S.sim.perPanel, monthlyLoss: S.sim.monthlyLoss } : null,
+                bg: S.bg ? Object.fromEntries(Object.entries(S.bg).filter(([k]) => k !== 'url')) : null, google: S.google },
+            photo_ids: S.photos.map((p) => p.id),
             panel_item_id: S.p.itemId, panel_watt: S.p.watt, panel_count: e.n,
             kwh_per_kwp: S.yield ? S.yield.kwh_per_kwp : 0, shading_loss: e.loss || 0,
             monthly_kwh: e.monthly ? e.monthly.map((m) => +m.toFixed(1)) : [], yield_source: S.yield ? S.yield.source : null,
@@ -742,15 +782,264 @@ if ($('btnQuote')) $('btnQuote').addEventListener('click', async () => {
 window.addEventListener('beforeunload', (e) => { if (S.dirty && INIT.canEdit) { e.preventDefault(); e.returnValue = ''; } });
 ['dName', 'dLead'].forEach((id) => $(id).addEventListener('change', () => { S.dirty = true; }));
 
+// ------------------------------------------------------------------ photos
+const csrfHeaders = { 'X-CSRF-TOKEN': INIT.csrf, 'X-Requested-With': 'XMLHttpRequest' };
+function bgUrl() {
+    if (!S.bg) return null;
+    if (S.bg.source === 'google') return googleStaticUrl();
+    return INIT.urls.photoBase + S.bg.photoId;
+}
+function bgCorners() {
+    if (!S.bg || S.bg.hidden) return [];
+    const b = S.bg, hw = (b.w * b.mpp) / 2, hh = (b.h * b.mpp) / 2, r = (b.rot || 0) * D2R;
+    return [[-hw, -hh], [hw, -hh], [hw, hh], [-hw, hh]].map(([x, y]) => [b.cx + x * Math.cos(r) - y * Math.sin(r), b.cy + x * Math.sin(r) + y * Math.cos(r)]);
+}
+const texCache = new Map();
+function bgTexture() {
+    if (!S.bg || S.bg.hidden || !R) return null;
+    if (S.bg.source === 'google' && R.plain) return null;
+    const url = bgUrl(); if (!url) return null;
+    if (texCache.has(url)) return texCache.get(url) || null;
+    texCache.set(url, null);
+    const loader = new THREE.TextureLoader(); loader.setCrossOrigin('anonymous');
+    loader.load(url, (t) => { t.colorSpace = THREE.SRGBColorSpace; texCache.set(url, t); build3d(); }, undefined, () => texCache.set(url, false));
+    return null;
+}
+async function upload(file, kind) {
+    const fd = new FormData(); fd.append('photo', file); fd.append('kind', kind); if (INIT.id) fd.append('design_id', INIT.id);
+    const r = await fetch(INIT.urls.photoUpload, { method: 'POST', headers: csrfHeaders, body: fd });
+    const res = await r.json().catch(() => ({ ok: false, error: 'Upload failed (HTTP ' + r.status + ').' }));
+    if (!res.ok) throw new Error(res.error || 'Upload failed.');
+    return res;
+}
+function maybeUseGps(ph) {
+    if (ph.lat == null || $('dLat').value) return;
+    if (confirm(`This photo has a GPS position (${ph.lat}, ${ph.lng}). Use it as the site location?`)) {
+        $('dLat').value = ph.lat; $('dLng').value = ph.lng; fetchYield(); changed({ geometry: true });
+    }
+}
+function showBgCtl() {
+    const b = S.bg;
+    $('bgCtl').hidden = !b;
+    if (!b) return;
+    $('bgUploadCtl').hidden = b.source === 'google';
+    $('bgOpacity').value = b.opacity ?? 0.75; $('bgRot').value = b.rot || 0; $('bgRotVal').textContent = (b.rot || 0) + '°';
+    $('bgHide').innerHTML = b.hidden ? '<i class="bi bi-eye"></i> Show' : '<i class="bi bi-eye-slash"></i> Hide';
+    $('bgInfo').textContent = b.source === 'google'
+        ? `Google satellite · ${Math.round(b.w * b.mpp)} × ${Math.round(b.h * b.mpp)} m · shown live, not saved`
+        : `Photo covers ${(b.w * b.mpp).toFixed(1)} × ${(b.h * b.mpp).toFixed(1)} m${b.calibrated ? '' : ' · set the scale!'}`;
+}
+$('bgFile').addEventListener('change', async () => {
+    const f = $('bgFile').files[0]; $('bgFile').value = ''; if (!f) return;
+    try {
+        hint('Uploading photo…');
+        const ph = await upload(f, 'plan');
+        S.photos.push(ph);
+        const c = centroid(S.roof.pts), ext = Math.max(...S.roof.pts.map((q) => Math.hypot(q[0] - c[0], q[1] - c[1]))) * 2 + 8;
+        S.bg = { source: 'upload', photoId: ph.id, w: ph.w, h: ph.h, mpp: ext / Math.max(ph.w, ph.h), rot: 0, cx: c[0], cy: c[1], opacity: 0.75, calibrated: false };
+        view = null; S.dirty = true; showBgCtl(); renderPlan(); build3d(); renderPhotos();
+        hint('Now click "Set scale": click two points on the photo you know the distance between.');
+        maybeUseGps(ph);
+    } catch (e) { hint(''); alert(e.message); }
+});
+$('bgOpacity').addEventListener('input', () => { if (!S.bg) return; S.bg.opacity = +$('bgOpacity').value; S.dirty = true; renderPlan(); });
+$('bgRot').addEventListener('input', () => { if (!S.bg) return; S.bg.rot = +$('bgRot').value; $('bgRotVal').textContent = S.bg.rot + '°'; S.dirty = true; renderPlan(); clearTimeout(rebuildTimer); rebuildTimer = setTimeout(build3d, 200); });
+$('bgScale').addEventListener('click', () => { switchView('plan'); S.mode = 'scale'; S.scalePts = []; hint('Click two points on the photo whose real distance you know (e.g. the two ends of a wall). Esc cancels.'); renderPlan(); });
+function scaleClick(p) {
+    S.scalePts.push(p); renderPlan();
+    if (S.scalePts.length < 2) return;
+    const [a, b] = S.scalePts, d = Math.hypot(b[0] - a[0], b[1] - a[1]);
+    setTimeout(() => {
+        const real = parseFloat(prompt('Real distance between the two points, in metres', ''));
+        if (Number.isFinite(real) && real > 0.2 && d > 0.05 && S.bg) {
+            const k = real / d;
+            S.bg.mpp *= k; S.bg.cx = a[0] + (S.bg.cx - a[0]) * k; S.bg.cy = a[1] + (S.bg.cy - a[1]) * k; S.bg.calibrated = true;
+            view = null; S.dirty = true; showBgCtl(); build3d();
+            hint('Scale set. Turn the photo so north is up, then trace the roof (Draw outline) over it.');
+        } else hint('');
+        S.mode = 'select'; S.scalePts = []; renderPlan();
+    }, 30);
+}
+$('bgMove').addEventListener('click', () => {
+    const on = S.mode !== 'movebg'; S.mode = on ? 'movebg' : 'select';
+    $('plan').classList.toggle('move-bg', on); $('bgMove').classList.toggle('active', on);
+    hint(on ? 'Drag the photo to line it up with the roof outline. Click "Move photo" again when done.' : '');
+});
+$('bgHide').addEventListener('click', () => { if (!S.bg) return; S.bg.hidden = !S.bg.hidden; S.dirty = true; showBgCtl(); renderPlan(); build3d(); });
+$('bgRemove').addEventListener('click', () => { if (!S.bg || !confirm('Remove the background photo from this design?')) return; S.bg = null; view = null; S.dirty = true; showBgCtl(); renderPlan(); build3d(); });
+
+// site photos
+function renderPhotos() {
+    const g = $('siteGrid'); g.innerHTML = '';
+    S.photos.filter((p) => p.kind === 'site').forEach((ph) => {
+        const d = document.createElement('div'); d.className = 'ph';
+        d.innerHTML = `<img src="${ph.url}" alt="" loading="lazy" title="${(ph.caption || '').replace(/"/g, '&quot;')}">` + (INIT.canEdit ? '<button type="button" title="Delete">×</button>' : '');
+        d.querySelector('img').addEventListener('click', () => window.open(ph.url, '_blank'));
+        const del = d.querySelector('button');
+        if (del) del.addEventListener('click', async () => {
+            if (!confirm('Delete this photo?')) return;
+            const r = await fetch(INIT.urls.photoBase + ph.id + '/delete', { method: 'POST', headers: csrfHeaders });
+            const res = await r.json().catch(() => ({}));
+            if (res.ok) { S.photos = S.photos.filter((x) => x !== ph); renderPhotos(); } else alert(res.error || 'Could not delete.');
+        });
+        g.appendChild(d);
+    });
+    if (!g.children.length) g.innerHTML = '<div class="small text-muted" style="grid-column:1/-1">Roof, tank, staircase, EB meter, the view south… anything useful for the team.</div>';
+}
+$('siteFiles').addEventListener('change', async () => {
+    const files = [...$('siteFiles').files]; $('siteFiles').value = '';
+    $('upProgWrap').hidden = false;
+    for (let i = 0; i < files.length; i++) {
+        try { const ph = await upload(files[i], 'site'); S.photos.push(ph); S.dirty = true; renderPhotos(); maybeUseGps(ph); } catch (e) { alert(files[i].name + ': ' + e.message); }
+        $('upProg').style.width = ((i + 1) / files.length) * 100 + '%';
+    }
+    $('upProgWrap').hidden = true; $('upProg').style.width = '0%';
+});
+
+// ------------------------------------------------------------------ Google (needs a key in Settings)
+const KEY = INIT.mapsKey;
+function needKey() {
+    alert('Google maps features need a Google Maps API key.\n\nAdministration → Settings → "Google Maps (3D roof design)", or google.mapsKey in .env.\nSee the User Manual (3D roof design) for how to get the key.');
+    return false;
+}
+function siteLatLng() { const la = parseFloat($('dLat').value), ln = parseFloat($('dLng').value); return Number.isFinite(la) && Number.isFinite(ln) ? [la, ln] : null; }
+/** metres per pixel of a Google static map at this zoom (scale=2 image). */
+const mppAt = (latDeg, zoom) => (156543.03392 * Math.cos(latDeg * D2R)) / 2 ** zoom / 2;
+function googleStaticUrl() {
+    const ll = siteLatLng(); if (!KEY || !ll || !S.bg) return null;
+    return `https://maps.googleapis.com/maps/api/staticmap?center=${ll[0]},${ll[1]}&zoom=${S.bg.zoom || 20}&size=640x640&scale=2&maptype=satellite&key=${encodeURIComponent(KEY)}`;
+}
+$('bgGoogle').addEventListener('click', () => {
+    if (!KEY) return needKey();
+    const ll = siteLatLng(); if (!ll) { alert('Set the site location first (Find on map, or type latitude / longitude).'); return; }
+    const c = centroid(S.roof.pts), ext = Math.max(...S.roof.pts.map((q) => Math.hypot(q[0] - c[0], q[1] - c[1])));
+    const zoom = ext > 35 ? 19 : 20;
+    // The plan's (0,0) is the site location, so the map is centred on 0,0 and north-up; scale comes from the zoom.
+    S.bg = { source: 'google', zoom, w: 1280, h: 1280, mpp: mppAt(ll[0], zoom), rot: 0, cx: 0, cy: 0, opacity: 0.9, calibrated: true };
+    view = null; S.dirty = true; showBgCtl(); renderPlan(); build3d();
+    hint('Satellite photo of the site. Drag the roof corners onto the real roof, or click "Detect roof".');
+});
+
+let mapsReady = null;
+function loadMaps() {
+    if (!KEY) return Promise.reject(new Error('no key'));
+    if (mapsReady) return mapsReady;
+    mapsReady = new Promise((resolve, reject) => {
+        window.__rdMapsReady = () => resolve(window.google.maps);
+        const s = document.createElement('script');
+        s.src = `https://maps.googleapis.com/maps/api/js?key=${encodeURIComponent(KEY)}&libraries=places,geocoding&v=weekly&loading=async&callback=__rdMapsReady`;
+        s.async = true; s.onerror = () => reject(new Error('Google Maps could not load (check the key and its allowed websites).'));
+        document.head.appendChild(s);
+    });
+    return mapsReady;
+}
+let gmap = null;
+$('btnMap').addEventListener('click', async () => {
+    if (!KEY) return needKey();
+    const modal = window.bootstrap.Modal.getOrCreateInstance($('mapModal'));
+    modal.show();
+    try {
+        const maps = await loadMaps();
+        const ll = siteLatLng();
+        if (!gmap) {
+            gmap = new maps.Map($('mapCanvas'), { center: ll ? { lat: ll[0], lng: ll[1] } : { lat: 11.0, lng: 78.0 }, zoom: ll ? 20 : 6, mapTypeId: 'satellite', tilt: 0, rotateControl: false, streetViewControl: false, fullscreenControl: false });
+            await initSearch(maps);
+        } else if (ll) { gmap.setCenter({ lat: ll[0], lng: ll[1] }); }
+    } catch (e) { $('mapMsg').textContent = e.message; }
+});
+async function initSearch(maps) {
+    const box = $('mapSearchBox');
+    const goTo = (loc, vp) => { if (vp) gmap.fitBounds(vp); else { gmap.setCenter(loc); gmap.setZoom(20); } };
+    try {
+        const { PlaceAutocompleteElement } = await maps.importLibrary('places');
+        const pac = new PlaceAutocompleteElement({ includedRegionCodes: ['in'] });
+        box.appendChild(pac);
+        const onPick = async (place) => { await place.fetchFields({ fields: ['location', 'viewport', 'formattedAddress'] }); goTo(place.location, place.viewport); gmap.setZoom(Math.max(gmap.getZoom(), 19)); $('mapMsg').textContent = place.formattedAddress + ' — drag so the cross is on the roof.'; };
+        pac.addEventListener('gmp-select', (ev) => onPick(ev.placePrediction.toPlace()));
+        pac.addEventListener('gmp-placeselect', (ev) => onPick(ev.place));
+    } catch (e) {
+        // fallback: plain box + Geocoding API
+        const inp = document.createElement('input'); inp.className = 'form-control form-control-sm'; inp.placeholder = 'Address, area or landmark – press Enter'; box.appendChild(inp);
+        inp.addEventListener('keydown', async (ev) => {
+            if (ev.key !== 'Enter') return; ev.preventDefault();
+            const { Geocoder } = await maps.importLibrary('geocoding');
+            new Geocoder().geocode({ address: inp.value, region: 'in' }, (res, st) => { if (st === 'OK' && res[0]) goTo(res[0].geometry.location, res[0].geometry.viewport); else $('mapMsg').textContent = 'Not found: ' + st; });
+        });
+    }
+}
+$('mapUse').addEventListener('click', () => {
+    if (!gmap) return;
+    const c = gmap.getCenter();
+    $('dLat').value = c.lat().toFixed(6); $('dLng').value = c.lng().toFixed(6);
+    window.bootstrap.Modal.getOrCreateInstance($('mapModal')).hide();
+    fetchYield();
+    if (!S.bg || S.bg.source === 'google') $('bgGoogle').click(); else changed({ geometry: true });
+});
+
+/** Google Solar API: roof outline (approx.), pitch and facing from the building under the site location. */
+$('btnDetect').addEventListener('click', async () => {
+    if (!KEY) return needKey();
+    const ll = siteLatLng(); if (!ll) { alert('Set the site location on the roof first (Find on map).'); return; }
+    $('btnDetect').disabled = true; hint('Asking Google Solar about this building…');
+    try {
+        const u = `https://solar.googleapis.com/v1/buildingInsights:findClosest?location.latitude=${ll[0]}&location.longitude=${ll[1]}&requiredQuality=BASE&key=${encodeURIComponent(KEY)}`;
+        const r = await fetch(u); const j = await r.json();
+        if (!r.ok) throw new Error(j.error && j.error.message ? j.error.message : 'HTTP ' + r.status);
+        applyBuildingInsights(j);
+    } catch (e) { hint(''); alert('Google Solar could not detect this roof: ' + e.message + '\n\nYou can still trace it over the satellite photo.'); }
+    finally { $('btnDetect').disabled = false; }
+});
+function applyBuildingInsights(j) {
+    const ll = siteLatLng() || [j.center.latitude, j.center.longitude];
+    const toXY = (p) => [(p.longitude - ll[1]) * 111320 * Math.cos(ll[0] * D2R), (p.latitude - ll[0]) * 110540];
+    const sp = j.solarPotential || {};
+    const segs = (sp.roofSegmentStats || []).filter((s) => s.boundingBox);
+    const box = (bb) => { const a = toXY(bb.sw), b = toXY(bb.ne); return [[a[0], a[1]], [b[0], a[1]], [b[0], b[1]], [a[0], b[1]]]; };
+    let pts = segs.length ? hull(segs.flatMap((s) => box(s.boundingBox))) : (j.boundingBox ? box(j.boundingBox) : null);
+    if (!pts || pts.length < 3) throw new Error('no roof outline in the answer');
+    pts = pts.map(([x, y]) => [+x.toFixed(2), +y.toFixed(2)]);
+    if (polyArea(pts) < 0) pts.reverse();
+    S.roof.pts = pts;
+    const main = segs.slice().sort((a, b) => (b.stats?.areaMeters2 || 0) - (a.stats?.areaMeters2 || 0))[0];
+    const pitch = main ? main.pitchDegrees || 0 : 0;
+    if (main && pitch > 8) {
+        S.p.tilt = Math.round(pitch); S.p.az = Math.round((main.azimuthDegrees || 180) / 5) * 5; S.p.front = 0.15; S.p.gapAuto = false; S.p.gap = 0.02;
+    }
+    if (sp.panelHeightMeters && sp.panelWidthMeters && !S.p.itemId) { S.p.len = sp.panelHeightMeters; S.p.wid = sp.panelWidthMeters; }
+    const cfg = (sp.solarPanelConfigs || []).slice(-1)[0];
+    S.google = {
+        date: j.imageryDate ? `${j.imageryDate.day}-${j.imageryDate.month}-${j.imageryDate.year}` : null, quality: j.imageryQuality || null,
+        roofArea: sp.wholeRoofStats ? Math.round(sp.wholeRoofStats.areaMeters2) : null, maxPanels: sp.maxArrayPanelsCount || null,
+        panelW: sp.panelCapacityWatts || null, maxKwh: cfg ? Math.round(cfg.yearlyEnergyDcKwh) : null, pitch: Math.round(pitch), segments: segs.length,
+    };
+    showGoogle();
+    if (!S.bg && KEY) $('bgGoogle').click();
+    S.removed.clear(); view = null; loadForm(); changed({ geometry: true });
+    hint(pitch > 8 ? `Sloped roof (${Math.round(pitch)}°): panels set flush to the slope. Check the outline over the photo.` : 'Roof detected. Drag the corners to match the photo exactly, then add the tank and staircase room.');
+}
+function showGoogle() {
+    const g = S.google, box = $('googleInfo');
+    if (!g) { box.hidden = true; return; }
+    box.hidden = false;
+    box.innerHTML = `<div class="alert alert-success py-1 px-2 mb-0"><b>Google Solar</b>: roof ${g.roofArea ?? '?'} m² in ${g.segments} part(s), ${g.pitch > 8 ? `sloped ${g.pitch}°` : 'flat roof'}.
+        ${g.maxPanels ? `Google's own estimate: up to ${g.maxPanels} panels of ${g.panelW} W${g.maxKwh ? ` ≈ ${g.maxKwh.toLocaleString('en-IN')} kWh/yr` : ''}.` : ''}
+        <span class="text-muted">Imagery ${g.date || ''} (${(g.quality || '').toLowerCase()}).</span></div>`;
+}
+if (!KEY) { ['btnMap', 'bgGoogle', 'btnDetect'].forEach((id) => { $(id).title = 'Needs a Google Maps key in Settings'; $(id).classList.add('opacity-50'); }); }
+if (!INIT.canEdit) ['bgGoogle', 'btnDetect', 'bgScale', 'bgMove', 'bgRemove'].forEach((id) => { $(id).disabled = true; });
+
 // ------------------------------------------------------------------ start
 if (!INIT.canEdit) {
     document.querySelectorAll('.rd-side input, .rd-side select, .rd-side button, #dName, #dLead, #dLat, #dLng, #btnLocate').forEach((x) => { x.disabled = true; });
 }
-loadForm();
+loadForm(true);
 layout();
 renderPlan();
 renderObsList();
 sunLabel();
 fetchYield();
 results();
-window.__rd = { S, layout, simulate, snapshot, computeEnergy }; // for testing
+showBgCtl();
+showGoogle();
+renderPhotos();
+window.__rd = { S, layout, simulate, snapshot, computeEnergy, applyBuildingInsights, renderPlan, mppAt }; // for testing

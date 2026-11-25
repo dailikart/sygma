@@ -796,6 +796,17 @@ has "quotation page links back to the design" "$(curl -s -b "$M" "$B/admin/quota
 eq "quotation PDF with the layout picture" "$(curl -s -b "$M" -o "$W/qd.pdf" -w '%{content_type}' "$B/admin/quotations/$QD/pdf") $(grep -ac '/Subtype /Image' "$W/qd.pdf" | awk '{print ($1>0)?"image":"none"}')" "application/pdf image"
 eq "designs list shows the design" "$(curl -s -b "$M" "$B/admin/designs" | grep -c "admin/designs/$DS\"")" "1"
 eq "surveyor may design, accounts may not" "$(code "$W/suresh" admin/designs) $(code "$W/acct1" admin/designs) $(code "$W/acct1" "admin/designs/$DS")" "200 403 403"
+PU=$(curl -s -b "$M" -c "$M" -H "X-CSRF-TOKEN: $(tok "$M" admin/leads/new)" -H "X-Requested-With: XMLHttpRequest" -F kind=site -F caption="Roof from staircase" -F "photo=@$W/photo.jpg" "$B/admin/designs/photos")
+PHID=$(php -r '$r=json_decode($argv[1],true); echo ($r["ok"]??false)?$r["id"]:"0";' "$PU")
+has "site photo uploaded (re-saved as JPG)" "$PU" '"kind": "site"'
+eq "non-image refused" "$(curl -s -b "$M" -c "$M" -H "X-CSRF-TOKEN: $(tok "$M" admin/leads/new)" -F kind=site -F "photo=@$W/virus.exe" -o /dev/null -w '%{http_code}' "$B/admin/designs/photos")" "422"
+eq "photo served as JPEG" "$(curl -s -b "$M" -o /dev/null -w '%{http_code} %{content_type}' "$B/admin/designs/photos/$PHID")" "200 image/jpeg"
+eq "photo not attached yet, not visible to others" "$(q "select design_id is null from roof_design_photos where id=$PHID")|$(code "$W/suresh" "admin/designs/photos/$PHID")" "1|404"
+dpost "$M" "admin/designs/save/$DS" "$(djson 'Quote Lead Kumar · roof' "$DL" 12 "$PNG" | php -r '$a=json_decode(stream_get_contents(STDIN),true); $a["photo_ids"]=[(int)$argv[1]]; echo json_encode($a);' "$PHID")" >/dev/null
+eq "photo attached to the design on save, then visible to the team" "$(q "select design_id from roof_design_photos where id=$PHID")|$(code "$W/suresh" "admin/designs/photos/$PHID")" "$DS|200"
+has "designer lists the photo" "$(curl -s -b "$M" "$B/admin/designs/$DS")" "admin\\/designs\\/photos\\/$PHID"
+eq "photo deleted" "$(curl -s -b "$M" -c "$M" -X POST -H "X-CSRF-TOKEN: $(tok "$M" admin/leads/new)" -o /dev/null -w '%{http_code}' "$B/admin/designs/photos/$PHID/delete")|$(q "select count(*) from roof_design_photos where id=$PHID")" "200|0"
+has "Settings has the Google Maps key field" "$(curl -s -b "$A" "$B/admin/settings")" 'name="googleMapsKey"'
 post "$M" "admin/designs/$DS" "admin/designs/$DS/delete" >/dev/null
 eq "design deleted (kept for history, gone from the list)" "$(q "select deleted_at is not null from roof_designs where id=$DS")|$(code "$M" "admin/designs/$DS")" "1|404"
 

@@ -29,6 +29,9 @@ class Solar extends BaseConfig
     /** Number prefixes. The financial year and a running number are added. */
     public string $quotePrefix    = 'QT';
     public string $designPrefix   = 'RD';
+
+    /** Google Maps browser key for the 3D roof designer (map search, satellite, Solar API). Can also be set as google.mapsKey in .env. */
+    public string $googleMapsKey  = '';
     public string $invoicePrefix  = 'INV';
     public string $receiptPrefix  = 'RCT';
     public string $projectPrefix  = 'PRJ';

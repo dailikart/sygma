@@ -55,6 +55,7 @@ class Features extends BaseConfig
             'description' => 'Draw the roof, place panels automatically, 3D view with sun and shadows, shading loss and generation; quotation from the design.',
             'permissions' => ['designs'],
             'routes'      => ['admin/designs'],
+            'settings'    => ['Google Maps (3D roof design)'],
         ],
         'invoices' => [
             'title'       => 'Invoices & Payments',

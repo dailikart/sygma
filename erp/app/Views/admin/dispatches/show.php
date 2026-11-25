@@ -27,6 +27,15 @@
     </tbody></table></div>
     <?php if ($serialEdit): ?><button class="btn btn-sm btn-outline-primary">Save serial numbers</button> <small class="text-muted">One per line. Inverter serial numbers fill the installation form automatically.</small><?php endif ?>
     </form>
+    <?php if ($taken): $names = array_column($lines, 'name', 'item_id'); ?>
+    <h3 class="h6 mt-2"><i class="bi bi-diagram-3"></i> Taken from (oldest stock first)</h3>
+    <div class="table-responsive"><table class="table table-sm align-middle"><thead><tr><th>Item</th><th class="text-end">Qty</th><th>Purchase · supplier bill · PO</th><th>Received</th><th class="text-end">Rate</th></tr></thead><tbody>
+    <?php foreach ($taken as $itemId => $lots): foreach ($lots as $l): ?>
+        <tr><td><a href="<?= site_url('admin/stock/item/' . $itemId . '/lots') ?>"><?= esc($names[$itemId] ?? ('#' . $itemId)) ?></a></td><td class="text-end"><?= qty($l['taken']) ?></td>
+            <td><?= view('admin/stock/_lot_source', ['lot' => $l]) ?></td><td class="text-nowrap"><small><?= fdate($l['received_on']) ?></small></td><td class="text-end"><?= money($l['rate'], false) ?></td></tr>
+    <?php endforeach; endforeach ?>
+    </tbody></table></div>
+    <?php endif ?>
     <?php if ($photos): ?><h3 class="h6">Delivery photos</h3><?= view('admin/projects/_files', ['list' => $photos]) ?><?php endif ?>
     <?php if ($d['delivery_note']): ?><p class="small">Note: <?= esc($d['delivery_note']) ?></p><?php endif ?>
     <p class="small text-muted mb-0">Dispatched <?= fdate($d['dispatched_at'], true) ?> <?= $d['dispatched_by'] ? 'by ' . esc(user_name($d['dispatched_by'])) : '' ?> · Delivered <?= fdate($d['delivered_at'], true) ?> <?= $d['delivered_by'] ? 'by ' . esc(user_name($d['delivered_by'])) : '' ?></p>

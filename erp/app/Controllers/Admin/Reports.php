@@ -263,12 +263,8 @@ class Reports extends AdminController
                 $g[$m['group_name']][$m['name']] = round($amt, 2);
             }
         }
-        $stockValue = static function (string $before) use ($db): float {
-            $row = $db->table('stock_movements m')->select('SUM(m.qty * i.purchase_price) AS v', false)->join('items i', 'i.id = m.item_id')
-                ->where('m.created_at <', $before . ' 00:00:00')->get()->getRowArray();
-
-            return round((float) ($row['v'] ?? 0), 2);
-        };
+        // Opening / closing stock at FIFO cost (the actual purchase rates of the lots still in store).
+        $stockValue = static fn (string $before): float => \App\Libraries\Lots::value($before);
         $opening = $stockValue($from);
         $closing = $stockValue(date('Y-m-d', strtotime($to . ' +1 day')));
         $sum     = static fn (array $a) => round(array_sum($a), 2);

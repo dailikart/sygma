@@ -189,6 +189,8 @@ $routes->group('admin', ['filter' => 'session', 'namespace' => 'App\Controllers\
     // Inventory
     $routes->get('stock', 'Stock::index');
     $routes->get('stock/item/(:num)', 'Stock::ledger/$1');
+    $routes->get('stock/item/(:num)/lots', 'Stock::lots/$1');
+    $routes->get('stock/lots', 'Stock::lotReport');
     $routes->post('stock/movements/(:num)/delete', 'Stock::deleteMovement/$1');
     $routes->get('stock/adjust', 'Stock::adjust');
     $routes->post('stock/adjust', 'Stock::saveAdjust');

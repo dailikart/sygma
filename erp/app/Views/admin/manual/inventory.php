@@ -20,3 +20,13 @@
     <li>A wrong opening / adjustment line? Admins (permission "Delete entries") can delete it with the bin icon on that line in the item's stock ledger (Stock Balance → click the quantity). Purchase, return and dispatch lines are removed by deleting that document.</li>
     <li>Items below their minimum stock are listed under <strong>Low stock</strong> on the dashboard.</li>
 </ul>
+<h4>Which PO and purchase bill: stock lots (FIFO)</h4>
+<p>Every purchase (goods received), opening stock or stock added by adjustment is kept as a <strong>lot</strong> that remembers its purchase no., supplier invoice no., PO no., supplier, date and rate. When stock goes out, the <strong>oldest lot is used first</strong> (First In, First Out). A purchase return takes from the lots of the purchase you return against.</p>
+<ul>
+    <li><span class="path">Stock Balance → Lots</span> (or <span class="btnname">Lots: which PO / purchase bill</span> in the item's ledger): every lot of the item with <em>In / Used / Left</em> and where it went: dispatch, project and customer, or return.</li>
+    <li>A <strong>dispatch</strong> shows <em>Taken from</em>: for each item, the purchase, supplier bill and PO the material came from.</li>
+    <li>A <strong>purchase</strong> shows <em>Where this stock went</em>: which projects got the material from that bill and how much is still in store.</li>
+    <li><span class="path">Stock Balance → Stock ageing</span>: stock still in store, lot by lot, with its age (0–30, 31–90, 91–180, over 180 days) and value. Old lots are slow-moving material.</li>
+    <li>Stock value (Stock Balance, Profit &amp; Loss opening/closing stock) and the material cost in <em>Project profit</em> use the real rate of the purchase bill each piece came from.</li>
+    <li>A purchase whose stock is already dispatched or returned cannot be deleted; the message names the dispatch / return to remove first.</li>
+</ul>

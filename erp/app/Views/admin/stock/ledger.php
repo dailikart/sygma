@@ -1,6 +1,7 @@
 <?= $this->extend('admin/layout') ?>
 <?= $this->section('title') ?>Stock Ledger: <?= esc($item['name']) ?><?= $this->endSection() ?>
 <?= $this->section('content') ?>
+<div class="d-flex mb-2"><a href="<?= site_url('admin/stock/item/' . $item['id'] . '/lots') ?>" class="btn btn-sm btn-outline-primary ms-auto"><i class="bi bi-diagram-3"></i> Lots: which PO / purchase bill</a></div>
 <div class="card"><div class="table-responsive"><table class="table table-sm mb-0">
     <thead><tr><th>Date</th><th>Location</th><th>Type</th><th>Reference</th><th>Note</th><th class="text-end">In</th><th class="text-end">Out</th><th class="text-end">Balance</th><?= can('entries.delete') ? '<th></th>' : '' ?></tr></thead><tbody>
     <?php $bal = 0; $links = ['purchase' => 'purchases', 'purchase_return' => 'purchase-returns', 'dispatch' => 'dispatches'];

@@ -8,15 +8,15 @@
     <?= view('partials_pwa') ?>
     <link href="<?= base_url("assets/vendor/bootstrap/css/bootstrap.min.css") ?>" rel="stylesheet">
     <link href="<?= base_url("assets/vendor/bootstrap-icons/bootstrap-icons.min.css") ?>" rel="stylesheet">
-    <link href="<?= base_url('assets/css/app.css') ?>" rel="stylesheet">
+    <link href="<?= asset('assets/css/app.css') ?>" rel="stylesheet">
 </head>
 <body data-theme="<?= esc((string) setting('Solar.theme')) ?>">
 <div class="d-flex">
     <aside class="sidebar offcanvas-lg offcanvas-start" tabindex="-1" id="sidebar">
         <div class="sidebar-brand d-flex align-items-center justify-content-between">
             <a href="<?= site_url('admin') ?>" class="text-white text-decoration-none fw-bold d-flex align-items-center gap-2">
-                <?php if (setting('Solar.logoPath')): ?><img src="<?= site_url('branding/logo') ?>" alt=""><?php else: ?><img src="<?= base_url('logo-sm.png') ?>" alt="" class="brand-mark"><?php endif ?>
-                <?php if (setting('Solar.logoPath')): ?><span class="text-truncate" style="max-width:160px"><?= esc((string) setting('Solar.companyName')) ?></span><?php else: ?><img src="<?= base_url('wordmark-light.png') ?>" alt="Sygma Solar Suite" class="brand-wordmark"><?php endif ?></a>
+                <?php if (setting('Solar.logoPath')): ?><img src="<?= site_url('branding/logo') ?>" alt=""><?php else: ?><img src="<?= asset('logo-sm.png') ?>" alt="" class="brand-mark" style="background:none;padding:0;width:34px;height:34px"><?php endif ?>
+                <?php if (setting('Solar.logoPath')): ?><span class="text-truncate" style="max-width:160px"><?= esc((string) setting('Solar.companyName')) ?></span><?php else: ?><img src="<?= asset('wordmark-light.png') ?>" alt="Sygma Solar Suite" class="brand-wordmark" style="background:none;padding:0;height:30px;width:auto;max-width:150px"><?php endif ?></a>
             <button type="button" class="btn-close btn-close-white d-lg-none" data-bs-dismiss="offcanvas" data-bs-target="#sidebar"></button>
         </div>
         <?= view('admin/partials/menu') ?>
@@ -66,7 +66,7 @@
     </div>
 </div>
 <script src="<?= base_url("assets/vendor/bootstrap/js/bootstrap.bundle.min.js") ?>"></script>
-<script src="<?= base_url('assets/js/app.js') ?>"></script>
+<script src="<?= asset('assets/js/app.js') ?>"></script>
 <script src="<?= base_url('assets/js/searchable-select.js') ?>"></script>
 <?= $this->renderSection('scripts') ?>
 </body>

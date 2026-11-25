@@ -142,7 +142,14 @@ abstract class PurchaseDocs extends AdminController
     {
         $this->requirePermission('purchases.view');
 
-        return $this->render('purchases/show', $this->data((int) $id));
+        $data = $this->data((int) $id);
+        if (($data['c']['table'] ?? '') === 'purchases') {
+            $data['lotsOf'] = \App\Libraries\Lots::forPurchase((int) $id);
+        } elseif (($data['c']['table'] ?? '') === 'purchase_returns') {
+            $data['takenFrom'] = \App\Libraries\Lots::takenBy('purchase_return', (int) $id);
+        }
+
+        return $this->render('purchases/show', $data);
     }
 
     public function pdf($id)

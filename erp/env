@@ -85,3 +85,7 @@
 # Only on YOUR installs (demo, your own). Never on a customer's server.
 
 # features.manage = true
+
+# Google Maps browser key for the 3D roof designer (map search, satellite,
+# roof detection). Normally set in Settings; use this where Settings is view-only.
+# google.mapsKey = ''

@@ -67,6 +67,7 @@ $manage = can('quotations.manage'); $open = $q['status'] !== 'converted'; ?>
                 <tr><td>Savings in 25 years</td><td class="text-end fw-bold text-success"><?= money($roi['savings_25']) ?></td></tr>
             </table>
             <div class="card-body small text-muted py-2">Based on <?= qty($q['units_per_kw_day']) ?> units/kW/day at ₹<?= qty($q['tariff']) ?>/unit.</div></div>
+        <?php if (! empty($q['roof_design_id']) && can('designs.view')): ?><a class="btn btn-sm btn-outline-primary w-100 mt-3" href="<?= site_url('admin/designs/' . $q['roof_design_id']) ?>"><i class="bi bi-badge-3d"></i> Open the 3D roof design</a><?php endif ?>
         <?php if ($q['design_path']): ?><div class="card mt-3"><div class="card-header bg-white fw-semibold">Design</div><div class="card-body text-center">
             <?php if (preg_match('/\.(jpe?g|png|webp)$/i', $q['design_path'])): ?><a href="<?= site_url('admin/quotations/' . $q['id'] . '/design') ?>" target="_blank"><img src="<?= site_url('admin/quotations/' . $q['id'] . '/design') ?>" class="img-fluid rounded" alt="Design"></a>
             <?php else: ?><a href="<?= site_url('admin/quotations/' . $q['id'] . '/design') ?>" target="_blank"><i class="bi bi-file-earmark-pdf fs-1"></i><br>Open design</a><?php endif ?></div></div><?php endif ?>

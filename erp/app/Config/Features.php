@@ -50,6 +50,13 @@ class Features extends BaseConfig
             'routes'      => ['admin/quotations', 'quote'],
             'settings'    => ['Quotation'],
         ],
+        'design' => [
+            'title'       => '3D roof design',
+            'description' => 'Draw the roof, place panels automatically, 3D view with sun and shadows, shading loss and generation; quotation from the design.',
+            'permissions' => ['designs'],
+            'routes'      => ['admin/designs'],
+            'settings'    => ['Google Maps (3D roof design)'],
+        ],
         'invoices' => [
             'title'       => 'Invoices & Payments',
             'description' => 'GST invoices, receipts and part payments.',

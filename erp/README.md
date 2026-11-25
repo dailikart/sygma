@@ -12,6 +12,7 @@ Built with CodeIgniter 4.7 (PHP 8.2+), CodeIgniter Shield, MySQL.
 - **Product proposal & confirmed project flow:** [docs/PROPOSAL.md](docs/PROPOSAL.md)
 - **Team demo setup (with the website):** [docs/DEMO_SETUP.md](docs/DEMO_SETUP.md)
 - **Modules & options per company:** [docs/MODULES.md](docs/MODULES.md)
+- **3D roof design:** in-app manual (Help on the design screen) · code in `app/Controllers/Admin/RoofDesigns.php`, `public/assets/js/roof-designer.js`
 
 Quick start (details in the setup guide):
 

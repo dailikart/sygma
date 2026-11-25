@@ -47,6 +47,9 @@ class Settings extends AdminController
         'Google Ads leads' => [
             'googleEnabled' => ['Import Google Ads lead-form leads', 'bool'],
         ],
+        'Google Maps (3D roof design)' => [
+            'googleMapsKey' => 'Google Maps API key: browser key restricted to this website; enable Maps JavaScript, Places, Maps Static and Solar APIs',
+        ],
         'AMC' => [
             'amcReminderDays' => ['Remind this many days before a service visit', 'number'],
         ],

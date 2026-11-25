@@ -24,7 +24,7 @@ $init = [
     'csrf'      => csrf_hash(),
 ];
 ?>
-<link rel="stylesheet" href="<?= base_url('assets/css/roof-designer.css') ?>?v=1">
+<link rel="stylesheet" href="<?= asset('assets/css/roof-designer.css') ?>">
 <div class="rd-top card card-body py-2 mb-3">
     <div class="row g-2 align-items-end">
         <div class="col-md-3"><label class="form-label small mb-0">Design name</label>
@@ -209,5 +209,5 @@ $init = [
 
 <script type="application/json" id="rd-init"><?= json_encode($init, JSON_HEX_TAG | JSON_HEX_AMP | JSON_UNESCAPED_UNICODE) ?></script>
 <script type="importmap">{"imports": {"three": "<?= base_url('assets/vendor/three/three.module.min.js') ?>", "three/addons/OrbitControls.js": "<?= base_url('assets/vendor/three/OrbitControls.js') ?>"}}</script>
-<script type="module" src="<?= base_url('assets/js/roof-designer.js') ?>?v=1"></script>
+<script type="module" src="<?= asset('assets/js/roof-designer.js') ?>"></script>
 <?= $this->endSection() ?>

@@ -41,6 +41,16 @@ if (! function_exists('fdate')) {
     }
 }
 
+if (! function_exists('asset')) {
+    /** URL of a file in public/ with ?v=<last change>, so browsers never keep an old copy after an update. */
+    function asset(string $path): string
+    {
+        $file = FCPATH . ltrim($path, '/');
+
+        return base_url($path) . (is_file($file) ? '?v=' . filemtime($file) : '');
+    }
+}
+
 if (! function_exists('can')) {
     function can(string $permission): bool
     {

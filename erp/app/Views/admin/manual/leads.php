@@ -29,3 +29,9 @@
     <li>Next: <a href="<?= site_url('admin/manual/invoices') ?>">create the invoice</a>.</li>
 </ol>
 <p class="small text-muted">A lead you lose: set the status to <strong>Lost</strong>. It leaves the open list but stays in the history.</p>
+<h4>Delete a lead</h4>
+<ul>
+    <li>For a wrong or duplicate entry: open the lead → <span class="btnname">Delete</span> and confirm.</li>
+    <li>Only roles with <em>Leads: delete</em> (<span class="path">Administration → Roles &amp; Access</span>) see the button.</li>
+    <li>A lead already converted to a customer cannot be deleted (delete the customer instead, if really needed). The delete is recorded in the User Log.</li>
+</ul>

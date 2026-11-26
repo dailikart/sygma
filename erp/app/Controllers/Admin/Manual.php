@@ -15,6 +15,7 @@ class Manual extends AdminController
      */
     public const TOPICS = [
         'getting-started' => ['Getting started', 'bi-play-circle', 'Basics', 'Everyone', ['admin', 'admin/tasks', 'admin/notifications', 'admin/profile']],
+        'whats-new'       => ["What's new", 'bi-stars', 'Basics', 'Everyone', []],
         'setup'           => ['First-time setup', 'bi-gear-wide-connected', 'Basics', 'Super Admin', []],
         'leads'           => ['Leads & follow-ups', 'bi-megaphone', 'Sales', 'Marketing / Sales', ['admin/leads']],
         'customers'       => ['Customers & documents', 'bi-people', 'Sales', 'Marketing / Sales', ['admin/customers', 'admin/documents', 'admin/files']],

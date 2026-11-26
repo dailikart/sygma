@@ -60,7 +60,7 @@ class ProjectProfit
         $ids = array_keys($out);
         // Material at the real cost of the stock lots used (FIFO); anything not traced to a lot at the average rate.
         $lotted = [];
-        foreach ($db->table('stock_lot_moves lm')->select('d.project_id, l.item_id, SUM(lm.qty) AS q, SUM(lm.qty * l.rate) AS v', false)
+        foreach (! \App\Libraries\Lots::ready() ? [] : $db->table('stock_lot_moves lm')->select('d.project_id, l.item_id, SUM(lm.qty) AS q, SUM(lm.qty * l.rate) AS v', false)
             ->join('stock_lots l', 'l.id = lm.lot_id')->join('stock_movements sm', 'sm.id = lm.movement_id')
             ->join('dispatches d', "d.id = sm.ref_id AND sm.ref_type = 'dispatch'")->whereIn('d.project_id', $ids)
             ->groupBy('d.project_id, l.item_id')->get()->getResultArray() as $r) {

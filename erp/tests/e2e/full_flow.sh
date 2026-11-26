@@ -68,7 +68,7 @@ A="$W/admin"; eq "admin login" "$(login "$A" admin@e2e.test 'Admin#2026x')" "303
 # ── settings & masters ─────────────────────────────────────────────────────
 section "Settings and masters"
 post "$A" admin/settings admin/settings -F companyName="Sun Power Solutions" -F companyAddress="12, Perundurai Road, Erode" -F companyPhone=9876500000 \
-  -F companyEmail=info@sunpower.test -F companyGstin=33AAAAA0000A1Z5 -F companyState="Tamil Nadu" -F smtpEnabled=1 -F smtpHost=127.0.0.1 -F smtpPort=1026 \
+  -F companyEmail=info@sunpower.test -F companyGstin=33AAAAA0000A1Z5 -F companyState="Tamil Nadu" -F companyCity=Erode -F companyPincode=638011 -F smtpEnabled=1 -F smtpHost=127.0.0.1 -F smtpPort=1026 \
   -F smtpCrypto= -F smtpUser= -F mailFromEmail=noreply@sunpower.test -F mailFromName="Sun Power Solutions" -F emailUseQueue=0 -F amcReminderDays=7 >/dev/null
 eq "settings saved" "$(q "select value from settings where \`key\`='companyName'")" "Sun Power Solutions"
 post "$A" admin/settings admin/settings -F theme=forest -F "logo=@$W/photo.jpg" -F "signature=@$W/photo.jpg" >/dev/null
@@ -661,6 +661,29 @@ eq "marketing notified about Meta and Google leads" "$(q "select count(distinct 
 has "lead form offers Google Ads as a source" "$(curl -s -b "$M" "$B/admin/leads/new")" "Google Ads"
 
 # ── project profit ─────────────────────────────────────────────────────────
+section "GST e-invoice: upload file for einvoice1.gst.gov.in"
+EI=$(curl -s -b "$A" "$B/admin/einvoice")
+has "e-invoice page lists the B2B invoice as ready" "$EI" "admin/einvoice/2/json"
+eq "…and not the B2C invoice (no GSTIN)" "$(grep -c 'admin/invoices/1"' <<<"$EI")" "0"
+curl -s -b "$A" -o "$W/ei.json" "$B/admin/einvoice/2/json"
+eq "JSON in portal schema 1.1: B2B, seller TN 33 / Erode 638011, buyer Karnataka 29, IGST, 3 lines" "$(php -r '$j=json_decode(file_get_contents($argv[1]),true)[0]; echo $j["Version"],"|",$j["TranDtls"]["SupTyp"],"|",$j["SellerDtls"]["Stcd"],"/",$j["SellerDtls"]["Loc"],"/",$j["SellerDtls"]["Pin"],"|",$j["BuyerDtls"]["Pos"],"/",$j["BuyerDtls"]["Gstin"],"|",$j["ValDtls"]["CgstVal"]+0,"/",$j["ValDtls"]["IgstVal"]>0?"igst":"none","|",count($j["ItemList"]),"|",$j["DocDtls"]["Dt"];' "$W/ei.json")" "1.1|B2B|33/Erode/638011|29/29KMCST1234A1Z9|0/igst|3|$(date -d "$(q "select invoice_date from invoices where id=2")" +%d/%m/%Y)"
+eq "JSON totals add up to the invoice total" "$(php -r '$j=json_decode(file_get_contents($argv[1]),true)[0]; $s=0; foreach($j["ItemList"] as $i){ $s+=$i["TotItemVal"]; if (abs($i["AssAmt"]+$i["IgstAmt"]+$i["CgstAmt"]+$i["SgstAmt"]-$i["TotItemVal"])>0.01) echo "line-bad "; } echo round($s+$j["ValDtls"]["RndOffAmt"],2),"=",$j["ValDtls"]["TotInvVal"];' "$W/ei.json")" "$(q "select total+0 from invoices where id=2")=$(q "select total+0 from invoices where id=2")"
+eq "service line (SAC 99..) marked as service" "$(php -r 'foreach(json_decode(file_get_contents($argv[1]),true)[0]["ItemList"] as $i) echo $i["HsnCd"],":",$i["IsServc"]," ";' "$W/ei.json")" "8541:N 8504:N 9954:Y "
+r=$(post "$A" admin/einvoice admin/einvoice/download -F 'ids[]=2'); eq "bulk download of ticked invoices is a JSON array" "$(php -r '$j=json_decode(file_get_contents($argv[1]),true); echo is_array($j)?count($j):"bad";' "$W/last.html")" "1"
+r=$(curl -s -b "$A" -o /dev/null -w '%{http_code} %{redirect_url}' "$B/admin/einvoice/1/json"); has "B2C invoice JSON refused" "$(flash "$A" admin/invoices/1)" "no GSTIN"
+post "$M" admin/customers/2/edit admin/customers/save/2 -F type=b2b -F eb_charges_by=company -F name="KMC School" -F company="KMC Educational Trust" -F gstin=29KMCST1234A1Z9 -F phone=9876543211 -F email=accounts@kmc.test -F address="5, MG Road" -F city=Bengaluru -F state=Karnataka -F pincode= >/dev/null
+has "missing customer PIN is reported before upload" "$(curl -s -b "$A" "$B/admin/einvoice")" "Customer PIN code is missing"
+post "$M" admin/customers/2/edit admin/customers/save/2 -F type=b2b -F eb_charges_by=company -F name="KMC School" -F company="KMC Educational Trust" -F gstin=29KMCST1234A1Z9 -F phone=9876543211 -F email=accounts@kmc.test -F address="5, MG Road" -F city=Bengaluru -F state=Karnataka -F pincode=560001 >/dev/null
+r=$(post "$A" admin/invoices/2 admin/einvoice/2/irn -F irn=12345); has "wrong IRN refused" "$(flash "$A" admin/invoices/2)" "64-character"
+IRN=a5c12dca80e743321740b001fd70953e8738d109865d28ba4013750f2046f229
+post "$A" admin/invoices/2 admin/einvoice/2/irn -F irn=$IRN -F irn_ack_no=112010036563310 -F irn_ack_date=2026-11-26T12:30 -F irn_qr="eyJhbGciOiJSUzI1NiJ9.eyJkYXRhIjoiSU5WLzAwMDIifQ.c2ln" >/dev/null
+eq "IRN, Ack no. and date saved" "$(q "select concat(irn,'|',irn_ack_no,'|',irn_ack_date) from invoices where id=2")" "$IRN|112010036563310|2026-11-26 12:30:00"
+curl -s -b "$A" -o "$W/inv2.pdf" "$B/admin/invoices/2/pdf?download=1"
+has "invoice PDF prints the IRN and Ack no." "$(pdftotext "$W/inv2.pdf" - 2>/dev/null | tr -d '\n')" "112010036563310"
+eq "invoice with IRN leaves the waiting list" "$(curl -s -b "$A" "$B/admin/einvoice" | grep -c 'admin/einvoice/2/json')" "0"
+eq "QR generator: text in = text out (matrix check of the format/version bits)" "$(php -r 'require "app/Libraries/QrCode.php"; $m=\App\Libraries\QrCode::matrix(str_repeat("x",1000)); echo count($m);')" "121"
+eq "store user cannot save an IRN" "$(post "$W/store1" admin/stock admin/einvoice/2/irn -F irn=$IRN | cut -d' ' -f1)" "403"
+
 section "Project profit report"
 EXP_P1=$(q "select round(i.subtotal - ifnull((select sum(lm.qty * l.rate) from stock_lot_moves lm join stock_lots l on l.id=lm.lot_id join stock_movements m on m.id=lm.movement_id join dispatches d on d.id=m.ref_id and m.ref_type='dispatch' where d.project_id=p.id),0) - ifnull((select sum(amount) from expenses where project_id=p.id),0), 2) from projects p join invoices i on i.id=p.invoice_id where p.id=1")
 PR=$(curl -s -b "$A" "$B/admin/reports/project-profit?from=2000-01-01&to=$D")
@@ -852,7 +875,7 @@ check kumar   admin/stock=200 admin/dispatches=200 admin/invoices=403
 # ── every page ─────────────────────────────────────────────────────────────
 section "Every admin page loads for the Super Admin"
 PAGES="admin admin/designs admin/designs/new admin/tasks admin/notifications admin/profile admin/users admin/users/new admin/roles admin/settings admin/user-log admin/message-log admin/whatsapp-templates
-admin/leads admin/leads/1 admin/leads/new admin/customers admin/customers/1 admin/customers/2 admin/invoices admin/invoices/1 admin/invoices/2 admin/invoices/new admin/payments
+admin/leads admin/leads/1 admin/leads/new admin/customers admin/customers/1 admin/customers/2 admin/einvoice admin/invoices admin/invoices/1 admin/invoices/2 admin/invoices/new admin/payments
 admin/projects admin/projects/1 admin/projects/2 admin/dispatches admin/dispatches/2 admin/amc admin/amc-plans admin/amc/contracts/1
 admin/stock admin/stock/item/1 admin/stock/item/1/lots admin/stock/lots admin/stock/adjust admin/items admin/items/new admin/items/1/edit admin/kits admin/kits/1/edit admin/installation-types admin/item-categories admin/locations
 admin/suppliers admin/purchase-orders admin/purchase-orders/1 admin/purchase-orders/new admin/purchases admin/purchases/1 admin/purchases/new admin/purchase-returns admin/purchase-returns/1

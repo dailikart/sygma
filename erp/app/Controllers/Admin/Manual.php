@@ -21,7 +21,7 @@ class Manual extends AdminController
         'customers'       => ['Customers & documents', 'bi-people', 'Sales', 'Marketing / Sales', ['admin/customers', 'admin/documents', 'admin/files']],
         'roof-design'     => ['3D roof design', 'bi-badge-3d', 'Sales', 'Marketing / Sales, Surveyor', ['admin/designs']],
         'quotations'      => ['Quotations / proposals', 'bi-file-earmark-text', 'Sales', 'Marketing / Sales', ['admin/quotations']],
-        'invoices'        => ['Invoices', 'bi-receipt', 'Sales', 'Marketing / Sales, Accounts', ['admin/invoices']],
+        'invoices'        => ['Invoices', 'bi-receipt', 'Sales', 'Marketing / Sales, Accounts', ['admin/invoices', 'admin/einvoice']],
         'payments'        => ['Payments, receipts & bank loans', 'bi-cash', 'Sales', 'Accounts', ['admin/payments']],
         'projects'        => ['Projects & stages', 'bi-kanban', 'Projects', 'Admin / Manager, all stage teams', ['admin/projects']],
         'status-page'     => ['Customer status page', 'bi-phone', 'Projects', 'Admin, Sales, Accounts', []],

@@ -1,5 +1,13 @@
 <p>The latest additions to Sygma Solar Suite, newest first. Each item links to its chapter for the full steps.</p>
 
+<h4><i class="bi bi-qr-code"></i> GST e-invoice upload file</h4>
+<ul>
+    <li><span class="path">Sales → GST e-Invoice</span> lists B2B invoices waiting for an IRN and checks every field the portal checks, telling you exactly what to fix.</li>
+    <li>One click makes the JSON file to upload on <code>einvoice1.gst.gov.in</code> (e-Invoice → Bulk Upload), for one invoice or many.</li>
+    <li>Enter the IRN, Ack No. and signed QR code the portal gives back: they print on the invoice PDF with the QR code.</li>
+    <li>New company fields <em>City</em> and <em>PIN code</em> in <span class="path">Settings → Company</span>. More: <a href="<?= site_url('admin/manual/invoices') ?>">Invoices</a>.</li>
+</ul>
+
 <h4><i class="bi bi-diagram-3"></i> Stock lots: which PO and purchase bill each item came from</h4>
 <ul>
     <li>Every purchase is kept as a <strong>lot</strong> with its purchase no., supplier invoice no., PO no., supplier, date and rate. Dispatches use the <strong>oldest stock first</strong> (FIFO).</li>

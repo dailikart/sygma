@@ -1,4 +1,10 @@
 <?= view('pdf/_style', ['docTitle' => 'TAX INVOICE']) ?>
+<?php if (! empty($inv['irn'])): ?>
+<table style="margin-bottom:6px"><tr>
+    <td class="box" style="font-size:8.5pt"><strong>e-Invoice</strong><br>IRN: <?= esc($inv['irn']) ?><br>Ack No: <?= esc((string) $inv['irn_ack_no']) ?> &nbsp; Ack Date: <?= $inv['irn_ack_date'] ? date('d-m-Y H:i', strtotime($inv['irn_ack_date'])) : '' ?></td>
+    <?php if (! empty($inv['irn_qr'])): ?><td style="width:36mm" class="r"><img src="<?= \App\Libraries\QrCode::dataUri((string) $inv['irn_qr']) ?>" style="width:34mm;height:34mm" alt=""></td><?php endif ?>
+</tr></table>
+<?php endif ?>
 <table><tr>
     <td style="width:55%" class="box"><span class="muted">Bill To</span><br><strong><?= esc($customer['name']) ?></strong><br>
         <?= nl2br(esc((string) $customer['address'])) ?><br><?= esc(trim(($customer['city'] ?? '') . ' ' . ($customer['state'] ?? '') . ' ' . ($customer['pincode'] ?? ''))) ?>

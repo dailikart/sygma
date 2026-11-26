@@ -123,6 +123,10 @@ $routes->group('admin', ['filter' => 'session', 'namespace' => 'App\Controllers\
     $routes->post('quotations/(:num)/email', 'Quotations::email/$1');
     $routes->get('quotations/(:num)/whatsapp', 'Quotations::whatsapp/$1');
     $routes->post('quotations/(:num)/convert', 'Quotations::convert/$1');
+    $routes->get('einvoice', 'EInvoices::index');
+    $routes->post('einvoice/download', 'EInvoices::download');
+    $routes->get('einvoice/(:num)/json', 'EInvoices::download/$1');
+    $routes->post('einvoice/(:num)/irn', 'EInvoices::saveIrn/$1');
     $routes->get('invoices', 'Invoices::index');
     $routes->get('invoices/new', 'Invoices::create');
     $routes->post('invoices', 'Invoices::store');

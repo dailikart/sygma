@@ -14,6 +14,7 @@ $menu = [
         ['3D Roof Designs', 'admin/designs', ['designs.view', 'designs.manage']],
         ['Quotations', 'admin/quotations', ['quotations.view', 'quotations.manage']],
         ['Invoices', 'admin/invoices', ['invoices.view']],
+        ['GST e-Invoice', 'admin/einvoice', ['invoices.view']],
         ['Payments', 'admin/payments', ['invoices.view', 'payments.manage']],
     ]],
     ['Projects', 'admin/projects', 'bi-kanban', ['projects.view', 'survey.update', 'dispatch.manage', 'delivery.update', 'installation.update', 'eb.update', 'subsidy.update']],

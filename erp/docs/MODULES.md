@@ -6,7 +6,7 @@ per company in two levels:
 | Level | Example | Effect when off |
 |---|---|---|
 | **Module** | 3D roof design, Quotations, Projects, Inventory, Purchase, Accounts, Tally, AMC & Service, WhatsApp | Menu entries, dashboard boxes, Settings sections and Roles & Access permissions disappear; its pages (and public links / webhooks) cannot be opened |
-| **Option** inside a module | Bank-loan tracking (Invoices), EB stage / subsidy stages / customer status page (Projects), IndiaMART / Facebook / Google lead import (Leads) | Just that feature disappears; new projects skip switched-off stages; forms cannot submit a switched-off choice |
+| **Option** inside a module | Bank-loan tracking and GST e-invoice (Invoices), EB stage / subsidy stages / customer status page (Projects), IndiaMART / Facebook / Google lead import (Leads) | Just that feature disappears; new projects skip switched-off stages; forms cannot submit a switched-off choice |
 
 **Data is never deleted.** Switching something back on brings it all back.
 

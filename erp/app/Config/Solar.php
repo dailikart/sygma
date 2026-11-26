@@ -23,6 +23,8 @@ class Solar extends BaseConfig
 
     /** Used to decide CGST+SGST (same state) or IGST (other state). */
     public string $companyState = 'Tamil Nadu';
+    public string $companyCity    = '';
+    public string $companyPincode = '';
 
     public string $currency = '₹';
 

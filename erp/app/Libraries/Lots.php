@@ -19,9 +19,20 @@ use RuntimeException;
  */
 class Lots
 {
+    private static ?bool $ready = null;
+
+    /** False until "Database Updates" has created the lot tables: everything then falls back to the old behaviour. */
+    public static function ready(): bool
+    {
+        return self::$ready ??= db_connect()->tableExists('stock_lot_moves');
+    }
+
     /** A movement has been added: create a lot (qty > 0) or take from lots (qty < 0). */
     public static function onMove(int $movementId, int $itemId, int $locationId, float $qty, string $type, ?string $refType, ?int $refId, ?string $when = null): void
     {
+        if (! self::ready()) {
+            return;
+        }
         if ($qty > 0) {
             self::create($movementId, $itemId, $locationId, $qty, $type, $refType, $refId, $when);
         } elseif ($qty < 0) {
@@ -42,7 +53,7 @@ class Lots
     public static function undo(array $movementIds): void
     {
         $movementIds = array_values(array_filter(array_map('intval', $movementIds)));
-        if (! $movementIds) {
+        if (! $movementIds || ! self::ready()) {
             return;
         }
         $db   = db_connect();
@@ -67,6 +78,7 @@ class Lots
     /** Rebuilds every lot from the stock ledger, in date order (used once when lots are switched on). */
     public static function rebuild(): int
     {
+        self::$ready = null;
         $db = db_connect();
         $db->table('stock_lot_moves')->truncate();
         $db->table('stock_lots')->truncate();
@@ -82,6 +94,14 @@ class Lots
     public static function value(?string $before = null): float
     {
         $db = db_connect();
+        if (! self::ready()) { // old method: quantity × item purchase price
+            $b = $db->table('stock_movements m')->select('SUM(m.qty * i.purchase_price) AS v', false)->join('items i', 'i.id = m.item_id');
+            if ($before !== null) {
+                $b->where('m.created_at <', $before . ' 00:00:00');
+            }
+
+            return round((float) ($b->get()->getRowArray()['v'] ?? 0), 2);
+        }
         if ($before === null) {
             $r = $db->table('stock_lots')->select('SUM(qty_left * rate) AS v', false)->get()->getRowArray();
 
@@ -123,6 +143,9 @@ class Lots
      */
     public static function forItem(int $itemId, bool $openOnly = false): array
     {
+        if (! self::ready()) {
+            return [];
+        }
         $db = db_connect();
         $b  = $db->table('stock_lots l')->select('l.*, loc.name AS location, s.name AS supplier')
             ->join('locations loc', 'loc.id = l.location_id', 'left')->join('suppliers s', 's.id = l.supplier_id', 'left')
@@ -152,6 +175,9 @@ class Lots
      */
     public static function takenBy(string $refType, int $refId): array
     {
+        if (! self::ready()) {
+            return [];
+        }
         $out = [];
         foreach (db_connect()->table('stock_lot_moves lm')->select('lm.qty AS taken, l.*')
             ->join('stock_lots l', 'l.id = lm.lot_id')->join('stock_movements sm', 'sm.id = lm.movement_id')
@@ -169,6 +195,9 @@ class Lots
      */
     public static function forPurchase(int $purchaseId): array
     {
+        if (! self::ready()) {
+            return [];
+        }
         $db   = db_connect();
         $lots = $db->table('stock_lots l')->select('l.*, loc.name AS location')->join('locations loc', 'loc.id = l.location_id', 'left')
             ->where('l.purchase_id', $purchaseId)->orderBy('l.id')->get()->getResultArray();
@@ -195,6 +224,9 @@ class Lots
      */
     public static function open(?int $locationId = null, ?int $categoryId = null): array
     {
+        if (! self::ready()) {
+            return [];
+        }
         $b = db_connect()->table('stock_lots l')->select('l.*, i.name AS item, i.unit, c.name AS category, loc.name AS location, s.name AS supplier, DATEDIFF(CURDATE(), l.received_on) AS age', false)
             ->join('items i', 'i.id = l.item_id')->join('item_categories c', 'c.id = i.category_id', 'left')
             ->join('locations loc', 'loc.id = l.location_id', 'left')->join('suppliers s', 's.id = l.supplier_id', 'left')
@@ -212,6 +244,9 @@ class Lots
     /** @return array<int, float> item_id => FIFO value of stock on hand (optionally one store) */
     public static function valueByItem(?int $locationId = null): array
     {
+        if (! self::ready()) {
+            return [];
+        }
         $b = db_connect()->table('stock_lots')->select('item_id, SUM(qty_left * rate) AS v', false)->where('qty_left >', 0);
         if ($locationId) {
             $b->where('location_id', $locationId);

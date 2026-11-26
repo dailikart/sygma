@@ -63,6 +63,7 @@ class Features extends BaseConfig
             'core'        => true,
             'options'     => [
                 'loan' => ['title' => 'Bank-loan finance tracking', 'description' => 'Cash / loan payment mode, lender, loan disbursements.'],
+                'einvoice' => ['title' => 'GST e-invoice (IRN)', 'description' => 'Ready-to-upload JSON for the e-invoice portal; IRN and QR code on B2B invoices.', 'routes' => ['admin/einvoice']],
             ],
         ],
         'projects' => [

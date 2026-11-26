@@ -42,6 +42,8 @@ UPDATE auth_identities SET secret2 = '$HASH', force_reset = 0 WHERE type = 'emai
 DELETE FROM auth_identities WHERE type <> 'email_password';
 UPDATE users SET username = 'demo', active = 1, status = NULL, status_message = NULL WHERE id = 1;
 UPDATE users SET active = 1;
+-- GST e-invoice: leave the B2B invoice waiting for its IRN, so the upload can be shown.
+UPDATE invoices SET irn = NULL, irn_ack_no = NULL, irn_ack_date = NULL, irn_qr = NULL;
 
 -- Company shown inside the demo.
 UPDATE settings SET value = 'Sygma Solar Suite Demo' WHERE class LIKE '%Solar' AND \`key\` IN ('companyName', 'mailFromName');

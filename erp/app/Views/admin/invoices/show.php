@@ -48,6 +48,7 @@
 </form>
 <?php endif ?>
 
+<?= view('admin/invoices/_einvoice', ['inv' => $inv, 'customer' => $customer]) ?>
 <?= view('admin/invoices/_finance', ['inv' => $inv, 'tranches' => $tranches, 'financeEditable' => $financeEditable]) ?>
 
 <div class="card"><div class="card-body p-4">

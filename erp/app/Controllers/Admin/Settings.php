@@ -9,6 +9,7 @@ class Settings extends AdminController
         'Company' => [
             'companyName' => 'Company name', 'companyAddress' => 'Address', 'companyPhone' => 'Phone',
             'companyEmail' => 'Email', 'companyGstin' => 'GSTIN', 'companyTagline' => 'Tagline (shown on the login page)', 'companyState' => 'State (for GST: same state = CGST+SGST, other = IGST)',
+            'companyCity' => 'City / place (for GST e-invoice)', 'companyPincode' => 'PIN code (for GST e-invoice)',
         ],
         'Appearance' => [
             'theme' => ['Theme colour', 'select', ['' => 'Slate (default)', 'ocean' => 'Ocean blue', 'forest' => 'Forest green', 'sunset' => 'Sunset orange',

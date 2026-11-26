@@ -22,6 +22,20 @@
     <li><span class="btnname">Mark as Cancelled</span> with a reason, for a wrong or withdrawn invoice. Its accounting entry is reversed.</li>
     <li>Admins (permission "Edit saved entries" / "Delete entries"): <span class="btnname">Edit</span> to correct a saved invoice, <span class="btnname">Delete</span> to remove it with its payments and project. Payments have a pencil (edit) and bin (delete) in the Payments table.</li>
 </ul>
+<h4>GST e-invoice (IRN) for B2B invoices</h4>
+<p>Invoices to customers with a GSTIN must be registered on the government e-invoice portal (<code>einvoice1.gst.gov.in</code>), which gives an <strong>IRN</strong> and a <strong>QR code</strong> to print on the invoice. The ERP makes the upload file for you.</p>
+<ol class="steps">
+    <li>Once: in <span class="path">Settings → Company</span> fill the GSTIN, address, <strong>City</strong>, <strong>PIN code</strong> and State. The customer needs GSTIN, address, city, state and PIN code; every item needs its HSN / SAC code.</li>
+    <li>Open <span class="path">Sales → GST e-Invoice</span>. B2B invoices waiting for an IRN are listed: <span class="badge text-bg-primary">Ready</span>, or <span class="badge text-bg-danger">Fix first</span> with exactly what to correct (missing PIN, wrong GST type for the state, HSN missing…).</li>
+    <li>Tick the ready invoices → <span class="btnname">Download JSON for upload</span> (or <span class="btnname">Download JSON</span> on one invoice's page). The file is in the portal's official format (schema 1.1).</li>
+    <li>On the portal: log in → <span class="path">e-Invoice → Bulk Upload</span> → choose the file → <span class="btnname">Upload</span>. The portal shows the IRN, Ack No. and Ack Date for each invoice.</li>
+    <li>Open the invoice here → <span class="btnname">Enter IRN from portal</span>: paste the IRN, Ack No., Ack Date and the <em>signed QR code</em> text → <span class="btnname">Save e-invoice details</span>. The invoice PDF now shows the IRN, Ack No. and the QR code.</li>
+</ol>
+<ul class="small">
+    <li>B2C invoices (no customer GSTIN) and cancelled invoices do not need an e-invoice and are not listed.</li>
+    <li>An IRN can be cancelled on the portal only within 24 hours. After that, correct the invoice with a credit / debit note, not by editing it. If you did cancel the IRN on the portal, use <span class="btnname">Remove IRN</span> on the invoice, correct it and upload again.</li>
+    <li>E-invoicing is compulsory once the company's yearly turnover crosses the limit set by GST (currently ₹5 crore). The option can be switched off for companies that do not need it.</li>
+</ul>
 <h4>Invoice list</h4>
 <p><span class="path">Sales → Invoices</span> shows for each invoice: amount (with <strong>Total</strong> receivable under it when the customer pays meter charges), <strong>Meter charges</strong> ("–" when the company pays), <strong>Paid</strong>, <strong>Due</strong>, status, <strong>EB Payment</strong> (Yes when "EB charges paid" is ticked on the project) and <strong>EB Submission</strong> (Yes when set on the project's EB / Net Meter card). "—" means the invoice has no project. Totals of amount, paid and due are at the bottom.</p>
 <h4>Statuses</h4>

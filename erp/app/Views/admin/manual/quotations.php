@@ -23,3 +23,9 @@
     <li>The invoice form opens filled from the quotation (lines, kW, kit, subsidy type, meter charges). Choose the payment mode, check and save.</li>
     <li>The quotation is marked <em>Converted</em> and links to the invoice. A converted quotation cannot be edited.</li>
 </ol>
+<h4>Delete a quotation</h4>
+<ul>
+    <li>For a wrong or duplicate quotation: open it → <span class="btnname">Delete</span> and confirm. Its lines and 3D layout picture are removed; a 3D design it was made from stays.</li>
+    <li>Only roles with <em>Quotations: delete</em> (<span class="path">Administration → Roles &amp; Access</span>) see the button.</li>
+    <li>A quotation already converted to an invoice cannot be deleted (cancel or delete the invoice instead).</li>
+</ul>

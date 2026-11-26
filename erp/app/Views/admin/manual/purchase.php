@@ -20,5 +20,11 @@
     <li>Enter only the <strong>Return qty</strong> for each item going back (maximum = bought − already returned), the return date and the reason. Save.</li>
     <li>Stock goes out of that store and a debit note reduces what you owe the supplier.</li>
 </ol>
+<h4>Where the stock of a purchase went</h4>
+<ul>
+    <li>Each purchase becomes a stock <strong>lot</strong>. The purchase page shows <em>Where this stock went</em>: per item, how much was received, used and is still in store, and which dispatch / project / customer or return got it.</li>
+    <li>A return takes stock from the lots of the purchase it is against; its page shows <em>Returned from</em>.</li>
+    <li>A purchase whose stock is already dispatched or returned cannot be deleted. The message names what to remove first.</li>
+</ul>
 <h4>Paying the supplier</h4>
 <p><span class="path">Accounts → Supplier Payments</span> → New: supplier, account paid from, amount, mode, reference. <span class="path">Reports → Supplier Summary</span> shows each supplier's purchases, returns, payments and balance, with a statement.</p>

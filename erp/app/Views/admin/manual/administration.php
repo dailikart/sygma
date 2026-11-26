@@ -8,6 +8,7 @@
 <table class="table table-sm">
     <?php foreach (config('AuthGroups')->groups as $g): ?><tr><th style="width:28%"><?= esc($g['title']) ?></th><td><?= esc($g['description']) ?></td></tr><?php endforeach ?>
 </table>
+<p class="small">Leads and quotations have their own delete permissions: <em>Leads: delete</em> (not leads already converted to a customer) and <em>Quotations: delete</em> (not quotations already converted to an invoice).</p>
 <h4>Editing and deleting saved entries</h4>
 <p>Two permissions in <span class="path">Roles &amp; Access</span> decide who may change saved work. They are given to Super Admin and Admin / Manager; tick them for any other role that needs them.</p>
 <table class="table table-sm">
@@ -15,6 +16,14 @@
     <tr><th>Delete entries</th><td><span class="btnname">Delete</span> on an invoice (removes its payments, loan schedule and project; dispatched stock goes back to the store), on a payment, on a project (the invoice stays), on a customer (only when they have no invoices), on purchase orders, purchases (refused if it has returns or its stock is already used; stock leaves the store, PO quantities go back) and purchase returns (stock comes back), on items (only with zero stock and not in a kit; their history stays), and on opening / adjustment lines in an item's stock ledger.</td></tr>
 </table>
 <p class="small text-muted">Every edit and delete is recorded in the User Log and the invoice's activity log. A deleted entry cannot be brought back.</p>
+<?php if (\App\Libraries\Features::manageable()): ?>
+<h4>Modules &amp; Options</h4>
+<ol class="steps">
+    <li><span class="path">Administration → Modules &amp; Options</span> (seen only by the software provider) lists every module with its options.</li>
+    <li>Switch off what this company does not use, e.g. AMC or Subsidy, or an option like IndiaMART leads. Modules marked <em>Core</em> are always on. A module that needs another (shown as "needs …") turns off with it.</li>
+    <li><span class="btnname">Save</span>. Switched-off modules leave the menu, dashboard, Settings and Roles &amp; Access, and their pages cannot be opened. <strong>Data is kept</strong>: switching back on brings it all back.</li>
+</ol>
+<?php endif ?>
 <h4>Settings</h4>
 <p><span class="path">Administration → Settings</span>: Company (name, address, GSTIN, state, tagline shown on the login page), Appearance (theme, logo, signature, seal), Numbering prefixes, Email (SMTP), AMC reminder days, WhatsApp, Tally ledger names. Click <span class="btnname">Save</span> at the bottom.</p>
 <h4>IndiaMART leads</h4>
@@ -42,5 +51,6 @@
     <tr><th>Document Types</th><td>The customer document checklist; mark which are required for the PCR.</td></tr>
     <tr><th>WhatsApp Templates</th><td>Which approved WhatsApp template is sent for each event.</td></tr>
     <tr><th>Message Log</th><td>Every email and WhatsApp sent to customers, with success or the error.</td></tr>
+    <?php if (\App\Filters\DemoGuard::enabled()): ?><tr><th>Reset demo data</th><td>Demo site only: <span class="path">Database Updates</span> → <span class="btnname">Reset demo data</span> deletes everything entered on the demo and loads the original sample data again (logins keep the team password). Use it before an important demo.</td></tr><?php endif ?>
     <tr><th>Database Updates</th><td>After a new version is deployed, a yellow banner appears: take a database backup (phpMyAdmin → Export), then <span class="btnname">Run database updates</span>.</td></tr>
 </table>

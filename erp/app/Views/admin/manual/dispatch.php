@@ -17,3 +17,5 @@
     <li>A wrong <strong>draft</strong> can be deleted. Material can be sent in more than one dispatch: <span class="btnname">Prepare another dispatch list</span>.</li>
     <li>When everything has gone, <span class="btnname">Complete dispatch stage</span> if it did not close by itself.</li>
 </ul>
+<h4>Which purchase the material came from</h4>
+<p>At dispatch the <strong>oldest stock is used first</strong> (FIFO). After dispatch, the page shows <em>Taken from</em>: for each item the purchase no., supplier bill no., PO no., date and rate of the stock that went. Click the item to see all its lots. See <a href="<?= site_url('admin/manual/inventory') ?>">Inventory → stock lots</a>.</p>

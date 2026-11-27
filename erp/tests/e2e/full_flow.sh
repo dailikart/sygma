@@ -217,11 +217,14 @@ r=$(post "$M" admin/customers/new admin/customers/save -F type=b2b -F name="Bad 
 # ── invoices & payments ────────────────────────────────────────────────────
 section "Invoices (intra / inter-state), email opt-in, cancellation, payments"
 : > "$W/smtp.log"
-post "$M" admin/invoices/new admin/invoices -F customer_id=1 -F invoice_date="$D" -F due_date="$D" -F subsidy_type=subsidy -F installation_type_id=1 -F capacity_kw=3 -F create_project=1 \
+r=$(post "$M" admin/invoices/new admin/invoices -F customer_id=1 -F invoice_date="$D" -F subsidy_type=subsidy -F capacity_kw=3 -F 'items[0][description]=x' -F 'items[0][qty]=1' -F 'items[0][rate]=100' -F 'items[0][tax_percent]=12')
+eq "invoice without payment mode is refused" "$(q "select count(*) from invoices")" "0"
+has "…with the reason" "$(curl -s -b "$M" "$B/admin/invoices/new")" "Choose the payment mode"
+post "$M" admin/invoices/new admin/invoices -F customer_id=1 -F invoice_date="$D" -F due_date="$D" -F subsidy_type=subsidy -F installation_type_id=1 -F capacity_kw=3 -F create_project=1 -F finance_mode=cash \
   -F 'items[0][description]=3 kW On-grid Solar System – supply and installation' -F 'items[0][hsn]=8541' -F 'items[0][qty]=1' -F 'items[0][rate]=180000' -F 'items[0][tax_percent]=12' >/dev/null
 sleep 1; eq "no invoice email to the customer when box not ticked" "$(grep -c '^To: murugan@e2e.test' "$W/smtp.log")" "0"
 eq "invoice 1 (intra, CGST+SGST)" "$(q "select concat(gst_type,' ',subtotal+0,' ',tax_total+0,' ',total+0,' ',status) from invoices where id=1")" "intra 180000 21600 201600 unpaid"
-eq "B2C invoice defaults to cumulative format, payment mode not decided" "$(q "select concat(print_format,'/',finance_mode,'/') from invoices where id=1")" "cumulative//"
+eq "B2C invoice defaults to cumulative format, payment mode saved" "$(q "select concat(print_format,'/',finance_mode,'/') from invoices where id=1")" "cumulative/cash/"
 post "$M" admin/invoices/new admin/invoices -F customer_id=2 -F invoice_date="$D" -F due_date="$D" -F subsidy_type=non_subsidy -F installation_type_id=1 -F capacity_kw=5 -F create_project=1 -F email_invoice=1 -F print_format=itemwise -F finance_mode=loan -F loan_bank="SBI Solar Loan" -F loan_amount=150000 -F loan_ref=SBI-778 \
   -F 'items[0][item_id]=1' -F 'items[0][description]=Mono PERC Panel 545W' -F 'items[0][hsn]=8541' -F 'items[0][qty]=10' -F 'items[0][rate]=11000' -F 'items[0][tax_percent]=12' \
   -F 'items[1][item_id]=3' -F 'items[1][description]=5 kW On-grid Inverter' -F 'items[1][hsn]=8504' -F 'items[1][qty]=1' -F 'items[1][rate]=46000' -F 'items[1][tax_percent]=12' \
@@ -235,9 +238,9 @@ eq "loan invoice: 3 disbursements of 50,000 created" "$(q "select concat(finance
 eq "item-wise format kept for B2B" "$(q "select print_format from invoices where id=2")" "itemwise"
 eq "projects: subsidy has 7 stages (incl. DCR), non-subsidy 5; kits matched" "$(q "select group_concat(concat(subsidy_type,':',(select count(*) from project_stages s where s.project_id=p.id),':',kit_id) order by id) from projects p")" "subsidy:7:1,non_subsidy:5:2"
 eq "surveyor notified" "$(q "select count(*) from notifications n join users u on u.id=n.user_id where u.username='suresh'")" "2"
-post "$M" admin/invoices/new admin/invoices -F customer_id=1 -F invoice_date="$D" -F subsidy_type=non_subsidy -F capacity_kw=1 -F create_project=1 -F 'items[0][description]=Wrong invoice' -F 'items[0][qty]=1' -F 'items[0][rate]=1000' -F 'items[0][tax_percent]=12' >/dev/null
+post "$M" admin/invoices/new admin/invoices -F customer_id=1 -F invoice_date="$D" -F subsidy_type=non_subsidy -F capacity_kw=1 -F create_project=1 -F finance_mode=cash -F 'items[0][description]=Wrong invoice' -F 'items[0][qty]=1' -F 'items[0][rate]=1000' -F 'items[0][tax_percent]=12' >/dev/null
 post "$M" admin/invoices/3 admin/invoices/3/cancel >/dev/null
-post "$M" admin/invoices/new admin/invoices -F customer_id=1 -F invoice_date="$D" -F subsidy_type=non_subsidy -F installation_type_id=1 -F capacity_kw=3 -F kit_id=2 -F create_project=1 -F print_format=cumulative \
+post "$M" admin/invoices/new admin/invoices -F customer_id=1 -F invoice_date="$D" -F subsidy_type=non_subsidy -F installation_type_id=1 -F capacity_kw=3 -F kit_id=2 -F finance_mode=cash -F create_project=1 -F print_format=cumulative \
   -F 'items[0][description]=Supply of 3 kW On-grid Solar Power System' -F 'items[0][hsn]=8541' -F 'items[0][qty]=1' -F 'items[0][rate]=150000' -F 'items[0][tax_percent]=12' \
   -F 'items[1][description]=Installation & commissioning service' -F 'items[1][hsn]=9954' -F 'items[1][qty]=1' -F 'items[1][rate]=15000' -F 'items[1][tax_percent]=18' >/dev/null
 PKG=$(q "select max(id) from invoices")
@@ -279,6 +282,7 @@ post "$W/suresh" $P $P/stage/survey -F action=complete -F survey_date="$D" -F ro
 eq "survey approved → dispatch active" "$(q "select concat(p.status,'/',p.current_stage) from projects p where id=1")" "active/dispatch"
 post "$A" $P $P/assign -F stage_id="$(q "select id from project_stages where project_id=1 and stage='installation'")" -F user_id="$(q "select id from users where username='fitter1'")" -F planned_date="$D" >/dev/null
 eq "installation assigned to fitter1" "$(q "select u.username from project_stages s join users u on u.id=s.assigned_to where s.project_id=1 and s.stage='installation'")" "fitter1"
+q "update invoices set finance_mode='' where id=1"   # an invoice made before payment mode was required
 code "$S" "$P/dispatch" >/dev/null; has "dispatch blocked until payment mode is set" "$(flash "$S" $P)" "Set the payment mode"
 post "$AC" admin/invoices/1 admin/invoices/1/finance -F finance_mode=cash -F print_format=cumulative >/dev/null
 eq "payment mode set to cash" "$(q "select finance_mode from invoices where id=1")" "cash"
@@ -542,7 +546,7 @@ eq "convert: customer created from the lead, lead confirmed" "$(q "select concat
 IF=$(curl -s -b "$M" "$B/admin/invoices/new?quotation=$QQ")
 has "invoice form filled from the quotation" "$IF" 'value="Supply of 3 kW On-grid Solar Power System"'
 has "…with the quotation link" "$IF" "name=\"quotation_id\" value=\"$QQ\""
-post "$M" "admin/invoices/new?quotation=$QQ" admin/invoices -F quotation_id=$QQ -F customer_id=$QC -F invoice_date="$D" -F subsidy_type=subsidy -F installation_type_id=1 -F capacity_kw=3 -F kit_id=1 -F print_format=cumulative \
+post "$M" "admin/invoices/new?quotation=$QQ" admin/invoices -F quotation_id=$QQ -F finance_mode=cash -F customer_id=$QC -F invoice_date="$D" -F subsidy_type=subsidy -F installation_type_id=1 -F capacity_kw=3 -F kit_id=1 -F print_format=cumulative \
   -F eb_charges_by=customer -F eb_charges_amount=5000 \
   -F 'items[0][description]=Supply of 3 kW On-grid Solar Power System' -F 'items[0][hsn]=8541' -F 'items[0][qty]=1' -F 'items[0][rate]=160000' -F 'items[0][tax_percent]=12' \
   -F 'items[1][description]=Installation & commissioning service' -F 'items[1][hsn]=9954' -F 'items[1][qty]=1' -F 'items[1][rate]=10000' -F 'items[1][tax_percent]=18' >/dev/null
@@ -728,7 +732,7 @@ eq "company-paid clears the amount" "$(q "select concat(eb_charges_by,':',ifnull
 # ── admin edit / delete of saved entries ───────────────────────────────────
 section "Admin: edit and delete invoices, payments, customers, projects"
 has "Roles & Access lists the new permissions" "$(curl -s -b "$A" "$B/admin/roles")" "Delete entries: customers, invoices, payments, projects, purchases and items"
-post "$A" admin/invoices/new admin/invoices -F customer_id=1 -F invoice_date="$D" -F subsidy_type=non_subsidy -F capacity_kw=2 -F create_project=1 -F eb_charges_by=company \
+post "$A" admin/invoices/new admin/invoices -F customer_id=1 -F invoice_date="$D" -F subsidy_type=non_subsidy -F capacity_kw=2 -F finance_mode=cash -F create_project=1 -F eb_charges_by=company \
   -F 'items[0][description]=Edit test system' -F 'items[0][qty]=1' -F 'items[0][rate]=10000' -F 'items[0][tax_percent]=12' >/dev/null
 XI=$(q "select max(id) from invoices"); XP=$(q "select id from projects where invoice_id=$XI")
 post "$A" admin/invoices/$XI admin/invoices/$XI/payments -F amount=5000 -F payment_date="$D" -F mode=cash -F account_id=2 >/dev/null

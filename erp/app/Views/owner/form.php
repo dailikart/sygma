@@ -39,7 +39,7 @@ $state = \App\Controllers\Owner::class;
     <h2 class="h6 mb-3">Web address</h2>
     <div class="row g-2">
         <div class="col-md-6"><label class="form-label small">Address *</label><input name="domain" id="domain" class="form-control" required value="<?= $v('domain') ?>" placeholder="<?= esc($base ? 'code.' . $base : 'erp.client.com') ?>">
-            <div class="form-text">Without https://. In Hostinger, add this sub-domain pointing to the same ERP folder.</div></div>
+            <div class="form-text">Without https://. Any <?= esc($base ? '*.' . $base : 'sub-domain') ?> address works at once (wildcard).</div></div>
         <div class="col-md-6"><label class="form-label small">Second address (optional)</label><input name="alt_domain" class="form-control" value="<?= $v('alt_domain') ?>" placeholder="erp.theirowndomain.com"><div class="form-text">e.g. the client's own domain.</div></div>
     </div>
 </div></div>

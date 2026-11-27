@@ -168,9 +168,9 @@ class QuickQuotes extends AdminController
             $db->table('quotations')->where('id', $old['id'])->update(['superseded_by' => $id, 'updated_at' => $now]);
         }
         $db->transComplete();
-        if ($old && $old['design_path'] && is_file(WRITEPATH . 'uploads/' . $old['design_path'])) {
+        if ($old && $old['design_path'] && is_file(upload_path() . $old['design_path'])) {
             $rel = 'quotations/design-' . $id . '-' . time() . '.' . pathinfo($old['design_path'], PATHINFO_EXTENSION);
-            if (copy(WRITEPATH . 'uploads/' . $old['design_path'], WRITEPATH . 'uploads/' . $rel)) {
+            if (copy(upload_path() . $old['design_path'], upload_path() . $rel)) {
                 $db->table('quotations')->where('id', $id)->update(['design_path' => $rel]);
             }
         }

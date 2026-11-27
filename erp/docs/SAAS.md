@@ -47,11 +47,12 @@ companies `<code>.sygmasolar.in`.
 3. **Database**: hPanel → Databases → create a **new, empty** MySQL database and user
    (for example `u123_saas`). Do not reuse the demo database. You do not import anything:
    the ERP creates the tables itself.
-4. **Sub-domains**: hPanel → Domains → Sub-domains:
-   - create `admin` (the owner panel) with **custom folder** `public_html/erp`;
-   - for each company, create its sub-domain (e.g. `sunpower`) with the **same folder** `public_html/erp`.
-     If your plan offers a wildcard sub-domain (`*`), add it once instead.
-   - Check that SSL is active for each sub-domain (hPanel → Security → SSL).
+4. **Wildcard sub-domain** (once): hPanel → Domains → Sub-domains → create `*` (shown as
+   `*.sygmasolar.in`) with **custom folder** `public_html/erp`. This one entry serves the owner
+   panel (`admin.sygmasolar.in`) and every company (`sunpower.sygmasolar.in`, …), so you never
+   add sub-domains again. Then hPanel → Security → SSL: install SSL for `*.sygmasolar.in`
+   (wildcard certificate). Open `https://admin.sygmasolar.in` once to check the padlock.
+   A sub-domain that has no company shows "Company not found".
 5. **`.env`**: File Manager → `public_html/erp/.env`:
 
    ```ini
@@ -94,13 +95,12 @@ companies `<code>.sygmasolar.in`.
 
 ## Onboarding a client
 
-1. hPanel: create the sub-domain `<code>.sygmasolar.in` → folder `public_html/erp` (skip if you have the wildcard).
-2. Owner panel → **New company**: name, code (e.g. `sunpower`; the address fills itself),
+1. Owner panel → **New company**: name, code (e.g. `sunpower`; the address fills itself),
    contact, GSTIN, state, plan, paid-until date, maximum users, modules, and the client's
    Super Admin email + password (**Generate** makes one).
-3. **Create company**. Then **Open login page** to check it, or **Open as Super Admin** to fill
+2. **Create company**. The address works at once (wildcard sub-domain); nothing to do in hPanel. Then **Open login page** to check it, or **Open as Super Admin** to fill
    their settings (logo, bank, quotation terms, users) with them.
-4. Send the client: the address, the Super Admin email and password. They change the password
+3. Send the client: the address, the Super Admin email and password. They change the password
    in their profile and add their own staff in Administration → Users.
 
 **Client's own domain** (e.g. `erp.sunpower.com`): the client points it to your Hostinger

@@ -1,5 +1,14 @@
 <p>The latest additions to Sygma Solar Suite, newest first. Each item links to its chapter for the full steps.</p>
 
+<h4><i class="bi bi-lightning-charge"></i> Quick Quote: the full proposal in one click</h4>
+<ul>
+    <li><span class="path">Sales → Quick Quote</span> (or <em>Quick Quote</em> on a lead / customer): type the customer, then either the bi-monthly units from the EB bill or the kW size, and tap the building type, system type (On-Grid DCR / NDCR, Hybrid, Micro inverter), panel technology, wattage, brand and inverter. The price, subsidy, net cost and payback show live on the right.</li>
+    <li><strong>Generate Quotation</strong> makes a 4-page PDF: cover letter, bill of materials with makes, total with blended GST and PM Surya Ghar + state subsidy, "how your system works", savings, payback year and break-even chart, and terms with payment stages, warranty and bank details.</li>
+    <li>It is saved as a normal quotation (two GST lines: supply at 5% and installation at 18%), so WhatsApp, email, the customer link and <em>Convert to invoice</em> work as before. <em>Revise</em> reopens it with the same choices.</li>
+    <li>Admins set the prices once in <span class="path">Administration → Quick Quote Prices</span>: margin %, panel ₹/W per brand (DCR / NDCR), inverter prices by size and phase, common costs, packages, brand names, payment stages, warranty, bank details, subsidy slabs and EB tariff slabs.</li>
+    <li><span class="path">Sales → Sales Team Progress</span>: quotes made, sent, won and value won by each salesperson.</li>
+</ul>
+
 <h4><i class="bi bi-qr-code"></i> GST e-invoice upload file</h4>
 <ul>
     <li><span class="path">Sales → GST e-Invoice</span> lists B2B invoices waiting for an IRN and checks every field the portal checks, telling you exactly what to fix.</li>

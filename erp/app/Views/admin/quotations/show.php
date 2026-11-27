@@ -12,7 +12,8 @@ $manage = can('quotations.manage'); $open = $q['status'] !== 'converted'; ?>
         <?php if ($manage): ?>
             <a href="<?= site_url('admin/quotations/' . $q['id'] . '/whatsapp') ?>" target="_blank" class="btn btn-outline-success<?= $q['party_phone'] ? '' : ' disabled' ?>"><i class="bi bi-whatsapp"></i> WhatsApp</a>
             <button class="btn btn-outline-secondary" data-bs-toggle="collapse" data-bs-target="#emailForm"><i class="bi bi-envelope"></i> Email</button>
-            <?php if ($open): ?><a href="<?= site_url('admin/quotations/' . $q['id'] . '/edit') ?>" class="btn btn-outline-primary"><i class="bi bi-pencil-square"></i> Edit</a><?php endif ?>
+            <?php if ($open && $qq): ?><a href="<?= site_url('admin/quotations/' . $q['id'] . '/quick') ?>" class="btn btn-outline-primary"><i class="bi bi-arrow-repeat"></i> Revise</a><?php endif ?>
+            <?php if ($open): ?><a href="<?= site_url('admin/quotations/' . $q['id'] . '/edit') ?>" class="btn btn-outline-<?= $qq ? 'secondary' : 'primary' ?>" title="Edit the lines and price by hand"><i class="bi bi-pencil-square"></i> Edit<?= $qq ? ' lines' : '' ?></a><?php endif ?>
             <?php if ($open && can('invoices.manage')): ?><form method="post" action="<?= site_url('admin/quotations/' . $q['id'] . '/convert') ?>"><?= csrf_field() ?><button class="btn btn-success" data-confirm="Convert to an invoice?<?= $q['customer_id'] ? '' : ' A customer is created from these details first.' ?>"><i class="bi bi-receipt"></i> Convert to invoice</button></form><?php endif ?>
         <?php endif ?>
         <?php if ($invoice): ?><a href="<?= site_url('admin/invoices/' . $invoice['id']) ?>" class="btn btn-outline-primary"><i class="bi bi-receipt"></i> <?= esc($invoice['invoice_no']) ?> <?= status_badge($invoice['status']) ?></a><?php endif ?>
@@ -57,16 +58,27 @@ $manage = can('quotations.manage'); $open = $q['status'] !== 'converted'; ?>
             </table></div></div>
             <?php if ($q['notes']): ?><div class="small text-muted mt-3"><?= nl2br(esc($q['notes'])) ?></div><?php endif ?>
         </div>
+        <?php if ($qq): ?>
+        <div class="card mt-3"><div class="card-header bg-white fw-semibold d-flex"><span><i class="bi bi-file-earmark-richtext"></i> Proposal sent to the customer</span>
+            <a class="ms-auto small" href="<?= site_url('admin/quotations/' . $q['id'] . '/pdf') ?>" target="_blank">open full screen</a></div>
+            <iframe src="<?= site_url('admin/quotations/' . $q['id'] . '/pdf') ?>" style="width:100%;height:80vh;border:0" title="Proposal PDF"></iframe></div>
+        <?php endif ?>
     </div>
     <div class="col-lg-4">
         <div class="card"><div class="card-header bg-white fw-semibold"><i class="bi bi-sun"></i> Savings</div>
             <table class="table table-sm mb-0">
                 <tr><td>Generation per year</td><td class="text-end"><?= number_format($roi['units_year']) ?> units</td></tr>
-                <tr><td>Savings per year</td><td class="text-end"><?= money($roi['savings_year']) ?></td></tr>
+                <tr><td>Savings per year</td><td class="text-end"><?= money($qq ? $qq['savings']['year'] : $roi['savings_year']) ?></td></tr>
+                <?php if ($qq): ?>
+                <tr><td>Bi-monthly saving</td><td class="text-end"><?= money($qq['savings']['bimonthly']) ?></td></tr>
+                <tr><td>Payback</td><td class="text-end fw-bold"><?= $qq['projection']['payback'] !== null ? $qq['projection']['payback'] . ' years' : '—' ?></td></tr>
+                <tr><td><?= (int) $qq['assume']['years'] ?>-year net gain</td><td class="text-end fw-bold text-success"><?= money($qq['projection']['net_gain']) ?></td></tr>
+                <?php else: ?>
                 <tr><td>Payback</td><td class="text-end fw-bold"><?= $roi['payback_years'] !== null ? $roi['payback_years'] . ' years' : '—' ?></td></tr>
                 <tr><td>Savings in 25 years</td><td class="text-end fw-bold text-success"><?= money($roi['savings_25']) ?></td></tr>
+                <?php endif ?>
             </table>
-            <div class="card-body small text-muted py-2">Based on <?= qty($q['units_per_kw_day']) ?> units/kW/day at ₹<?= qty($q['tariff']) ?>/unit.</div></div>
+            <div class="card-body small text-muted py-2"><?= $qq ? 'EB slab tariff, ' . qty($qq['assume']['escalation']) . '% yearly tariff rise, ' . qty($qq['assume']['degradation']) . '% panel degradation.' : 'Based on ' . qty($q['units_per_kw_day']) . ' units/kW/day at ₹' . qty($q['tariff']) . '/unit.' ?></div></div>
         <?php if (! empty($q['roof_design_id']) && can('designs.view')): ?><a class="btn btn-sm btn-outline-primary w-100 mt-3" href="<?= site_url('admin/designs/' . $q['roof_design_id']) ?>"><i class="bi bi-badge-3d"></i> Open the 3D roof design</a><?php endif ?>
         <?php if ($q['design_path']): ?><div class="card mt-3"><div class="card-header bg-white fw-semibold">Design</div><div class="card-body text-center">
             <?php if (preg_match('/\.(jpe?g|png|webp)$/i', $q['design_path'])): ?><a href="<?= site_url('admin/quotations/' . $q['id'] . '/design') ?>" target="_blank"><img src="<?= site_url('admin/quotations/' . $q['id'] . '/design') ?>" class="img-fluid rounded" alt="Design"></a>

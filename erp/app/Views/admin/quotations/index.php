@@ -8,7 +8,9 @@
         <input name="q" value="<?= esc(service('request')->getGet('q')) ?>" class="form-control form-control-sm" placeholder="Quote no / name / phone">
         <select name="status" class="form-select form-select-sm"><?= select_options($st, service('request')->getGet('status'), 'All statuses') ?></select>
         <button class="btn btn-sm btn-outline-secondary">Filter</button></form>
-    <?php if (can('quotations.manage')): ?><a href="<?= site_url('admin/quotations/new') ?>" class="btn btn-primary ms-auto"><i class="bi bi-plus-lg"></i> New Quotation</a><?php endif ?>
+    <a href="<?= site_url('admin/quotations/team') ?>" class="btn btn-outline-secondary ms-auto"><i class="bi bi-people"></i> Team progress</a>
+    <?php if (can('quotations.manage')): ?><a href="<?= site_url('admin/quotations/new') ?>" class="btn btn-outline-primary"><i class="bi bi-plus-lg"></i> Detailed quotation</a>
+        <a href="<?= site_url('admin/quotations/quick') ?>" class="btn btn-primary"><i class="bi bi-lightning-charge"></i> Quick Quote</a><?php endif ?>
 </div>
 <div class="card"><div class="table-responsive"><table class="table table-hover table-sm table-bordered table-grid mb-0 align-middle small">
     <thead><tr><th>Quotation #</th><th>Date</th><th>For</th><th>kW</th><th class="text-end">Total</th><th class="text-end">Subsidy</th><th>Status</th><th>Valid until</th></tr></thead><tbody>

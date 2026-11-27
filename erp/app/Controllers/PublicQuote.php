@@ -25,6 +25,7 @@ class PublicQuote extends BaseController
         if (! $q['viewed_at']) {
             db_connect()->table('quotations')->where('id', $q['id'])->update(['viewed_at' => date('Y-m-d H:i:s')]);
         }
-        Pdf::stream('pdf/quotation', Quotations::dataFor($q), str_replace('/', '-', $q['quote_no']), false);
+        $d = Quotations::dataFor($q);
+        Pdf::stream(Quotations::pdfView($d), $d, str_replace('/', '-', $q['quote_no']), false);
     }
 }

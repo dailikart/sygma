@@ -111,6 +111,14 @@ $routes->group('admin', ['filter' => 'session', 'namespace' => 'App\Controllers\
     $routes->post('designs/(:num)/delete', 'RoofDesigns::delete/$1');
     $routes->get('designs/(:num)/snapshot', 'RoofDesigns::snapshot/$1');
     $routes->get('designs/(:num)/quotation', 'RoofDesigns::quotation/$1');
+    $routes->get('quotations/quick', 'QuickQuotes::create');
+    $routes->post('quotations/quick', 'QuickQuotes::store');
+    $routes->post('quotations/quick/preview', 'QuickQuotes::preview');
+    $routes->get('quotations/quick-settings', 'QuickQuotes::settings');
+    $routes->post('quotations/quick-settings', 'QuickQuotes::saveSettings');
+    $routes->get('quotations/team', 'QuickQuotes::team');
+    $routes->get('quotations/(:num)/quick', 'QuickQuotes::edit/$1');
+    $routes->post('quotations/(:num)/quick', 'QuickQuotes::update/$1');
     $routes->get('quotations/new', 'Quotations::create');
     $routes->post('quotations', 'Quotations::store');
     $routes->get('quotations/(:num)', 'Quotations::show/$1');

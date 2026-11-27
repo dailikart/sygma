@@ -170,7 +170,7 @@ class Quotations extends AdminController
     {
         $this->requirePermission('quotations.view', 'quotations.manage');
         $d = $this->data((int) $id);
-        Pdf::stream('pdf/quotation', $d, str_replace('/', '-', $d['q']['quote_no']), (bool) $this->request->getGet('download'));
+        Pdf::stream(self::pdfView($d), $d, str_replace('/', '-', $d['q']['quote_no']), (bool) $this->request->getGet('download'));
     }
 
     public function design($id)
@@ -194,7 +194,7 @@ class Quotations extends AdminController
         if (! filter_var($to, FILTER_VALIDATE_EMAIL)) {
             return $this->back('Enter a valid email address.');
         }
-        $pdf = Pdf::toFile('pdf/quotation', $d, $q['quote_no']);
+        $pdf = Pdf::toFile(self::pdfView($d), $d, $q['quote_no']);
         $res = Messenger::customer('quotation', ['name' => $q['party_name'], 'email' => $to, 'phone' => $q['party_phone']], [
             'quote_no' => $q['quote_no'], 'capacity_kw' => qty($q['capacity_kw']), 'total' => money($q['total']), 'link' => self::shareUrl($q),
         ], 'Quotation ' . $q['quote_no'] . ' – ' . setting('Solar.companyName'), sprintf(
@@ -255,6 +255,12 @@ class Quotations extends AdminController
         }
 
         return redirect()->to('admin/invoices/new?quotation=' . $q['id'])->with('message', 'Check the invoice filled from quotation ' . $q['quote_no'] . ' and save it.');
+    }
+
+    /** Quick quotes print as the full proposal; others as the classic quotation. */
+    public static function pdfView(array $d): string
+    {
+        return empty($d['qq']) ? 'pdf/quotation' : 'pdf/quotation_proposal';
     }
 
     public static function shareUrl(array $q): string
@@ -427,6 +433,7 @@ class Quotations extends AdminController
             'roi'   => Quote::roi($q),
             'type'  => $q['installation_type_id'] ? (string) $db->table('installation_types')->select('name')->where('id', $q['installation_type_id'])->get()->getRow('name') : '',
             'kit'   => $q['kit_id'] ? $db->table('kits')->where('id', $q['kit_id'])->get()->getRowArray() : null,
+            'qq'    => \App\Libraries\QuickQuote::proposal($q),
         ];
     }
 

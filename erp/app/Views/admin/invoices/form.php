@@ -40,9 +40,9 @@
         <div class="col-md-4"><label class="form-label">Invoice format</label>
             <select name="print_format" id="print_format" class="form-select"><?= select_options(\App\Libraries\InvoiceFormat::FORMATS, $val('print_format', 'cumulative')) ?></select>
             <div class="form-text">Set automatically from the customer type; you can change it.</div></div>
-        <?php if (! $inv): ?><div class="col-md-4"><label class="form-label">Payment mode</label>
-            <select name="finance_mode" id="finance_mode" class="form-select"><?= select_options(\App\Libraries\Finance::modes(), old('finance_mode', '')) ?></select>
-            <div class="form-text">Can be decided later, but must be set before material is dispatched.</div></div><?php endif ?>
+        <?php if (! $inv): ?><div class="col-md-4"><label class="form-label">Payment mode *</label>
+            <select name="finance_mode" id="finance_mode" class="form-select" required><?= select_options(array_diff_key(\App\Libraries\Finance::modes(), ['' => 1]), old('finance_mode', ''), '— Choose cash or loan —') ?></select>
+            <div class="form-text">Needed before material can be dispatched.</div></div><?php endif ?>
         <div class="col-md-4"><label class="form-label">EB / meter charges paid by</label>
             <div class="input-group"><select name="eb_charges_by" id="eb_by" class="form-select"><?= select_options(eb_charges_options(), (string) $val('eb_charges_by', '')) ?></select>
             <input type="number" step="0.01" min="0" name="eb_charges_amount" id="eb_amt" class="form-control" style="max-width:120px" placeholder="₹" value="<?= esc((string) ((float) $val('eb_charges_amount', 5000) ?: 5000)) ?>"></div>

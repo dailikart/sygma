@@ -96,7 +96,9 @@ class Invoices extends AdminController
             'subsidy_type' => 'required|in_list[subsidy,non_subsidy]',
             'capacity_kw'  => 'required|decimal|greater_than[0]',
             'print_format' => 'permit_empty|in_list[itemwise,cumulative]',
-            'finance_mode' => 'permit_empty|in_list[cash,loan]',
+            // Needed before material can be dispatched, so it is asked when the invoice is made.
+            'finance_mode' => ['label' => 'Payment mode', 'rules' => 'required|in_list[' . implode(',', array_keys(array_filter(\App\Libraries\Finance::modes(), static fn ($k) => $k !== '', ARRAY_FILTER_USE_KEY))) . ']',
+                'errors' => ['required' => 'Choose the payment mode: cash / self-funded or bank loan. It is needed before material can be dispatched.']],
         ])) {
             return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
         }

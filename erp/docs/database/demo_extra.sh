@@ -72,7 +72,7 @@ for c in $C2 $C3; do q "update customers set address='4, Anna Street', pincode='
 q "update customers set address='SIDCO Industrial Estate', pincode='638001', eb_charges_by='company' where id in ($C1,$C4)"
 
 invoice() { # customer subsidy kW kit rate
-  post "$M" admin/invoices/new admin/invoices -F customer_id="$1" -F invoice_date="$D" -F due_date="$D" -F subsidy_type="$2" -F installation_type_id=1 -F capacity_kw="$3" -F kit_id="$4" -F create_project=1 -F print_format=cumulative \
+  post "$M" admin/invoices/new admin/invoices -F customer_id="$1" -F invoice_date="$D" -F due_date="$D" -F subsidy_type="$2" -F installation_type_id=1 -F capacity_kw="$3" -F kit_id="$4" -F create_project=1 -F finance_mode=cash -F print_format=cumulative \
     -F "items[0][description]=$3 kW On-grid Solar Power System – supply and installation" -F 'items[0][hsn]=8541' -F 'items[0][qty]=1' -F "items[0][rate]=$5" -F 'items[0][tax_percent]=12' >/dev/null
   q "select max(id) from invoices"
 }

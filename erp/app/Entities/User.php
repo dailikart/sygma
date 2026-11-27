@@ -14,6 +14,9 @@ class User extends ShieldUser
     public function can(string ...$permissions): bool
     {
         $permissions = array_values(array_filter($permissions, Features::permissionAllowed(...)));
+        if ($permissions !== [] && $this->inGroup('superadmin')) {
+            return true; // Super Admin always has everything (also permissions added after roles were saved)
+        }
 
         return $permissions !== [] && parent::can(...$permissions);
     }

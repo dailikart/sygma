@@ -81,6 +81,9 @@ class AuthGroups extends ShieldAuthGroups
         // AMC / service
         'amc.view'            => 'AMC: view contracts and visits',
         'amc.manage'          => 'AMC: plans, complete visits, assign technicians',
+        // Payroll
+        'payroll.view'        => 'Payroll: view employees, attendance, salaries and payslips',
+        'payroll.manage'      => 'Payroll: employees, attendance, salary runs, advances, approve and pay',
         // Reports
         'reports.view'        => 'Reports: view',
         'tally.export'        => 'Tally: export XML / Excel',
@@ -91,7 +94,7 @@ class AuthGroups extends ShieldAuthGroups
             'users.*', 'roles.*', 'settings.*', 'entries.*', 'leads.*', 'customers.*', 'quotations.*', 'designs.*', 'invoices.*', 'payments.*',
             'projects.*', 'survey.*', 'dispatch.*', 'delivery.*', 'installation.*', 'eb.*', 'subsidy.*',
             'inventory.*', 'suppliers.*', 'purchases.*', 'accounts.*', 'reports.*', 'tally.*',
-            'documents.*', 'amc.*',
+            'documents.*', 'amc.*', 'payroll.*',
         ],
         'admin' => [
             'users.manage', 'entries.edit', 'entries.delete', 'leads.*', 'customers.*', 'quotations.*', 'designs.*', 'invoices.*', 'payments.*', 'projects.*',
@@ -101,7 +104,7 @@ class AuthGroups extends ShieldAuthGroups
         'marketing' => ['leads.view', 'leads.manage', 'customers.*', 'quotations.view', 'quotations.manage', 'designs.view', 'designs.manage', 'documents.upload', 'invoices.*', 'projects.view'],
         'accounts'  => [
             'customers.view', 'quotations.view', 'invoices.view', 'payments.manage', 'projects.view', 'purchases.view',
-            'suppliers.manage', 'accounts.*', 'reports.view', 'tally.export',
+            'suppliers.manage', 'accounts.*', 'reports.view', 'tally.export', 'payroll.*',
         ],
         'surveyor'  => ['survey.update', 'designs.view', 'designs.manage'],
         'store'     => ['dispatch.manage', 'inventory.*', 'suppliers.manage', 'purchases.*', 'projects.view'],

@@ -38,6 +38,7 @@
                     <ul class="dropdown-menu dropdown-menu-end">
                         <li><span class="dropdown-item-text small text-muted"><?= esc(implode(', ', auth()->user()->getGroups())) ?></span></li>
                         <li><a class="dropdown-item" href="<?= site_url('admin/profile') ?>">Change password</a></li>
+                        <?php if (\App\Libraries\Features::on('payroll')): ?><li><a class="dropdown-item" href="<?= site_url('admin/my-payslips') ?>">My payslips</a></li><?php endif ?>
                         <li><a class="dropdown-item" href="#" data-install-app><i class="bi bi-phone"></i> Install app on this device</a></li>
                         <li><a class="dropdown-item" href="<?= url_to('logout') ?>">Logout</a></li>
                     </ul>

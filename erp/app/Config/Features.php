@@ -107,6 +107,13 @@ class Features extends BaseConfig
             'routes'      => ['admin/tally'],
             'settings'    => ['Tally ledger names'],
         ],
+        'payroll' => [
+            'title'       => 'Payroll',
+            'description' => 'Employees, monthly attendance, salary with PF / ESI / PT / TDS, payslips, advances, salary accounts.',
+            'permissions' => ['payroll'],
+            'routes'      => ['admin/employees', 'admin/attendance', 'admin/payroll', 'admin/my-payslips'],
+            'settings'    => ['Payroll'],
+        ],
         'amc' => [
             'title'       => 'AMC & Service',
             'description' => 'AMC plans and visits, service complaints, reminders.',

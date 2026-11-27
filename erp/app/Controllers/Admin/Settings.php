@@ -51,6 +51,15 @@ class Settings extends AdminController
         'Google Maps (3D roof design)' => [
             'googleMapsKey' => 'Google Maps API key: browser key restricted to this website; enable Maps JavaScript, Places, Maps Static and Solar APIs',
         ],
+        'Payroll' => [
+            'pfEmployeeRate' => ['PF: employee % (of basic, up to the ceiling)', 'number'], 'pfEmployerRate' => ['PF: employer %', 'number'],
+            'pfWageCeiling' => ['PF wage ceiling ₹ per month', 'number'],
+            'esiEmployeeRate' => ['ESI: employee %', 'number'], 'esiEmployerRate' => ['ESI: employer %', 'number'],
+            'esiWageLimit' => ['ESI applies up to monthly gross ₹', 'number'],
+            'ptSlabs' => 'Professional tax: half-yearly slabs "income up to:tax", last "0:tax" for above (Tamil Nadu: 21000:0, 30000:180, 45000:425, 60000:930, 75000:1025, 0:1250)',
+            'otRate' => ['Overtime: times the hourly rate', 'number'],
+            'weekOffDay' => ['Weekly off day', 'select', ['Sun' => 'Sunday', 'Mon' => 'Monday', 'Tue' => 'Tuesday', 'Wed' => 'Wednesday', 'Thu' => 'Thursday', 'Fri' => 'Friday', 'Sat' => 'Saturday']],
+        ],
         'AMC' => [
             'amcReminderDays' => ['Remind this many days before a service visit', 'number'],
         ],

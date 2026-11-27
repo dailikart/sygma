@@ -37,6 +37,7 @@ class Manual extends AdminController
         'inventory'       => ['Inventory: items, kits & stock', 'bi-boxes', 'Store', 'Store In-charge', ['admin/stock', 'admin/items', 'admin/kits', 'admin/installation-types', 'admin/item-categories', 'admin/locations']],
         'purchase'        => ['Purchase: PO, purchase & return', 'bi-cart', 'Store', 'Store In-charge, Accounts', ['admin/suppliers', 'admin/purchase-orders', 'admin/purchases', 'admin/purchase-returns']],
         'bulk-upload'     => ['Bulk upload (Excel)', 'bi-upload', 'Store', 'Admin, Store, Accounts', ['admin/import']],
+        'payroll'         => ['Payroll: employees, attendance & salaries', 'bi-person-vcard', 'Accounts', 'Accounts / HR', ['admin/employees', 'admin/attendance', 'admin/payroll', 'admin/my-payslips']],
         'accounts'        => ['Accounts: income, expenses & ledgers', 'bi-cash-coin', 'Accounts', 'Accounts', ['admin/incomes', 'admin/expenses', 'admin/supplier-payments', 'admin/accounts', 'admin/ledgers', 'admin/income-heads', 'admin/expense-heads', 'admin/bank-accounts', 'admin/vouchers']],
         'reports'         => ['Reports', 'bi-bar-chart', 'Accounts', 'Admin, Accounts', ['admin/reports']],
         'tally'           => ['Tally export', 'bi-arrow-left-right', 'Accounts', 'Accounts', ['admin/tally']],

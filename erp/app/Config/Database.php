@@ -201,4 +201,10 @@ class Database extends Config
             $this->defaultGroup = 'tests';
         }
     }
+
+    /** Forget open connections (multi-company mode switches the table prefix). */
+    public static function resetConnections(): void
+    {
+        static::$instances = [];
+    }
 }

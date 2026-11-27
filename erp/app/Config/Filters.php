@@ -29,6 +29,7 @@ class Filters extends BaseFilters
         'auditlog'      => \App\Filters\AuditLog::class,
         'demoguard'     => \App\Filters\DemoGuard::class,
         'featureguard'  => \App\Filters\FeatureGuard::class,
+        'saasguard'     => \App\Filters\SaasGuard::class,
         'toolbar'       => DebugToolbar::class,
         'honeypot'      => Honeypot::class,
         'invalidchars'  => InvalidChars::class,
@@ -75,6 +76,7 @@ class Filters extends BaseFilters
      */
     public array $globals = [
         'before' => [
+            'saasguard', // multi-company: owner address, suspended / expired companies, one company per session
             // 'honeypot',
             'csrf' => ['except' => ['indiamart/push/*', 'webhooks/*']], // IndiaMART server cannot send a form token; the secret address protects it
             'featureguard', // modules / options switched off for this company

@@ -160,7 +160,7 @@ class Quotations extends AdminController
             $db->table('quotations')->where('superseded_by', $q['id'])->update(['superseded_by' => null]); // the previous version is the latest again
         }
         if ($q['design_path']) {
-            @unlink(WRITEPATH . 'uploads/' . $q['design_path']);
+            @unlink(upload_path() . $q['design_path']);
         }
         Workflow::log('quotation', (int) $q['id'], 'deleted', 'Quotation ' . $q['quote_no'] . ' deleted');
 
@@ -195,7 +195,7 @@ class Quotations extends AdminController
     {
         $this->requirePermission('quotations.view', 'quotations.manage');
         $q    = $this->findOr404('quotations', $id);
-        $path = WRITEPATH . 'uploads/' . $q['design_path'];
+        $path = upload_path() . $q['design_path'];
         if (! $q['design_path'] || ! is_file($path)) {
             throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
         }
@@ -336,11 +336,11 @@ class Quotations extends AdminController
         $db->table('quotations')->where('id', $quotationId)->update(['roof_design_id' => $d['id']]);
         $db->table('roof_designs')->where('id', $d['id'])->update(['quotation_id' => $quotationId]);
         $q = $db->table('quotations')->select('design_path')->where('id', $quotationId)->get()->getRowArray();
-        $src = WRITEPATH . 'uploads/' . $d['snapshot_path'];
+        $src = upload_path() . $d['snapshot_path'];
         if (empty($q['design_path']) && $d['snapshot_path'] && is_file($src)) {
-            is_dir(WRITEPATH . 'uploads/quotations') || mkdir(WRITEPATH . 'uploads/quotations', 0775, true);
+            is_dir(upload_path() . 'quotations') || mkdir(upload_path() . 'quotations', 0775, true);
             $rel = 'quotations/design-' . $quotationId . '-' . time() . '.png';
-            if (copy($src, WRITEPATH . 'uploads/' . $rel)) {
+            if (copy($src, upload_path() . $rel)) {
                 $db->table('quotations')->where('id', $quotationId)->update(['design_path' => $rel]);
             }
         }
@@ -425,7 +425,7 @@ class Quotations extends AdminController
         $db = db_connect();
         $q  = $db->table('quotations')->select('design_path')->where('id', $id)->get()->getRowArray();
         if ($this->request->getPost('remove_design') && $q['design_path']) {
-            @unlink(WRITEPATH . 'uploads/' . $q['design_path']);
+            @unlink(upload_path() . $q['design_path']);
             $db->table('quotations')->where('id', $id)->update(['design_path' => null]);
             $q['design_path'] = null;
         }
@@ -438,7 +438,7 @@ class Quotations extends AdminController
         }
         if ($path) {
             if ($q['design_path']) {
-                @unlink(WRITEPATH . 'uploads/' . $q['design_path']);
+                @unlink(upload_path() . $q['design_path']);
             }
             $db->table('quotations')->where('id', $id)->update(['design_path' => $path]);
         }

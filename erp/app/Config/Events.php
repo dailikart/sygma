@@ -37,6 +37,10 @@ Events::on('login', static fn ($user) => $authLog('login', (int) $user->id, 'Log
 Events::on('logout', static fn ($user) => $authLog('logout', $user ? (int) $user->id : null, 'Logged out'));
 Events::on('failedLogin', static fn ($credentials) => $authLog('failed_login', null, 'Failed login for ' . ($credentials['email'] ?? $credentials['username'] ?? '?')));
 
+// Multi-company mode: choose the company from the web address before anything uses the database.
+Events::on('pre_system', static fn () => \App\Libraries\Saas::boot(), 1);
+Events::on('pre_command', static fn () => \App\Libraries\Saas::guardCommand(), 1);
+
 Events::on('pre_system', static function (): void {
     if (ENVIRONMENT !== 'testing') {
         $value = ini_get('zlib.output_compression');

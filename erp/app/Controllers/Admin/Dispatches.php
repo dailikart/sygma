@@ -244,7 +244,7 @@ class Dispatches extends AdminController
         }
         $db   = db_connect();
         $name = 'delivery_photo-' . time() . '.' . $ext;
-        $photo->move(WRITEPATH . 'uploads/projects/' . $d['project_id'], $name);
+        $photo->move(upload_path() . 'projects/' . $d['project_id'], $name);
 
         $db->transException(true)->transStart();
         try {

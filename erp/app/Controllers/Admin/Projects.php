@@ -244,7 +244,7 @@ class Projects extends AdminController
                 return $this->back('Only images / PDF up to 10 MB.');
             }
             $name = $label . '-' . time() . $n . '.' . $ext;
-            $file->move(WRITEPATH . 'uploads/projects/' . $project['id'], $name);
+            $file->move(upload_path() . 'projects/' . $project['id'], $name);
             db_connect()->table('project_files')->insert([
                 'project_id' => $project['id'], 'stage' => $stage, 'label' => $label,
                 'file_path' => 'projects/' . $project['id'] . '/' . $name, 'original_name' => $file->getClientName(),

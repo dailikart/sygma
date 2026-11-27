@@ -57,6 +57,9 @@ class Users extends AdminController
             return $this->back('Choose at least one role you are allowed to assign.');
         }
 
+        if (! $id && ($limit = \App\Libraries\Saas::userLimitMessage())) {
+            return $this->back($limit);
+        }
         $user = $id ? $users->findById((int) $id) : new User();
         if ($id && ! $user) {
             return $this->back('User not found.');
@@ -102,6 +105,9 @@ class Users extends AdminController
         }
         // Shield "ban" blocks login and ends existing sessions on the next request.
         if ($user->isBanned()) {
+            if ($limit = \App\Libraries\Saas::userLimitMessage()) {
+                return $this->back($limit);
+            }
             $user->unBan();
             $user->activate();
             $msg = 'activated';

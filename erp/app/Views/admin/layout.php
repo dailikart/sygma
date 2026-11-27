@@ -49,6 +49,9 @@
             <?php if (auth()->user()->inGroup('superadmin') && uri_string() !== 'admin/maintenance' && ($pend = \App\Controllers\Admin\Maintenance::pending())): ?>
                 <div class="alert alert-warning"><i class="bi bi-database-exclamation"></i> <?= count($pend) ?> database update(s) are waiting. <a href="<?= site_url('admin/maintenance') ?>" class="alert-link">Run them now</a>.</div>
             <?php endif ?>
+            <?php $sc = \App\Libraries\Saas::current(); if ($sc && $sc['expires_on'] && can('settings.manage') && ($dl = (int) floor((strtotime($sc['expires_on']) - strtotime(date('Y-m-d'))) / 86400)) <= 10): ?>
+                <div class="alert alert-warning py-2 small"><i class="bi bi-calendar-x"></i> Your Sygma Solar Suite subscription ends <?= $dl <= 0 ? 'today' : 'in ' . $dl . ' day' . ($dl === 1 ? '' : 's') ?> (<?= date('d-m-Y', strtotime($sc['expires_on'])) ?>). Please renew to keep using it without a break.</div>
+            <?php endif ?>
             <?php if (\App\Filters\DemoGuard::enabled()): ?>
                 <div class="alert alert-info py-2 small d-flex flex-wrap align-items-center gap-2"><i class="bi bi-stars"></i> <span><b>Demo company</b> with sample data. Users, roles and settings are view-only.</span></div>
             <?php endif ?>

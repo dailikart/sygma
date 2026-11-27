@@ -194,7 +194,7 @@ class ServiceTickets extends AdminController
         $t  = $this->ticket((int) $id);
         $db = db_connect();
         foreach ($db->table('service_ticket_updates')->where('ticket_id', $t['id'])->where('photo_path IS NOT NULL', null, false)->get()->getResultArray() as $u) {
-            @unlink(WRITEPATH . 'uploads/' . $u['photo_path']);
+            @unlink(upload_path() . $u['photo_path']);
         }
         $db->table('service_ticket_updates')->where('ticket_id', $t['id'])->delete();
         $db->table('service_tickets')->where('id', $t['id'])->delete();
@@ -210,8 +210,8 @@ class ServiceTickets extends AdminController
         if (! can('amc.view') && ! can('amc.manage') && ! can('customers.manage') && ! ServiceDesk::canWork($t)) {
             throw new \App\Exceptions\ForbiddenException();
         }
-        $path = $u['photo_path'] ? realpath(WRITEPATH . 'uploads/' . $u['photo_path']) : false;
-        if (! $path || ! str_starts_with($path, realpath(WRITEPATH . 'uploads'))) {
+        $path = $u['photo_path'] ? realpath(upload_path() . $u['photo_path']) : false;
+        if (! $path || ! str_starts_with($path, realpath(upload_path()))) {
             throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
         }
 

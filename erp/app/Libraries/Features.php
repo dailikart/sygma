@@ -156,6 +156,10 @@ class Features
     /** Only you (the software owner) may change modules: needs features.manage = true in .env. */
     public static function manageable(): bool
     {
+        if (Saas::enabled()) {
+            return false; // multi-company: modules are set in the owner control panel
+        }
+
         return filter_var(env('features.manage', false), FILTER_VALIDATE_BOOLEAN);
     }
 

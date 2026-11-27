@@ -17,6 +17,9 @@ class FeatureGuard implements FilterInterface
 {
     public function before(RequestInterface $request, $arguments = null)
     {
+        if (\App\Libraries\Saas::isOwnerRequest()) {
+            return null; // owner control panel: no company modules
+        }
         $path    = trim(service('uri')->getRoutePath(), '/');
         $blocked = Features::blockedBy($path);
         if ($blocked === null) {

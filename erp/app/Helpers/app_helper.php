@@ -103,15 +103,34 @@ if (! function_exists('status_badge')) {
     }
 }
 
+if (! function_exists('upload_path')) {
+    /**
+     * Folder for uploaded files, ending in "/". In multi-company mode each company
+     * has its own folder (writable/uploads/tenants/<code>/); paths stored in the
+     * database stay relative to it.
+     */
+    function upload_path(string $sub = ''): string
+    {
+        $c    = \App\Libraries\Saas::current();
+        $base = WRITEPATH . 'uploads/' . ($c ? 'tenants/' . $c['code'] . '/' : '');
+        if ($c && ! is_dir($base)) {
+            @mkdir($base, 0775, true);
+        }
+
+        return $base . ltrim($sub, '/');
+    }
+}
+
 if (! function_exists('user_name')) {
     function user_name($userId): string
     {
-        static $cache = null;
-        if ($cache === null) {
-            $cache = array_column(db_connect()->table('users')->select('id, username')->get()->getResultArray(), 'username', 'id');
+        static $cache = [];
+        $k = \App\Libraries\Saas::current()['code'] ?? '';
+        if (! isset($cache[$k])) {
+            $cache[$k] = array_column(db_connect()->table('users')->select('id, username')->get()->getResultArray(), 'username', 'id');
         }
 
-        return $userId ? ($cache[$userId] ?? ('#' . $userId)) : '—';
+        return $userId ? ($cache[$k][$userId] ?? ('#' . $userId)) : '—';
     }
 }
 

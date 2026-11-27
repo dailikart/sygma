@@ -72,7 +72,7 @@ class Purchases extends PurchaseDocs
         // Update the PO's received quantities and status.
         if ($poId = (int) ($p['purchase_order_id'] ?? 0)) {
             foreach ($lines as $l) {
-                $db->query('UPDATE purchase_order_items SET received_qty = received_qty + ? WHERE purchase_order_id = ? AND item_id = ?', [$l['qty'], $poId, $l['item_id']]);
+                $db->query('UPDATE ' . $db->prefixTable('purchase_order_items') . ' SET received_qty = received_qty + ? WHERE purchase_order_id = ? AND item_id = ?', [$l['qty'], $poId, $l['item_id']]);
             }
             $left = $db->table('purchase_order_items')->where('purchase_order_id', $poId)->where('received_qty < qty', null, false)->countAllResults();
             $db->table('purchase_orders')->where('id', $poId)->update(['status' => $left ? 'partial' : 'received']);
@@ -99,7 +99,7 @@ class Purchases extends PurchaseDocs
         Ledger::unpost('purchase', (int) $doc['id']);
         if ($poId = (int) ($doc['purchase_order_id'] ?? 0)) {
             foreach ($lines as $l) {
-                $db->query('UPDATE purchase_order_items SET received_qty = GREATEST(received_qty - ?, 0) WHERE purchase_order_id = ? AND item_id = ?', [$l['qty'], $poId, $l['item_id']]);
+                $db->query('UPDATE ' . $db->prefixTable('purchase_order_items') . ' SET received_qty = GREATEST(received_qty - ?, 0) WHERE purchase_order_id = ? AND item_id = ?', [$l['qty'], $poId, $l['item_id']]);
             }
             $po = $db->table('purchase_orders')->select('status')->where('id', $poId)->get()->getRowArray();
             if ($po && $po['status'] !== 'cancelled') {

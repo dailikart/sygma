@@ -8,8 +8,8 @@ class Customers extends AdminController
     {
         $this->requirePermission('customers.view');
         $b = db_connect()->table('customers c')
-            ->select('c.*, (SELECT COUNT(*) FROM projects p WHERE p.customer_id = c.id) AS projects,
-                (SELECT COALESCE(SUM(i.total - i.amount_paid), 0) FROM invoices i WHERE i.customer_id = c.id AND i.status IN (\'unpaid\',\'partial\')) AS due', false)
+            ->select('c.*, (SELECT COUNT(*) FROM ' . db_connect()->prefixTable('projects') . ' p WHERE p.customer_id = c.id) AS projects,
+                (SELECT COALESCE(SUM(i.total - i.amount_paid), 0) FROM ' . db_connect()->prefixTable('invoices') . ' i WHERE i.customer_id = c.id AND i.status IN (\'unpaid\',\'partial\')) AS due', false)
             ->where('c.deleted_at', null);
         if ($t = $this->request->getGet('type')) {
             $b->where('c.type', $t);

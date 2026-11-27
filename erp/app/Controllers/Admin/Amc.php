@@ -95,8 +95,8 @@ class Amc extends AdminController
     {
         $this->requirePermission('amc.view', 'amc.manage');
         $v    = $this->findOr404('amc_visits', $visitId);
-        $path = $v['photo_path'] ? realpath(WRITEPATH . 'uploads/' . $v['photo_path']) : false;
-        if (! $path || ! str_starts_with($path, realpath(WRITEPATH . 'uploads'))) {
+        $path = $v['photo_path'] ? realpath(upload_path() . $v['photo_path']) : false;
+        if (! $path || ! str_starts_with($path, realpath(upload_path()))) {
             throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
         }
 

@@ -52,7 +52,7 @@ class Documents extends AdminController
             // Stored under the title, e.g. customers/12/Aadhaar-card-1699999999.pdf
             $slug = trim(preg_replace('/[^A-Za-z0-9]+/', '-', $title), '-') ?: 'document';
             $name = $slug . '-' . time() . $i . '.' . $ext;
-            $file->move(WRITEPATH . 'uploads/customers/' . $customer['id'], $name);
+            $file->move(upload_path() . 'customers/' . $customer['id'], $name);
             $db->table('customer_documents')->insert([
                 'customer_id' => $customer['id'], 'project_id' => $project, 'title' => $title,
                 'document_type_id' => $typeIds[$i] ?? null,
@@ -77,8 +77,8 @@ class Documents extends AdminController
         if (! can('customers.view') && ! can('documents.upload') && ! can('eb.update')) {
             throw new \App\Exceptions\ForbiddenException();
         }
-        $base = realpath(WRITEPATH . 'uploads');
-        $path = realpath(WRITEPATH . 'uploads/' . $doc['file_path']);
+        $base = realpath(upload_path());
+        $path = realpath(upload_path() . $doc['file_path']);
         if ($path === false || ! str_starts_with($path, $base)) {
             throw PageNotFoundException::forPageNotFound();
         }
@@ -94,7 +94,7 @@ class Documents extends AdminController
     {
         $this->requirePermission('documents.upload', 'customers.manage');
         $doc = $this->findOr404('customer_documents', $id);
-        @unlink(WRITEPATH . 'uploads/' . $doc['file_path']);
+        @unlink(upload_path() . $doc['file_path']);
         db_connect()->table('customer_documents')->where('id', $doc['id'])->delete();
 
         return redirect()->back()->with('message', 'Document deleted.');

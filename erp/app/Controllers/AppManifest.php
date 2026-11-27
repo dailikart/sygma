@@ -55,7 +55,7 @@ class AppManifest extends BaseController
         $cache    = WRITEPATH . 'cache/app-icon-v2-' . md5($logo . $color . $file) . '.png';
         if (! is_file($cache)) {
             // Company logo from Settings, else the Sygma Solar Suite logo.
-            file_put_contents($cache, $this->draw($size, $maskable, $logo !== '' ? WRITEPATH . 'uploads/' . $logo : FCPATH . 'logo.png', $color));
+            file_put_contents($cache, $this->draw($size, $maskable, $logo !== '' ? upload_path() . $logo : FCPATH . 'logo.png', $color));
         }
 
         return $this->response->setHeader('Content-Type', 'image/png')->setHeader('Cache-Control', 'public, max-age=604800')->setBody(file_get_contents($cache));

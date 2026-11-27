@@ -128,3 +128,6 @@ _modules/*
 # Local SQLite test databases
 *.db
 /writable/demo_password.sync
+
+# Demo-site sync stamps (written by the app on the server)
+/writable/demo_*.sync

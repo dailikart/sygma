@@ -23,7 +23,7 @@ $row = static function ($i, $r) use ($items, $price, $opt, $description) {
         . '<td><input type="number" step="0.01" min="0" name="items[' . $i . '][qty]" data-field="qty" class="form-control form-control-sm" value="' . esc($r['qty'] ?? 1) . '"></td>'
         . '<td><input type="number" step="0.01" min="0" name="items[' . $i . '][rate]" data-field="rate" class="form-control form-control-sm" value="' . esc($r['rate'] ?? '') . '"></td>'
         . '<td><input type="number" step="0.01" min="0" name="items[' . $i . '][tax_percent]" data-field="tax_percent" class="form-control form-control-sm" value="' . esc($r['tax_percent'] ?? '') . '"></td>'
-        . '<td class="text-end" data-out="amount">0.00</td>'
+        . '<td><input type="number" step="0.01" min="0" data-out="amount" data-incl class="form-control form-control-sm text-end" title="Type the final price including GST: the rate is worked out for you"></td>'
         . '<td><button type="button" class="btn btn-sm btn-outline-danger" data-remove-row><i class="bi bi-x"></i></button></td></tr>';
 };
 ?>
@@ -34,7 +34,8 @@ $row = static function ($i, $r) use ($items, $price, $opt, $description) {
         <?php foreach ($rows ?: [[]] as $i => $r) { echo $row($i, $r); } ?>
     </tbody>
     <tfoot>
-        <tr><td colspan="6"><button type="button" class="btn btn-sm btn-outline-primary" data-add-row="#lines"><i class="bi bi-plus"></i> Add line</button></td></tr>
+        <tr><td colspan="6"><button type="button" class="btn btn-sm btn-outline-primary" data-add-row="#lines"><i class="bi bi-plus"></i> Add line</button>
+            <span class="small text-muted ms-2">Know the final price with GST? Type it in <b>Amount incl. GST</b> and the rate is worked out (price ÷ (1 + GST%)).</span></td></tr>
         <tr><td colspan="4" class="text-end">Sub total</td><td class="text-end" id="sum-subtotal">0.00</td><td></td></tr>
         <tr><td colspan="4" class="text-end">GST</td><td class="text-end" id="sum-tax">0.00</td><td></td></tr>
         <tr class="fw-bold"><td colspan="4" class="text-end">Total</td><td class="text-end" id="sum-total">0.00</td><td></td></tr>

@@ -53,7 +53,7 @@ class Removal
         }
         $db->table('dispatches')->where('project_id', $projectId)->delete();
         foreach ($db->table('project_files')->where('project_id', $projectId)->get()->getResultArray() as $f) {
-            $path = WRITEPATH . 'uploads/' . ($f['file_path'] ?? $f['path'] ?? '');
+            $path = upload_path() . ($f['file_path'] ?? $f['path'] ?? '');
             if (! empty($f['file_path'] ?? $f['path'] ?? '') && is_file($path)) {
                 @unlink($path);
             }

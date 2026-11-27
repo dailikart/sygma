@@ -15,6 +15,8 @@ set -u
 cd "$(dirname "$0")/../.."
 
 DB=${E2E_DB:-solar_e2e}
+SAAS=${E2E_SAAS:-0}   # 1 = run everything inside one company of the multi-company (SaaS) mode
+DBQ=$DB               # database the checks read (SaaS: views onto the company's prefixed tables)
 DBUSER=${E2E_DBUSER:-solar}
 DBPASS=${E2E_DBPASS:-solarpw}
 PORT=${E2E_PORT:-8090}
@@ -29,7 +31,7 @@ eq()   { [ "$2" == "$3" ] && ok "$1" || bad "$1 (expected '$3', got '$2')"; }
 hasnt() { if grep -qF -- "$3" <<<"$2"; then FAIL=$((FAIL+1)); FAILS+=("$1"); printf '  \e[31m✗ %s\e[0m\n' "$1"; else PASS=$((PASS+1)); printf '  \e[32m✓\e[0m %s\n' "$1"; fi; }
 has()  { [[ "$2" == *"$3"* ]] && ok "$1" || bad "$1 (expected to contain '$3', got '${2:0:200}')"; }
 section() { printf '\n\e[1m== %s\e[0m\n' "$1"; }
-q()    { mysql -N -B -u"$DBUSER" -p"$DBPASS" "$DB" -e "$1" 2>/dev/null | tr '\t' '|' | sed -E 's/([0-9])\.00([^0-9]|$)/\1\2/g; s/([0-9])\.00([^0-9]|$)/\1\2/g'; }
+q()    { mysql -N -B -u"$DBUSER" -p"$DBPASS" "$DBQ" -e "$1" 2>/dev/null | tr '\t' '|' | sed -E 's/([0-9])\.00([^0-9]|$)/\1\2/g; s/([0-9])\.00([^0-9]|$)/\1\2/g'; }
 tok()  { curl -s -b "$1" -c "$1" "$B/$2" | grep -o 'name="csrf_test_name" value="[^"]*"' | head -1 | sed 's/.*value="//;s/"//'; }
 # post JAR FORM_PAGE URL fields... → prints "<code> <redirect>"
 post() { local j=$1 p=$2 u=$3; shift 3; curl -s -b "$j" -c "$j" -o "$W/last.html" -w '%{http_code} %{redirect_url}' -F "csrf_test_name=$(tok "$j" "$p")" "$@" "$B/$u"; }
@@ -55,9 +57,22 @@ database.default.DBDriver = MySQLi
 admin.email = admin@e2e.test
 admin.password = 'Admin#2026x'
 EOF
+[ "$SAAS" = 1 ] && printf "saas.enabled = true\nsaas.ownerHosts = '127.0.0.1'\nsaas.secret = 'e2e-secret-0123456789abcdef'\n" >> .env
 restore() { pkill -f "spark serve --port $PORT" 2>/dev/null; pkill -f -- "-S localhost:$PORT" 2>/dev/null; pkill -f "http.server 8097" 2>/dev/null; pkill -f "aiosmtpd -n -l 127.0.0.1:1026" 2>/dev/null; [ -f "$W/env.backup" ] && cp "$W/env.backup" .env || rm -f .env; }
 trap restore EXIT
-php spark migrate --all >/dev/null && php spark db:seed AdminSeeder >/dev/null && ok "migrations + admin seed" || bad "migrations"
+if [ "$SAAS" = 1 ]; then
+  php spark saas:create --code=e2e --name="Sun Power Solutions" --domain=localhost --admin-email=admin@e2e.test --admin-password='Admin#2026x' --state="Tamil Nadu" >/dev/null && ok "SaaS company created (tables t_e2e_*)" || bad "saas:create"
+  DBQ=${DB}_v
+  mysql -u"$DBUSER" -p"$DBPASS" -e "CREATE DATABASE IF NOT EXISTS $DBQ CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;" 2>/dev/null
+  for t in $(mysql -N -u"$DBUSER" -p"$DBPASS" "$DB" -e "SHOW TABLES LIKE 't\_e2e\_%'" 2>/dev/null); do
+    mysql -u"$DBUSER" -p"$DBPASS" "$DBQ" -e "CREATE OR REPLACE VIEW \`${t#t_e2e_}\` AS SELECT * FROM $DB.\`$t\`" 2>/dev/null
+  done
+  eq "no app table without the company prefix" "$(mysql -N -u"$DBUSER" -p"$DBPASS" "$DB" -e "SHOW TABLES" 2>/dev/null | grep -v '^t_e2e_\|^saas_' | wc -l)" "0"
+  sparkc() { php spark saas:run "$*" --company=e2e; }
+else
+  php spark migrate --all >/dev/null && php spark db:seed AdminSeeder >/dev/null && ok "migrations + admin seed" || bad "migrations"
+  sparkc() { php spark "$@"; }
+fi
 (python3 -m aiosmtpd -n -l 127.0.0.1:1026 > "$W/smtp.log" 2>&1 &)
 (php spark serve --port "$PORT" > "$W/serve.log" 2>&1 &)
 for i in $(seq 1 30); do curl -s -o /dev/null "$B/login" && break; sleep 1; done
@@ -351,7 +366,7 @@ D2=$(q "select max(id) from dispatches")
 has "shortage flagged on the dispatch screen (inverter is in Warehouse 2)" "$(curl -s -b "$K" "$B/admin/dispatches/$D2")" "short in this store"
 post "$K" admin/dispatches/$D2 admin/dispatches/$D2/dispatch -F vehicle_no=TN33X >/dev/null; has "dispatch with shortage refused by the server" "$(flash "$K" admin/dispatches/$D2)" "Not enough stock"
 eq "…and no stock moved" "$(q "select count(*) from stock_movements where ref_type='dispatch' and ref_id=$D2")" "0"
-mysql -N -u"$DBUSER" -p"$DBPASS" "$DB" -e "DELETE FROM dispatch_items WHERE dispatch_id=$D2 AND item_id=3" 2>/dev/null   # store keeps inverter out of this load
+mysql -N -u"$DBUSER" -p"$DBPASS" "$DBQ" -e "DELETE FROM dispatch_items WHERE dispatch_id=$D2 AND item_id=3" 2>/dev/null   # store keeps inverter out of this load
 post "$K" admin/dispatches/$D2 admin/dispatches/$D2/dispatch -F vehicle_no=TN33X1 -F driver_name=Ravi >/dev/null
 post "$K" $P/dispatch $P/dispatch -F location_id=2 -F 'items[0][item_id]=3' -F 'items[0][qty]=1' >/dev/null
 D3=$(q "select max(id) from dispatches")
@@ -370,9 +385,9 @@ eq "non-subsidy project completes after EB; paid AMC plan chosen (4 visits)" "$(
 
 # ── AMC ────────────────────────────────────────────────────────────────────
 section "AMC visits and reminders"
-mysql -N -u"$DBUSER" -p"$DBPASS" "$DB" -e "UPDATE amc_visits SET due_date=DATE_ADD(CURDATE(), INTERVAL 3 DAY) WHERE visit_no=1" 2>/dev/null
-has "amc:remind sends due reminders" "$(php spark amc:remind 2>&1)" "Reminders sent: 2"
-eq "…once only" "$(php spark amc:remind 2>&1 | grep -o 'Reminders sent: [0-9]*')" "Reminders sent: 0"
+mysql -N -u"$DBUSER" -p"$DBPASS" "$DBQ" -e "UPDATE amc_visits SET due_date=DATE_ADD(CURDATE(), INTERVAL 3 DAY) WHERE visit_no=1" 2>/dev/null
+has "amc:remind sends due reminders" "$(sparkc amc:remind 2>&1)" "Reminders sent: 2"
+eq "…once only" "$(sparkc amc:remind 2>&1 | grep -o 'Reminders sent: [0-9]*')" "Reminders sent: 0"
 V=$(q "select id from amc_visits where visit_no=1 order by id limit 1"); C=$(q "select amc_contract_id from amc_visits where id=$V")
 post "$W/service1" admin/amc/contracts/$C admin/amc/visits/$V/complete -F done_date="$D" -F findings= >/dev/null; has "visit needs findings" "$(flash "$W/service1" admin/amc/contracts/$C)" "Write what was done"
 post "$W/service1" admin/amc/contracts/$C admin/amc/visits/$V/complete -F done_date="$D" -F findings="Panels cleaned, generation normal" -F "photo=@$W/photo.jpg" >/dev/null
@@ -616,7 +631,7 @@ q "insert into settings (class, \`key\`, value, type, context, created_at, updat
 post "$A" admin/settings admin/indiamart/pull >/dev/null; has "Fetch now imports new enquiries and skips known ones" "$(flash "$A" admin/settings)" "1 new lead(s), 0 added to existing leads, 1 already imported"
 eq "B2B lead from the company name, 50 kW" "$(q "select concat(customer_type,'/',required_kw+0,'/',source) from leads where external_ref='IM-2873101'")" "b2b/50/IndiaMART"
 post "$A" admin/settings admin/indiamart/pull >/dev/null; has "IndiaMART's 5-minute limit is respected" "$(flash "$A" admin/settings)" "one check every 5 minutes"
-has "cron command runs (and respects the limit)" "$(php spark indiamart:pull 2>&1)" "one check every 5 minutes"
+has "cron command runs (and respects the limit)" "$(sparkc indiamart:pull 2>&1)" "one check every 5 minutes"
 has "leads list filters by source" "$(curl -s -b "$M" "$B/admin/leads?source=IndiaMART")" "Lakshmi Textiles"
 pkill -f "http.server 8097" 2>/dev/null
 

@@ -18,7 +18,7 @@ class RoofDesigns extends AdminController
     {
         $this->requirePermission('designs.view', 'designs.manage');
         $b = db_connect()->table('roof_designs d')
-            ->select("d.*, l.name AS lead_name, q.quote_no, (SELECT COUNT(*) FROM roof_design_photos ph WHERE ph.design_id = d.id AND ph.kind = 'site') AS photo_count", false)
+            ->select("d.*, l.name AS lead_name, q.quote_no, (SELECT COUNT(*) FROM " . db_connect()->prefixTable('roof_design_photos') . " ph WHERE ph.design_id = d.id AND ph.kind = 'site') AS photo_count", false)
             ->join('leads l', 'l.id = d.lead_id', 'left')
             ->join('quotations q', 'q.id = d.quotation_id', 'left')
             ->where('d.deleted_at', null);
@@ -146,7 +146,7 @@ class RoofDesigns extends AdminController
     {
         $this->requirePermission('designs.view', 'designs.manage', 'quotations.view');
         $d    = $this->design((int) $id);
-        $path = WRITEPATH . 'uploads/' . $d['snapshot_path'];
+        $path = upload_path() . $d['snapshot_path'];
         if (! $d['snapshot_path'] || ! is_file($path)) {
             throw PageNotFoundException::forPageNotFound();
         }
@@ -191,10 +191,10 @@ class RoofDesigns extends AdminController
             return $this->fail('This photo could not be read.');
         }
         $img = $this->limitSize($img, $kind === 'plan' ? 2600 : 1800);
-        $dir = WRITEPATH . 'uploads/designs/photos';
+        $dir = upload_path() . 'designs/photos';
         is_dir($dir) || mkdir($dir, 0775, true);
         $rel = 'designs/photos/' . date('Ymd-His') . '-' . bin2hex(random_bytes(5)) . '.jpg';
-        imagejpeg($img, WRITEPATH . 'uploads/' . $rel, 85);
+        imagejpeg($img, upload_path() . $rel, 85);
         $w = imagesx($img);
         $h = imagesy($img);
         imagedestroy($img);
@@ -214,7 +214,7 @@ class RoofDesigns extends AdminController
     {
         $this->requirePermission('designs.view', 'designs.manage', 'quotations.view');
         $ph   = db_connect()->table('roof_design_photos')->where('id', (int) $id)->get()->getRowArray();
-        $path = $ph ? WRITEPATH . 'uploads/' . $ph['path'] : '';
+        $path = $ph ? upload_path() . $ph['path'] : '';
         if (! $ph || ! is_file($path) || ($ph['design_id'] === null && (int) $ph['created_by'] !== (int) auth()->id())) {
             throw PageNotFoundException::forPageNotFound();
         }
@@ -230,7 +230,7 @@ class RoofDesigns extends AdminController
         if (! $ph || ($ph['design_id'] === null && (int) $ph['created_by'] !== (int) auth()->id())) {
             return $this->fail('Photo not found.');
         }
-        @unlink(WRITEPATH . 'uploads/' . $ph['path']);
+        @unlink(upload_path() . $ph['path']);
         $db->table('roof_design_photos')->where('id', $ph['id'])->delete();
 
         return $this->response->setJSON(['ok' => true]);
@@ -356,13 +356,13 @@ class RoofDesigns extends AdminController
         if ($png === false || strlen($png) > 6_000_000 || substr($png, 0, 8) !== "\x89PNG\r\n\x1a\n") {
             return;
         }
-        $dir = WRITEPATH . 'uploads/designs';
+        $dir = upload_path() . 'designs';
         is_dir($dir) || mkdir($dir, 0775, true);
         $rel = 'designs/' . $id . '-' . time() . '.png';
-        file_put_contents(WRITEPATH . 'uploads/' . $rel, $png);
+        file_put_contents(upload_path() . $rel, $png);
         db_connect()->table('roof_designs')->where('id', $id)->update(['snapshot_path' => $rel]);
         if ($old && $old !== $rel) {
-            @unlink(WRITEPATH . 'uploads/' . $old);
+            @unlink(upload_path() . $old);
         }
     }
 }

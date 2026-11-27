@@ -21,6 +21,12 @@ class Lots
 {
     private static ?bool $ready = null;
 
+    /** Forget cached state (multi-company mode switches company). */
+    public static function reset(): void
+    {
+        self::$ready = null;
+    }
+
     /** False until "Database Updates" has created the lot tables: everything then falls back to the old behaviour. */
     public static function ready(): bool
     {
@@ -67,7 +73,7 @@ class Lots
             }
         }
         foreach ($db->table('stock_lot_moves')->whereIn('movement_id', $movementIds)->get()->getResultArray() as $m) {
-            $db->query('UPDATE stock_lots SET qty_left = qty_left + ? WHERE id = ?', [$m['qty'], $m['lot_id']]);
+            $db->query('UPDATE ' . $db->prefixTable('stock_lots') . ' SET qty_left = qty_left + ? WHERE id = ?', [$m['qty'], $m['lot_id']]);
         }
         $db->table('stock_lot_moves')->whereIn('movement_id', $movementIds)->delete();
         if ($lots) {
@@ -314,7 +320,7 @@ class Lots
             }
             $take = min($qty, (float) $lot['qty_left']);
             $db->table('stock_lot_moves')->insert(['lot_id' => $lot['id'], 'movement_id' => $movementId, 'qty' => $take, 'created_at' => $now]);
-            $db->query('UPDATE stock_lots SET qty_left = qty_left - ? WHERE id = ?', [$take, $lot['id']]);
+            $db->query('UPDATE ' . $db->prefixTable('stock_lots') . ' SET qty_left = qty_left - ? WHERE id = ?', [$take, $lot['id']]);
             $qty -= $take;
         }
         // Anything left over had no lot (stock taken below zero with the check switched off): not traced.

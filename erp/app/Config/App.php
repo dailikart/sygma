@@ -199,4 +199,13 @@ class App extends BaseConfig
      * @see http://www.w3.org/TR/CSP/
      */
     public bool $CSPEnabled = false;
+
+    public function __construct()
+    {
+        parent::__construct();
+        // Multi-company mode: each company has its own web address on the same code.
+        if (PHP_SAPI !== 'cli' && filter_var(env('saas.enabled', false), FILTER_VALIDATE_BOOLEAN)) {
+            $this->baseURL = \App\Libraries\Saas::baseUrlFor($this->baseURL);
+        }
+    }
 }

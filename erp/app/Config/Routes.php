@@ -6,6 +6,27 @@ use CodeIgniter\Router\RouteCollection;
 $routes->addRedirect('/', 'admin');
 
 service('auth')->routes($routes);
+
+// Multi-company mode: owner control panel (owner address only) and the owner's support login into a company.
+$routes->group('owner', static function ($routes): void {
+    $routes->get('/', 'Owner::index');
+    $routes->get('login', 'Owner::login');
+    $routes->post('login', 'Owner::doLogin');
+    $routes->get('logout', 'Owner::logout');
+    $routes->get('companies/new', 'Owner::create');
+    $routes->post('companies', 'Owner::store');
+    $routes->get('companies/(:num)', 'Owner::show/$1');
+    $routes->post('companies/(:num)', 'Owner::update/$1');
+    $routes->post('companies/(:num)/migrate', 'Owner::migrate/$1');
+    $routes->post('companies/(:num)/admin', 'Owner::admin/$1');
+    $routes->post('companies/(:num)/support', 'Owner::support/$1');
+    $routes->post('companies/(:num)/delete', 'Owner::delete/$1');
+    $routes->post('migrate-all', 'Owner::migrateAll');
+    $routes->get('log', 'Owner::log');
+    $routes->get('account', 'Owner::account');
+    $routes->post('account', 'Owner::saveAccount');
+});
+$routes->get('saas/support/(:segment)', 'SaasSupport::login/$1');
 $routes->get('branding/(:segment)', 'Admin\Settings::branding/$1');
 // Install on phone (PWA): manifest and home-screen icons.
 $routes->get('manifest.webmanifest', 'AppManifest::manifest');

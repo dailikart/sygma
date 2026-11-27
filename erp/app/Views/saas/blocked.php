@@ -1,0 +1,3 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title><?= esc($title) ?></title>
+<style>body{margin:0;background:#f6f7f9;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;color:#1f2937}.b{max-width:520px;margin:14vh auto;padding:32px 24px;background:#fff;border-radius:14px;box-shadow:0 2px 12px rgba(0,0,0,.06);text-align:center}h1{font-size:22px;margin:0 0 10px}p{color:#4b5563;line-height:1.5}small{color:#9ca3af}</style></head>
+<body><div class="b"><h1><?= esc($title) ?></h1><p><?= esc($text) ?></p><small><?= esc($company['name']) ?> · Sygma Solar Suite</small></div></body></html>

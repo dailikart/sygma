@@ -113,7 +113,7 @@ class Settings extends AdminController
         // Logo / authorised signature images.
         foreach (['logo' => 'logoPath', 'signature' => 'signaturePath', 'seal' => 'sealPath'] as $field => $key) {
             if ($this->request->getPost('remove_' . $field)) {
-                @unlink(WRITEPATH . 'uploads/' . setting('Solar.' . $key));
+                @unlink(upload_path() . setting('Solar.' . $key));
                 setting('Solar.' . $key, '');
                 continue;
             }
@@ -124,9 +124,9 @@ class Settings extends AdminController
                     return $this->back(ucfirst($field) . ': use a PNG or JPG image up to 2 MB.');
                 }
                 $name = $field . '-' . time() . '.' . $ext;
-                $file->move(WRITEPATH . 'uploads/branding', $name);
+                $file->move(upload_path() . 'branding', $name);
                 if (setting('Solar.' . $key)) {
-                    @unlink(WRITEPATH . 'uploads/' . setting('Solar.' . $key));
+                    @unlink(upload_path() . setting('Solar.' . $key));
                 }
                 setting('Solar.' . $key, 'branding/' . $name);
             }
@@ -143,8 +143,8 @@ class Settings extends AdminController
             throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
         }
         $rel  = (string) setting('Solar.' . $key);
-        $path = $rel ? realpath(WRITEPATH . 'uploads/' . $rel) : false;
-        if (! $path || ! str_starts_with($path, realpath(WRITEPATH . 'uploads'))) {
+        $path = $rel ? realpath(upload_path() . $rel) : false;
+        if (! $path || ! str_starts_with($path, realpath(upload_path()))) {
             throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
         }
 

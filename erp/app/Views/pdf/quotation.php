@@ -38,8 +38,8 @@
     </table></td>
 </tr></table>
 <p class="muted"><?= amount_in_words((float) $q['total']) ?></p>
-<?php if ($q['design_path'] && preg_match('/\.(jpe?g|png)$/i', $q['design_path']) && is_file(WRITEPATH . 'uploads/' . $q['design_path'])): ?>
-    <p><strong>Proposed layout</strong><br><img src="<?= esc(WRITEPATH . 'uploads/' . $q['design_path']) ?>" style="max-width:100%;max-height:260px"></p>
+<?php if ($q['design_path'] && preg_match('/\.(jpe?g|png)$/i', $q['design_path']) && is_file(upload_path() . $q['design_path'])): ?>
+    <p><strong>Proposed layout</strong><br><img src="<?= esc(upload_path() . $q['design_path']) ?>" style="max-width:100%;max-height:260px"></p>
 <?php endif ?>
 <?php if ($q['notes']): ?><p><strong>Terms</strong><br><span class="muted"><?= nl2br(esc($q['notes'])) ?></span></p><?php endif ?>
 <br><table><tr><td class="muted">We look forward to powering your home with the sun.</td><td class="r">For <?= esc(setting('Solar.companyName')) ?><br><?= brand_img('signature', 'max-height:40px;max-width:150px') ?: '<br><br>' ?><br>Authorised Signatory</td></tr></table>

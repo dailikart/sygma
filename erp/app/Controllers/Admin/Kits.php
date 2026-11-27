@@ -12,7 +12,7 @@ class Kits extends AdminController
     {
         $this->requirePermission('inventory.manage', 'inventory.view');
         $rows = db_connect()->table('kits k')
-            ->select('k.*, t.name AS type, (SELECT COUNT(*) FROM kit_items ki WHERE ki.kit_id = k.id) AS line_count')
+            ->select('k.*, t.name AS type, (SELECT COUNT(*) FROM ' . db_connect()->prefixTable('kit_items') . ' ki WHERE ki.kit_id = k.id) AS line_count', false)
             ->join('installation_types t', 't.id = k.installation_type_id', 'left')
             ->orderBy('t.name')->orderBy('k.capacity_kw')->get()->getResultArray();
 

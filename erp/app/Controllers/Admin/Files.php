@@ -27,8 +27,8 @@ class Files extends AdminController
             throw new \App\Exceptions\ForbiddenException();
         }
 
-        $path = realpath(WRITEPATH . 'uploads/' . $file['file_path']);
-        if ($path === false || ! str_starts_with($path, realpath(WRITEPATH . 'uploads'))) {
+        $path = realpath(upload_path() . $file['file_path']);
+        if ($path === false || ! str_starts_with($path, realpath(upload_path()))) {
             throw PageNotFoundException::forPageNotFound();
         }
 
@@ -54,8 +54,8 @@ class Files extends AdminController
         if (! self::canDelete($file, $stage)) {
             return $this->back('This file belongs to a completed stage. Only a manager can delete it.');
         }
-        $base = realpath(WRITEPATH . 'uploads');
-        $path = realpath(WRITEPATH . 'uploads/' . $file['file_path']);
+        $base = realpath(upload_path());
+        $path = realpath(upload_path() . $file['file_path']);
         if ($path && str_starts_with($path, $base)) {
             @unlink($path);
         }

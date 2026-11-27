@@ -88,7 +88,7 @@ abstract class AdminController extends BaseController
             throw new \RuntimeException('File is larger than 10 MB.');
         }
         $name = $file->getRandomName();
-        $file->move(WRITEPATH . 'uploads/' . $folder, $name);
+        $file->move(upload_path() . $folder, $name);
 
         return $folder . '/' . $name;
     }

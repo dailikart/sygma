@@ -22,6 +22,10 @@ class DemoGuard implements FilterInterface
 
     public static function enabled(): bool
     {
+        if (\App\Libraries\Saas::enabled()) {
+            return false; // single-company demo tools; not used in multi-company mode
+        }
+
         return filter_var(env('demo.mode', false), FILTER_VALIDATE_BOOLEAN);
     }
 

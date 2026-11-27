@@ -44,7 +44,7 @@ Only **you** (the software owner), never the customer:
   ```
 
 The choice is stored in each company's own database (`settings` table, key `Features.off`).
-In the multi-company (SaaS) version, your control panel will write the same setting.
+In multi-company mode ([SAAS.md](SAAS.md)) the owner control panel sets the modules of each company; the screen and command above are not used there.
 
 ## Adding a new module or option
 

@@ -12,7 +12,9 @@ $menu = [
     ]],
     ['Sales', null, 'bi-receipt', ['invoices.view', 'payments.manage', 'quotations.view', 'quotations.manage', 'designs.view', 'designs.manage'], [
         ['3D Roof Designs', 'admin/designs', ['designs.view', 'designs.manage']],
+        ['Quick Quote', 'admin/quotations/quick', ['quotations.manage']],
         ['Quotations', 'admin/quotations', ['quotations.view', 'quotations.manage']],
+        ['Sales Team Progress', 'admin/quotations/team', ['quotations.view', 'quotations.manage']],
         ['Invoices', 'admin/invoices', ['invoices.view']],
         ['GST e-Invoice', 'admin/einvoice', ['invoices.view']],
         ['Payments', 'admin/payments', ['invoices.view', 'payments.manage']],
@@ -68,6 +70,7 @@ $menu = [
         ['User Log', 'admin/user-log', ['users.manage']],
         ['Roles & Access', 'admin/roles', ['roles.manage']],
         ['Settings', 'admin/settings', ['settings.manage']],
+        ['Quick Quote Prices', 'admin/quotations/quick-settings', ['settings.manage']],
         ['Document Types', 'admin/document-types', ['settings.manage']],
         ['WhatsApp Templates', 'admin/whatsapp-templates', ['settings.manage']],
         ['Message Log', 'admin/message-log', ['settings.manage']],

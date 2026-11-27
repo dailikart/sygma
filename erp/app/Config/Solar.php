@@ -57,6 +57,9 @@ class Solar extends BaseConfig
     public string $quoteTariff = '6.50';
     public string $quoteTerms = "1. Prices include supply, installation and commissioning.\n2. 50% advance with order, balance before dispatch.\n3. Subsidy is credited by the government directly to the customer's bank account.\n4. Panel warranty as per manufacturer; system warranty 5 years.";
 
+    /** Quick quote rate card (JSON, edited in Quotations → Quick quote settings). */
+    public string $quickQuote = '';
+
     /** Days before an AMC visit to remind the customer and service team. */
     public int $amcReminderDays = 3;
 

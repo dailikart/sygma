@@ -7,13 +7,16 @@
     <form method="get" class="d-flex gap-2"><input type="hidden" name="from" value="<?= esc($from) ?>"><input type="hidden" name="to" value="<?= esc($to) ?>">
         <input name="q" value="<?= esc(service('request')->getGet('q')) ?>" class="form-control form-control-sm" placeholder="Quote no / name / phone">
         <select name="status" class="form-select form-select-sm"><?= select_options($st, service('request')->getGet('status'), 'All statuses') ?></select>
+        <?php if (\App\Controllers\Admin\Quotations::hasVersions()): ?><div class="form-check align-self-center small text-nowrap"><input class="form-check-input" type="checkbox" name="versions" value="1" id="vers" <?= service('request')->getGet('versions') ? 'checked' : '' ?>><label class="form-check-label" for="vers">Show earlier versions</label></div><?php endif ?>
         <button class="btn btn-sm btn-outline-secondary">Filter</button></form>
-    <?php if (can('quotations.manage')): ?><a href="<?= site_url('admin/quotations/new') ?>" class="btn btn-primary ms-auto"><i class="bi bi-plus-lg"></i> New Quotation</a><?php endif ?>
+    <a href="<?= site_url('admin/quotations/team') ?>" class="btn btn-outline-secondary ms-auto"><i class="bi bi-people"></i> Team progress</a>
+    <?php if (can('quotations.manage')): ?><a href="<?= site_url('admin/quotations/new') ?>" class="btn btn-outline-primary"><i class="bi bi-plus-lg"></i> Detailed quotation</a>
+        <a href="<?= site_url('admin/quotations/quick') ?>" class="btn btn-primary"><i class="bi bi-lightning-charge"></i> Quick Quote</a><?php endif ?>
 </div>
 <div class="card"><div class="table-responsive"><table class="table table-hover table-sm table-bordered table-grid mb-0 align-middle small">
     <thead><tr><th>Quotation #</th><th>Date</th><th>For</th><th>kW</th><th class="text-end">Total</th><th class="text-end">Subsidy</th><th>Status</th><th>Valid until</th></tr></thead><tbody>
     <?php $sum = 0; foreach ($rows as $r): $sum += $r['total']; $expired = $r['valid_until'] && $r['valid_until'] < date('Y-m-d') && in_array($r['status'], ['draft', 'sent'], true); ?>
-        <tr><td class="text-nowrap"><a href="<?= site_url('admin/quotations/' . $r['id']) ?>"><?= esc($r['quote_no']) ?></a><div class="text-muted">by <?= esc(user_name($r['created_by'])) ?></div></td>
+        <tr><td class="text-nowrap"><a href="<?= site_url('admin/quotations/' . $r['id']) ?>"><?= esc($r['quote_no']) ?></a><?= ! empty($r['revision']) ? ' <span class="badge text-bg-warning">R' . (int) $r['revision'] . '</span>' : '' ?><?= ! empty($r['superseded_by']) ? ' <span class="badge text-bg-light border">earlier version</span>' : '' ?><div class="text-muted">by <?= esc(user_name($r['created_by'])) ?></div></td>
             <td class="text-nowrap"><?= fdate($r['quote_date']) ?></td>
             <td><?= esc($r['party_name']) ?> <?= status_badge($r['customer_type']) ?><div class="text-muted"><?= esc((string) $r['party_phone']) ?> <?= $r['customer_id'] ? '' : '<span class="badge text-bg-light border">' . ($r['lead_id'] ? 'Lead' : 'New enquiry') . '</span>' ?></div></td>
             <td><?= qty($r['capacity_kw']) ?></td>

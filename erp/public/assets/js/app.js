@@ -39,10 +39,20 @@ document.addEventListener('change', function (e) {
 });
 document.addEventListener('input', function (e) {
     const table = e.target.closest('table.line-items');
-    if (table) recalc(table);
+    if (!table) return;
+    // Price typed including GST → rate = price ÷ (1 + GST%) ÷ qty.
+    if (e.target.matches('[data-incl]')) {
+        const tr = e.target.closest('tr');
+        const q = parseFloat((tr.querySelector('[data-field="qty"]') || {}).value) || 1;
+        const t = parseFloat((tr.querySelector('[data-field="tax_percent"]') || {}).value) || 0;
+        const incl = parseFloat(e.target.value) || 0;
+        const rate = tr.querySelector('[data-field="rate"]');
+        if (rate) rate.value = incl > 0 ? (Math.round(incl / (1 + t / 100) / q * 100) / 100).toFixed(2) : '';
+    }
+    recalc(table, e.target);
 });
 
-function recalc(table) {
+function recalc(table, typing) {
     if (!table) return;
     let sub = 0, tax = 0;
     table.querySelectorAll('tbody tr').forEach(function (tr) {
@@ -53,7 +63,9 @@ function recalc(table) {
         const tx = Math.round(amt * t) / 100;
         sub += amt; tax += tx;
         const out = tr.querySelector('[data-out="amount"]');
-        if (out) out.textContent = (amt + tx).toFixed(2);
+        if (out && out !== typing) {
+            if (out.matches('input')) out.value = (amt + tx) ? (amt + tx).toFixed(2) : ''; else out.textContent = (amt + tx).toFixed(2);
+        }
     });
     const set = function (sel, v) { const el = document.querySelector(sel); if (el) el.textContent = v.toFixed(2); };
     set('#sum-subtotal', sub); set('#sum-tax', tax); set('#sum-total', sub + tax);

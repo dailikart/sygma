@@ -1,5 +1,13 @@
 <p>The latest additions to Sygma Solar Suite, newest first. Each item links to its chapter for the full steps.</p>
 
+<h4><i class="bi bi-person-vcard"></i> Payroll</h4>
+<ul>
+    <li><span class="path">Payroll → Employees</span>: monthly or daily-wage staff with salary parts, PF / ESI / PT / TDS, bank and statutory details.</li>
+    <li><span class="path">Payroll → Attendance</span>: one sheet per month; click to mark absent, half day, leave, week off, holiday; overtime hours.</li>
+    <li><span class="path">Payroll → Salary Runs</span>: salaries calculated from the attendance, incentives and deductions, approve, bank transfer sheet, mark paid. Payslip PDFs by email; staff see their own under <em>My payslips</em>.</li>
+    <li>Salary advances recovered from salaries; everything posted in Accounts and Tally. More: <a href="<?= site_url('admin/manual/payroll') ?>">Payroll</a>.</li>
+</ul>
+
 <h4><i class="bi bi-boxes"></i> Quick Quote: stock items, versions and the agreement</h4>
 <ul>
     <li><strong>Items fetched automatically.</strong> The quick quote now fills the quotation with your real Inventory items: panels, inverter, structure, DCDB, ACDB, cables, earthing, lightning arrestor and so on, with the right quantity, HSN and GST rate. The live summary lists each item and its stock. The invoice made from the quotation then dispatches the right stock. Link items in <span class="path">Quick Quote Prices → Items</span> (or on each panel / inverter price row); anything not linked is matched by its name, or added as a typed line.</li>

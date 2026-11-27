@@ -90,7 +90,7 @@ if (! function_exists('status_badge')) {
             'confirmed' => 'success', 'lost' => 'secondary',
             'b2b' => 'dark', 'b2c' => 'info', 'subsidy' => 'success', 'non_subsidy' => 'secondary',
             'redeemed' => 'success', 'applied' => 'info', 'under_review' => 'warning', 'sanctioned' => 'primary',
-            'refunded' => 'danger', 'not_applied' => 'secondary',
+            'refunded' => 'danger', 'not_applied' => 'secondary', 'approved' => 'primary',
         ];
         $labels = [
             'partial' => 'Partially Paid', 'on_hold' => 'On Hold', 'follow_up' => 'Follow-up',

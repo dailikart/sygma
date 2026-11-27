@@ -63,6 +63,17 @@ class Solar extends BaseConfig
     /** Days before an AMC visit to remind the customer and service team. */
     public int $amcReminderDays = 3;
 
+    // Payroll (Settings → Payroll)
+    public float $pfEmployeeRate  = 12;
+    public float $pfEmployerRate  = 12;
+    public float $pfWageCeiling   = 15000;
+    public float $esiEmployeeRate = 0.75;
+    public float $esiEmployerRate = 3.25;
+    public float $esiWageLimit    = 21000;
+    public string $ptSlabs        = '21000:0, 30000:180, 45000:425, 60000:930, 75000:1025, 0:1250';
+    public float $otRate          = 2;
+    public string $weekOffDay     = 'Sun';
+
     // ── Appearance / branding ──
     /** default | ocean | forest | sunset | purple | crimson | teal | solar */
     public string $theme         = '';

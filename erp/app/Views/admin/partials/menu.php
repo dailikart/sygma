@@ -41,6 +41,11 @@ $menu = [
         ['Purchases', 'admin/purchases', ['purchases.view']],
         ['Purchase Returns', 'admin/purchase-returns', ['purchases.view']],
     ]],
+    ['Payroll', null, 'bi-person-vcard', ['payroll.view', 'payroll.manage'], [
+        ['Employees', 'admin/employees', ['payroll.view', 'payroll.manage']],
+        ['Attendance', 'admin/attendance', ['payroll.view', 'payroll.manage']],
+        ['Salary Runs', 'admin/payroll', ['payroll.view', 'payroll.manage']],
+    ]],
     ['Accounts', null, 'bi-cash-coin', ['accounts.view'], [
         ['Income', 'admin/incomes', ['accounts.view']],
         ['Expenses', 'admin/expenses', ['accounts.view']],

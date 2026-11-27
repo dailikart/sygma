@@ -892,6 +892,52 @@ check mgr     admin/projects=200 admin/reports/projects=200 admin/users=200 admi
 check kumar   admin/stock=200 admin/dispatches=200 admin/invoices=403
 
 # ── every page ─────────────────────────────────────────────────────────────
+section "Payroll: employees, attendance, salary run, payslips, accounts"
+emp() { post "$A" admin/employees/new admin/employees/save -F join_date=2026-01-01 "$@" >/dev/null; }
+emp -F emp_code=EMP001 -F name="Arun Kumar" -F department=Installation -F designation=Technician -F email=arun@e2e.test -F pay_type=monthly -F basic=15000 -F hra=7500 -F conveyance=1500 -F special=6000 -F pf_applicable=1 -F pt_applicable=1 -F pan=ABCDE1234F -F bank_account=1234567890 -F ifsc=SBIN0001234 -F bank_name=SBI -F user_id="$(q "select id from users where username='store1'")"
+emp -F emp_code=EMP002 -F name="Bala Murugan" -F department=Office -F pay_type=monthly -F basic=10000 -F hra=4000 -F special=4000 -F pf_applicable=1 -F esi_applicable=1 -F pt_applicable=1
+emp -F emp_code=EMP003 -F name="Chinna Helper" -F department=Installation -F pay_type=daily -F daily_wage=700 -F pt_applicable=1
+r=$(post "$A" admin/employees/new admin/employees/save -F emp_code=EMP001 -F name="Dup" -F pay_type=monthly -F basic=1000); has "duplicate employee code refused" "$(curl -s -b "$A" "$B/admin/employees/new")" "already used"
+r=$(post "$A" admin/employees/new admin/employees/save -F emp_code=EMP009 -F name="No pay" -F pay_type=monthly); eq "employee without salary refused" "$(q "select count(*) from employees")" "3"
+E1=$(q "select id from employees where emp_code='EMP001'"); E2=$(q "select id from employees where emp_code='EMP002'"); E3=$(q "select id from employees where emp_code='EMP003'")
+post "$A" admin/employees/$E1 admin/employees/$E1/advance -F adv_date=2026-11-02 -F amount=5000 -F monthly_recovery=1000 -F account_id=1 -F notes="Medical" >/dev/null
+eq "salary advance paid: Dr Staff Advances, Cr bank" "$(q "select concat(v.voucher_type,'/',v.amount+0) from vouchers v where v.ref_type='employee_advance'")" "Payment/5000"
+# November 2026 (30 days). EMP001: absent 3 days. EMP003 (daily): 20 present, 2 half, 3 absent, 5 week off, OT 5 h. EMP002: no attendance.
+ATT=(); for d in $(seq 1 30); do s1=P; [ $d -le 3 ] && s1=A; ATT+=(-F "att[$E1][$d]=$s1"); s3=P; [ $d -le 3 ] && s3=A; [ $d -ge 4 ] && [ $d -le 5 ] && s3=H; [ $d -ge 26 ] && s3=W; ATT+=(-F "att[$E3][$d]=$s3"); done
+post "$A" "admin/attendance?month=2026-11" admin/attendance -F month=2026-11 "${ATT[@]}" -F "ot[$E3]=5" >/dev/null
+eq "attendance saved (60 days, OT month total)" "$(q "select count(*) from attendance")|$(q "select ot_hours+0 from attendance_months where employee_id=$E3")" "60|5"
+has "attendance sheet shows the month" "$(curl -s -b "$A" "$B/admin/attendance?month=2026-11")" "Chinna Helper"
+r=$(post "$A" admin/payroll admin/payroll/create -F month=2026-11); RUN=$(q "select id from payroll_runs where month='2026-11-01'")
+eq "salary run calculated for 3 employees" "$(q "select count(*) from payroll_lines where run_id=$RUN")" "3"
+eq "EMP001: 27/30 days, gross 27000, PF 1620, PT 208, advance 1000, net 24172" "$(q "select concat(paid_days+0,'|',gross+0,'|',pf_employee+0,'|',pt+0,'|',advance_recovery+0,'|',net+0) from payroll_lines where run_id=$RUN and employee_id=$E1")" "27|27000|1620|208|1000|24172"
+eq "EMP003 daily: 21 days × 700 + OT 875 = 15575, PT 208" "$(q "select concat(paid_days+0,'|',wages+0,'|',ot_amount+0,'|',gross+0,'|',pt+0,'|',net+0) from payroll_lines where run_id=$RUN and employee_id=$E3")" "21|14700|875|15575|208|15367"
+L2=$(q "select id from payroll_lines where run_id=$RUN and employee_id=$E2")
+post "$A" admin/payroll/$RUN admin/payroll/$RUN -F "l[$L2][other_earnings]=2000" -F "l[$L2][remarks]=Festival incentive" >/dev/null
+eq "EMP002 (no attendance → full month) + incentive 2000: PF 1200, ESI 150 (employer 650), net 18442" "$(q "select concat(att_entered,'|',gross+0,'|',pf_employee+0,'|',esi_employee+0,'|',esi_employer+0,'|',net+0) from payroll_lines where id=$L2")" "0|20000|1200|150|650|18442"
+eq "run totals: gross 62575, deductions 4594, net 57981" "$(q "select concat(gross+0,'|',deductions+0,'|',net+0) from payroll_runs where id=$RUN")" "62575|4594|57981"
+eq "draft payslip PDF" "$(curl -s -b "$A" -o "$W/ps.pdf" -w '%{content_type}' "$B/admin/payroll/$RUN/payslip/$E1") $(head -c4 "$W/ps.pdf")" "application/pdf %PDF"
+has "payslip shows net pay" "$(pdftotext "$W/ps.pdf" - 2>/dev/null)" "24,172.00"
+post "$A" admin/payroll/$RUN admin/payroll/$RUN/approve >/dev/null
+eq "approved: journal balances (Dr salaries 62575 + employer PF 2820 + ESI 650)" "$(q "select concat(v.voucher_type,'/',v.amount+0) from vouchers v where v.ref_type='payroll' and v.ref_id=$RUN")" "Journal/66045"
+eq "…credits: salary payable, PF 5640, ESI 800, PT 624, advances 1000" "$(q "select group_concat(concat(l.name,'=',e.credit+0) order by l.name separator ';') from voucher_entries e join ledgers l on l.id=e.ledger_id join vouchers v on v.id=e.voucher_id where v.ref_type='payroll' and v.ref_id=$RUN and e.credit>0")" "ESI Payable=800;PF Payable=5640;Professional Tax Payable=624;Salary Payable=57981;Staff Advances=1000"
+eq "advance recovery recorded" "$(q "select recovered+0 from employee_advances where employee_id=$E1")" "1000"
+r=$(post "$A" "admin/attendance?month=2026-11" admin/attendance -F month=2026-11 -F "att[$E1][4]=A"); has "attendance locked after approval" "$(curl -s -b "$A" "$B/admin/attendance?month=2026-11")" "approved, so the sheet is locked"
+post "$A" admin/payroll/$RUN admin/payroll/$RUN/unapprove >/dev/null
+eq "undo approval: journal removed, advance given back" "$(q "select count(*) from vouchers where ref_type='payroll' and ref_id=$RUN")|$(q "select recovered+0 from employee_advances where employee_id=$E1")|$(q "select status from payroll_runs where id=$RUN")" "0|0|draft"
+post "$A" admin/payroll/$RUN admin/payroll/$RUN/approve >/dev/null
+post "$A" admin/payroll/$RUN admin/payroll/$RUN/pay -F account_id=1 -F paid_on=2026-12-01 >/dev/null
+eq "paid: payment voucher 57981 from the bank" "$(q "select concat(status,'/',(select amount+0 from vouchers where ref_type='payroll_payment' and ref_id=$RUN)) from payroll_runs where id=$RUN")" "paid/57981"
+eq "salary payable cleared" "$(q "select sum(e.credit-e.debit)+0 from voucher_entries e join ledgers l on l.id=e.ledger_id where l.name='Salary Payable'")" "0"
+eq "books balance with payroll" "$(q "select round(sum(debit)-sum(credit),2)+0 from voucher_entries")" "0"
+eq "salary register and bank transfer sheet (Excel)" "$(curl -s -b "$A" -o /dev/null -w '%{content_type}' "$B/admin/payroll/$RUN/export/register" | cut -d';' -f1) $(curl -s -b "$A" "$B/admin/payroll/$RUN/export/bank" | grep -c 'SBIN0001234')" "application/vnd.ms-excel 1"
+eq "all payslips in one PDF" "$(curl -s -b "$A" -o "$W/all.pdf" -w '%{content_type}' "$B/admin/payroll/$RUN/payslips") $(pdfinfo "$W/all.pdf" 2>/dev/null | grep -c 'Pages: *3')" "application/pdf 1"
+has "staff sees own payslip under My payslips" "$(curl -s -b "$S" "$B/admin/my-payslips")" "24,172.00"
+eq "…can open own payslip, not others'" "$(code "$S" admin/payroll/$RUN/payslip/$E1) $(code "$S" admin/payroll/$RUN/payslip/$E2)" "200 403"
+eq "store user cannot open payroll" "$(code "$S" admin/payroll) $(code "$S" admin/employees)" "403 403"
+eq "accounts user can (default role)" "$(code "$W/acct1" admin/payroll)" "200"
+r=$(post "$A" admin/employees/$E1 admin/employees/$E1/delete); has "employee with salary history cannot be deleted" "$(flash "$A" admin/employees/$E1)" "Set an exit date"
+eq "December run: advance recovers 1000 again" "$(post "$A" admin/payroll admin/payroll/create -F month=2026-12 >/dev/null; q "select advance_recovery+0 from payroll_lines l join payroll_runs r on r.id=l.run_id where r.month='2026-12-01' and l.employee_id=$E1")" "1000"
+
 section "Quick Quote (one-click proposal)"
 QQF=(); while read -r nv; do QQF+=(-F "$nv"); done < <(curl -s -b "$A" "$B/admin/quotations/quick" | grep -o 'name="qq\[[a-z_]*\]" id="[^"]*" value="[^"]*" checked' | sed -E 's/name="([^"]*)" id="[^"]*" value="([^"]*)".*/\1=\2/')
 has "quick quote form has its default choices (size from bill, system, panel type)" "${QQF[*]}" "qq[mode]=bill"
@@ -904,7 +950,7 @@ eq "Quick Quote prices and Sales Team Progress pages" "$(code "$A" admin/quotati
 
 section "Every admin page loads for the Super Admin"
 PAGES="admin admin/designs admin/designs/new admin/tasks admin/notifications admin/profile admin/users admin/users/new admin/roles admin/settings admin/user-log admin/message-log admin/whatsapp-templates
-admin/leads admin/leads/1 admin/leads/new admin/customers admin/customers/1 admin/customers/2 admin/einvoice admin/invoices admin/invoices/1 admin/invoices/2 admin/invoices/new admin/payments
+admin/leads admin/leads/1 admin/leads/new admin/customers admin/customers/1 admin/customers/2 admin/einvoice admin/employees admin/employees/new admin/employees/1 admin/attendance admin/payroll admin/payroll/1 admin/invoices admin/invoices/1 admin/invoices/2 admin/invoices/new admin/payments
 admin/projects admin/projects/1 admin/projects/2 admin/dispatches admin/dispatches/2 admin/amc admin/amc-plans admin/amc/contracts/1
 admin/stock admin/stock/item/1 admin/stock/item/1/lots admin/stock/lots admin/stock/adjust admin/items admin/items/new admin/items/1/edit admin/kits admin/kits/1/edit admin/installation-types admin/item-categories admin/locations
 admin/suppliers admin/purchase-orders admin/purchase-orders/1 admin/purchase-orders/new admin/purchases admin/purchases/1 admin/purchases/new admin/purchase-returns admin/purchase-returns/1

@@ -888,6 +888,16 @@ check mgr     admin/projects=200 admin/reports/projects=200 admin/users=200 admi
 check kumar   admin/stock=200 admin/dispatches=200 admin/invoices=403
 
 # ── every page ─────────────────────────────────────────────────────────────
+section "Quick Quote (one-click proposal)"
+QQF=(); while read -r nv; do QQF+=(-F "$nv"); done < <(curl -s -b "$A" "$B/admin/quotations/quick" | grep -o 'name="qq\[[a-z_]*\]" id="[^"]*" value="[^"]*" checked' | sed -E 's/name="([^"]*)" id="[^"]*" value="([^"]*)".*/\1=\2/')
+has "quick quote form has its default choices (size from bill, system, panel type)" "${QQF[*]}" "qq[mode]=bill"
+r=$(post "$A" admin/quotations/quick admin/quotations/quick -F party_name="Quick Test" -F party_phone=9000012345 -F 'qq[units]=600' -F 'qq[subsidy]=1' "${QQF[@]}")
+QQ=$(q "select id from quotations where party_name='Quick Test'")
+eq "quick quote saved as a quotation and opened" "${QQ:-none}|${r##*/}" "${QQ:-x}|${QQ:-y}"
+eq "size worked out from the bill, details kept for revising" "$(q "select concat(capacity_kw>0,'/',quick_spec is not null,'/',(select count(*)>1 from quotation_items where quotation_id=$QQ)) from quotations where id=$QQ")" "1/1/1"
+eq "proposal PDF" "$(curl -s -b "$A" -o "$W/qq.pdf" -w '%{content_type}' "$B/admin/quotations/$QQ/pdf") $(head -c4 "$W/qq.pdf")" "application/pdf %PDF"
+eq "Quick Quote prices and Sales Team Progress pages" "$(code "$A" admin/quotations/quick-settings) $(code "$A" admin/quotations/team)" "200 200"
+
 section "Every admin page loads for the Super Admin"
 PAGES="admin admin/designs admin/designs/new admin/tasks admin/notifications admin/profile admin/users admin/users/new admin/roles admin/settings admin/user-log admin/message-log admin/whatsapp-templates
 admin/leads admin/leads/1 admin/leads/new admin/customers admin/customers/1 admin/customers/2 admin/einvoice admin/invoices admin/invoices/1 admin/invoices/2 admin/invoices/new admin/payments

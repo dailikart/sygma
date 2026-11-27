@@ -77,8 +77,8 @@ table { border-collapse: collapse; width: 100%; }
 <table class="bom">
     <thead><tr><th style="width:8%">S.No</th><th style="width:28%">Content</th><th style="width:27%">Description</th><th style="width:20%">Make</th><th class="c" style="width:8%">Qty</th><th class="c" style="width:9%">UOM</th></tr></thead>
     <tbody>
-    <?php foreach ($qq['bom'] as $n => [$item, $desc, $make, $qty, $uom]): ?>
-        <tr class="<?= $n % 2 ? 'alt' : '' ?>"><td class="c muted"><?= $n + 1 ?></td><td><b><?= esc($item) ?></b></td><td><?= esc((string) $desc) ?></td><td><?= esc((string) $make) ?></td><td class="c"><?= esc((string) $qty) ?></td><td class="c"><?= esc($uom) ?></td></tr>
+    <?php foreach ($qq['bom'] as $n => $b): ?>
+        <tr class="<?= $n % 2 ? 'alt' : '' ?>"><td class="c muted"><?= $n + 1 ?></td><td><b><?= esc($b['item']) ?></b></td><td><?= esc((string) $b['desc']) ?></td><td><?= esc((string) $b['make']) ?></td><td class="c"><?= esc(QQ::fmt((float) $b['qty'])) ?></td><td class="c"><?= esc($b['uom']) ?></td></tr>
     <?php endforeach ?>
     </tbody>
 </table>

@@ -27,6 +27,9 @@ class Quotations extends AdminController
         if (($s = $this->request->getGet('status')) && isset(self::STATUSES[$s])) {
             $b->where('q.status', $s);
         }
+        if (self::hasVersions() && ! $this->request->getGet('versions')) {
+            $b->where('q.superseded_by', null); // older versions are listed on the latest one
+        }
         if ($term = trim((string) $this->request->getGet('q'))) {
             $b->groupStart()->like('q.quote_no', $term)->orLike('q.party_name', $term)->orLike('q.party_phone', $term)->groupEnd();
         }
@@ -105,6 +108,9 @@ class Quotations extends AdminController
         if ($q['status'] === 'converted') {
             return $this->back('This quotation is already converted to an invoice.');
         }
+        if (! empty($q['superseded_by'])) {
+            return $this->back('This is an older version (' . $q['quote_no'] . '). Open the latest version to change it.');
+        }
         $lines = db_connect()->table('quotation_items')->where('quotation_id', $q['id'])->orderBy('id')->get()->getResultArray();
 
         return $this->render('quotations/form', $this->formData($q, $lines));
@@ -116,6 +122,9 @@ class Quotations extends AdminController
         $q = $this->findOr404('quotations', $id);
         if ($q['status'] === 'converted') {
             return $this->back('This quotation is already converted to an invoice.');
+        }
+        if (! empty($q['superseded_by'])) {
+            return $this->back('This is an older version (' . $q['quote_no'] . '). Open the latest version to change it.');
         }
         try {
             [$head, $lines] = $this->collect();
@@ -141,9 +150,15 @@ class Quotations extends AdminController
         if ($q['status'] === 'converted') {
             return $this->back('This quotation is already an invoice. Cancel or delete the invoice instead.');
         }
+        if (! empty($q['superseded_by'])) {
+            return $this->back('Only the latest version can be deleted. Delete ' . $q['quote_no'] . "'s newer version first.");
+        }
         $db = db_connect();
         $db->table('quotation_items')->where('quotation_id', $q['id'])->delete();
         $db->table('quotations')->where('id', $q['id'])->delete();
+        if (self::hasVersions()) {
+            $db->table('quotations')->where('superseded_by', $q['id'])->update(['superseded_by' => null]); // the previous version is the latest again
+        }
         if ($q['design_path']) {
             @unlink(WRITEPATH . 'uploads/' . $q['design_path']);
         }
@@ -157,6 +172,9 @@ class Quotations extends AdminController
         $this->requirePermission('quotations.manage');
         $q = $this->findOr404('quotations', $id);
         $s = (string) $this->request->getPost('status');
+        if (! empty($q['superseded_by'])) {
+            return $this->back('This is an older version. Change the status on the latest version.');
+        }
         if ($q['status'] === 'converted' || ! in_array($s, ['draft', 'sent', 'accepted', 'rejected'], true)) {
             return $this->back('This status cannot be set.');
         }
@@ -235,6 +253,10 @@ class Quotations extends AdminController
         if ($q['status'] === 'converted' && $q['invoice_id']) {
             return redirect()->to('admin/invoices/' . $q['invoice_id']);
         }
+        if (! empty($q['superseded_by'])) {
+            return $this->back('This is an older version (' . $q['quote_no'] . '). Open the latest version to change it.');
+        }
+
         $db = db_connect();
         if (! $q['customer_id']) {
             $now = date('Y-m-d H:i:s');
@@ -445,6 +467,29 @@ class Quotations extends AdminController
             'lead'     => $q['lead_id'] ? db_connect()->table('leads')->select('id, name')->where('id', $q['lead_id'])->get()->getRowArray() : null,
             'customer' => $q['customer_id'] ? db_connect()->table('customers')->select('id, name')->where('id', $q['customer_id'])->get()->getRowArray() : null,
             'invoice'  => $q['invoice_id'] ? db_connect()->table('invoices')->select('id, invoice_no, status')->where('id', $q['invoice_id'])->get()->getRowArray() : null,
+            'versions' => self::versions($q),
         ];
+    }
+
+    public static function hasVersions(): bool
+    {
+        static $has;
+
+        return $has ??= db_connect()->fieldExists('superseded_by', 'quotations');
+    }
+
+    /** All versions of a quotation, newest first (empty when it has only one). */
+    public static function versions(array $q): array
+    {
+        if (! self::hasVersions()) {
+            return [];
+        }
+        $root = (int) ($q['root_id'] ?: $q['id']);
+        $rows = db_connect()->table('quotations q')->select('q.id, q.quote_no, q.revision, q.quote_date, q.total, q.capacity_kw, q.status, q.superseded_by, u.username')
+            ->join('users u', 'u.id = q.created_by', 'left')
+            ->groupStart()->where('q.id', $root)->orWhere('q.root_id', $root)->groupEnd()
+            ->orderBy('q.revision', 'DESC')->get()->getResultArray();
+
+        return count($rows) > 1 ? $rows : [];
     }
 }

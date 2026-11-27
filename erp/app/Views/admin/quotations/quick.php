@@ -170,6 +170,17 @@ foreach ($cfg['inverters'] as $kind => $rows) {
                     + '<div class="d-flex justify-content-between small"><span>Payback</span><span>' + (d.payback !== null ? d.payback + ' yrs' : '—') + '</span></div>';
                 if (d.cost) h += '<div class="small text-muted mt-2">Cost ' + money(d.cost.total) + ' + ' + d.cost.margin + '% margin</div>';
                 if (d.warnings.length) h += '<div class="alert alert-warning small py-1 px-2 mt-2 mb-0">' + d.warnings.join('<br>') + '</div>';
+                const esc = t => String(t).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+                const linked = d.items.filter(i => i.item).length;
+                h += '<hr class="my-2"><div class="small fw-semibold">Items from Inventory <span class="fw-normal text-muted">(' + linked + ' of ' + d.items.length + ')</span></div><ul class="list-unstyled small mb-0">';
+                d.items.forEach(i => {
+                    const short = i.item && i.stock !== null && i.stock < i.qty && !['KW', 'Lot', 'As Req', 'Set'].includes(i.uom);
+                    h += '<li class="d-flex gap-1 border-bottom py-1"><span class="text-muted" style="min-width:42%">' + esc(i.part) + '</span>'
+                        + (i.item ? '<span>' + esc(i.item) + (i.auto ? ' <i class="bi bi-magic text-muted" title="Matched by name. Link it in Quick Quote Prices → Items to be sure."></i>' : '')
+                            + (i.stock !== null ? ' <span class="badge ' + (short ? 'text-bg-danger' : 'text-bg-light border') + '">stock ' + i.stock + '</span>' : '') + '</span>'
+                          : '<span class="text-warning-emphasis">not linked, typed line</span>') + '</li>';
+                });
+                h += '</ul>';
                 $('sum').innerHTML = h;
             }).catch(() => {}), 300);
     }

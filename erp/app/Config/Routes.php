@@ -119,6 +119,9 @@ $routes->group('admin', ['filter' => 'session', 'namespace' => 'App\Controllers\
     $routes->get('quotations/team', 'QuickQuotes::team');
     $routes->get('quotations/(:num)/quick', 'QuickQuotes::edit/$1');
     $routes->post('quotations/(:num)/quick', 'QuickQuotes::update/$1');
+    $routes->get('quotations/(:num)/agreement', 'QuoteAgreements::form/$1');
+    $routes->post('quotations/(:num)/agreement', 'QuoteAgreements::save/$1');
+    $routes->get('quotations/(:num)/agreement/pdf', 'QuoteAgreements::pdf/$1');
     $routes->get('quotations/new', 'Quotations::create');
     $routes->post('quotations', 'Quotations::store');
     $routes->get('quotations/(:num)', 'Quotations::show/$1');

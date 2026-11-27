@@ -25,6 +25,7 @@ class Numbering
         $row  = db_connect()->table($table)
             ->select($column)
             ->like($column, $base, 'after')
+            ->notLike($column, '-R', 'both') // quotation versions (…/0001-R1) never set the next number
             ->orderBy('id', 'DESC')
             ->limit(1)
             ->get()->getRowArray();

@@ -83,6 +83,12 @@ class QuickQuote
                 ],
             ],
             'extras'          => [],
+            'item_map'        => array_fill_keys(array_keys(self::ITEM_KEYS), 0),
+            'line_gst'        => 'items',
+            'legal_name'      => '',
+            'legal_address'   => '',
+            'agreement_stamp' => true,
+            'agreement_text'  => Agreement::defaultText(),
             'inverter_brands' => ['Growatt', 'Deye', 'Solis', 'Sungrow', 'Havells', 'Polycab'],
             'micro_brands'    => ['Enphase', 'Hoymiles', 'APsystems'],
             'makes'           => [
@@ -149,13 +155,20 @@ class QuickQuote
             ], static fn ($r) => $r['kw'] > 0 && $r['price'] > 0),
             'panels'            => $rows($lst('panels', $d['panels']), static fn ($r) => [
                 'brand' => $str($r['brand'] ?? ''), 'tech' => isset(self::TECHS[$r['tech'] ?? '']) ? $r['tech'] : 'bifacial',
-                'dcr' => empty($r['dcr']) ? 0 : 1, 'rate' => $num($r['rate'] ?? 0),
+                'dcr' => empty($r['dcr']) ? 0 : 1, 'rate' => $num($r['rate'] ?? 0), 'item_id' => (int) ($r['item_id'] ?? 0),
             ], static fn ($r) => $r['brand'] !== '' && $r['rate'] > 0),
             'costs'             => [],
             'inverters'         => [],
             'extras'            => $rows($in['extras'] ?? [], static fn ($r) => [
                 'name' => $str($r['name'] ?? ''), 'make' => $str($r['make'] ?? ''), 'price' => $num($r['price'] ?? 0), 'per_kw' => empty($r['per_kw']) ? 0 : 1,
+                'item_id' => (int) ($r['item_id'] ?? 0),
             ], static fn ($r) => $r['name'] !== ''),
+            'item_map'          => [],
+            'line_gst'          => in_array($in['line_gst'] ?? '', ['items', 'split'], true) ? $in['line_gst'] : $d['line_gst'],
+            'legal_name'        => $str($in['legal_name'] ?? ''),
+            'legal_address'     => trim(str_replace("\r\n", "\n", strip_tags((string) ($in['legal_address'] ?? '')))),
+            'agreement_stamp'   => array_key_exists('agreement_stamp', $in) ? ! empty($in['agreement_stamp']) : $d['agreement_stamp'],
+            'agreement_text'    => trim(str_replace("\r\n", "\n", (string) ($in['agreement_text'] ?? ''))) ?: $d['agreement_text'],
             'inverter_brands'   => self::list($in['inverter_brands'] ?? $d['inverter_brands']),
             'micro_brands'      => self::list($in['micro_brands'] ?? $d['micro_brands']),
             'makes'             => [],
@@ -185,9 +198,12 @@ class QuickQuote
         }
         foreach (['ongrid', 'hybrid'] as $kind) {
             $out['inverters'][$kind] = $rows($in['inverters'][$kind] ?? ($form ? [] : $d['inverters'][$kind]), static fn ($r) => [
-                'phase' => (int) ($r['phase'] ?? 1) === 3 ? 3 : 1, 'kw' => $num($r['kw'] ?? 0), 'price' => $num($r['price'] ?? 0),
+                'phase' => (int) ($r['phase'] ?? 1) === 3 ? 3 : 1, 'kw' => $num($r['kw'] ?? 0), 'price' => $num($r['price'] ?? 0), 'item_id' => (int) ($r['item_id'] ?? 0),
             ], static fn ($r) => $r['kw'] > 0 && $r['price'] > 0);
             usort($out['inverters'][$kind], static fn ($a, $b) => [$a['phase'], $a['kw']] <=> [$b['phase'], $b['kw']]);
+        }
+        foreach (self::ITEM_KEYS as $k => $_) {
+            $out['item_map'][$k] = max(0, (int) ($in['item_map'][$k] ?? 0));
         }
         foreach ($d['makes'] as $k => $v) {
             $out['makes'][$k] = $str($in['makes'][$k] ?? $v);
@@ -286,7 +302,7 @@ class QuickQuote
      *                   battery_kwh, adjust (₹ +/-), subsidy (bool)
      * @return array{ok: bool, error?: string, ...}
      */
-    public static function build(array $in, array $cfg, string $installer = ''): array
+    public static function build(array $in, array $cfg, string $installer = '', ?array $items = null): array
     {
         $num    = static fn ($k, $d = 0) => is_numeric(str_replace(',', '', (string) ($in[$k] ?? ''))) ? (float) str_replace(',', '', (string) $in[$k]) : (float) $d;
         $system = isset(self::SYSTEMS[$in['system'] ?? '']) ? $in['system'] : $cfg['default_system'];
@@ -372,29 +388,50 @@ class QuickQuote
         }
         $brand = $brand !== '' ? $brand : ($rate['brand'] ?? '');
 
-        // ── Cost build-up (₹, GST included) ──
+        // ── Components: what is supplied, its cost (₹, GST included) and the stock item used ──
         $c        = $cfg['costs'];
         $m        = $cfg['makes'];
+        $map      = $cfg['item_map'];
         $extraLen = $floors * $c['floor_cable_m'];
         $earthLen = $c['earth_cable_len'] + $extraLen;
-        $cost     = [
-            'panels'       => $panels * $watt * ($rate['rate'] ?? 0),
-            'inverter'     => $micro ? $panels * $c['micro_per_panel'] : (float) ($inv['price'] ?? 0),
-            'battery'      => $battery * $c['battery_per_kwh'],
-            'structure'    => $kw * ($c['structure'] + ($struct === 'high' ? $c['structure_high'] : 0)),
-            'dcdb'         => $micro ? 0 : $c['dcdb'],
-            'acdb'         => $c['acdb'],
-            'dc_cable'     => $micro ? 0 : $c['dc_cable'],
-            'ac_cable'     => $c['ac_cable'] + $extraLen * $c['cable_per_m'],
-            'earthing'     => $c['earth_pits'] * $c['earthing'] + $earthLen * $c['earth_cable_m'],
-            'la'           => $c['la'],
-            'misc'         => $c['misc'],
-            'transport'    => $kw * $c['transport'],
-            'installation' => $kw * $c['installation'],
+        $techName = self::TECHS[$tech][0];
+        $sysName  = self::SYSTEMS[$system][0];
+        $invDesc  = $micro ? 'Micro inverter (1 per panel)' : self::fmt($inv['kw']) . 'kW ' . $phase . 'Ph' . ($kind === 'hybrid' ? ' Hybrid' : '');
+        $row      = static fn (string $key, string $item, string $desc, string $make, float $qty, string $uom, float $cost, int $itemId = 0) => [
+            'key' => $key, 'item' => $item, 'desc' => $desc, 'make' => $make, 'qty' => round($qty, 2), 'uom' => $uom, 'cost' => round($cost, 2), 'item_id' => $itemId,
         ];
-        foreach ($cfg['extras'] as $i => $x) {
-            $cost['extra' . $i] = $x['per_kw'] ? $x['price'] * $kw : $x['price'];
+        $bom   = [];
+        $bom[] = $row('panels', 'Module ' . $techName . ' ' . ($dcr ? 'DCR' : 'NDCR'), $techName . ' ' . $watt . 'W', $brand, $panels, 'Nos', $panels * $watt * ($rate['rate'] ?? 0), (int) ($rate['item_id'] ?? 0));
+        $bom[] = $row('inverter', ($micro ? 'Micro' : ($kind === 'hybrid' ? 'Hybrid' : 'On-Grid')) . ' Inverter', $invDesc, $invBrand, $micro ? $panels : 1, $micro ? 'Nos' : 'No',
+            $micro ? $panels * $c['micro_per_panel'] : (float) ($inv['price'] ?? 0), $micro ? $map['micro'] : (int) ($inv['item_id'] ?? 0));
+        if ($battery > 0) {
+            $bom[] = $row('battery', 'Battery Bank', self::fmt($battery) . ' kWh Lithium', $m['battery'], 1, 'Set', $battery * $c['battery_per_kwh'], $map['battery']);
         }
+        $bom[] = $row('structure', 'Module Mounting Structure', self::STRUCTURES[$struct][1], $m['structure'], $panels, 'Nos',
+            $kw * ($c['structure'] + ($struct === 'high' ? $c['structure_high'] : 0)), $struct === 'high' && $map['structure_high'] ? $map['structure_high'] : $map['structure']);
+        if (! $micro) {
+            $bom[] = $row('dcdb', 'DCDB', $kw > 6 ? '2 in 2 out' : '1 in 1 out', $m['dcdb'], 1, 'No', $c['dcdb'], $map['dcdb']);
+        }
+        $bom[] = $row('acdb', 'ACDB', $phase === 3 ? '3 Phase' : '1 in 1 out', $m['acdb'], 1, 'No', $c['acdb'], $map['acdb']);
+        if (! $micro) {
+            $bom[] = $row('dc_cable', 'DC Cable', (string) ($in['dc_cable'] ?? '') ?: self::DC_CABLES[0], $m['dc_cable'], 1, 'As Req', $c['dc_cable'], $map['dc_cable']);
+        }
+        $bom[] = $row('ac_cable', 'Copper Cable, PVC Insulated', (string) ($in['ac_cable'] ?? '') ?: self::AC_CABLES[2], $m['ac_cable'], 1, 'As Req', $c['ac_cable'] + $extraLen * $c['cable_per_m'], $map['ac_cable']);
+        $bom[] = $row('conduit', 'Flexible Conduits', 'PVC', $m['conduit'], 1, 'As Req', 0, $map['conduit']);
+        $bom[] = $row('earth_pit', 'Earth Pit', 'Earth pit & Chambers', $m['earthing'], $c['earth_pits'], 'Nos', $c['earth_pits'] * $c['earthing'], $map['earth_pit']);
+        $bom[] = $row('earth_cable', 'Earth Cable', self::fmt($earthLen) . 'm', $m['earth_cable'], $earthLen, 'Mts', $earthLen * $c['earth_cable_m'], $map['earth_cable']);
+        $bom[] = $row('la', 'Lightning Arrestor', 'Spike', $m['la'], 1, 'No', $c['la'], $map['la']);
+        $bom[] = $row('misc', 'Miscellaneous Items', 'plugs, screws, MC4 connectors', 'Multiple', 1, 'Set', $c['misc'], $map['misc']);
+        foreach ($cfg['extras'] as $i => $x) {
+            $bom[] = $row('extra' . $i, $x['name'], '', $x['make'] ?: 'Branded', $x['per_kw'] ? $kw : 1, $x['per_kw'] ? 'KW' : 'No', $x['per_kw'] ? $x['price'] * $kw : $x['price'], (int) ($x['item_id'] ?? 0));
+        }
+        $bom[] = $row('transport', 'Transport', 'Roadways', $m['transport'], $kw, 'Lot', $kw * $c['transport'], $map['transport']);
+        $bom[] = $row('installation', 'Installation', 'End to End', $installer ?: 'Our team', $kw, 'KW', $kw * $c['installation'], $map['installation']);
+        $bom   = array_values(array_filter($bom, static fn ($b) => $b['qty'] > 0));
+        if ($items !== null) {
+            $bom = self::attachItems($bom, $items, ['brand' => $brand, 'watt' => $watt, 'tech' => $tech, 'dcr' => $dcr, 'inv_kw' => $micro ? null : $inv['kw'], 'kind' => $micro ? 'micro' : $kind, 'phase' => $phase]);
+        }
+        $cost = array_column($bom, 'cost', 'key');
         $costTotal = round(array_sum($cost), 2);
         $price     = round($costTotal * (1 + $cfg['margin'] / 100));
         $package   = null;
@@ -412,13 +449,10 @@ class QuickQuote
         $adjust = round($num('adjust'));
         $total  = max(0, $price + $adjust);
 
-        // ── GST split: goods share at the goods rate, service share at the service rate ──
-        $g        = $cfg['gst'];
-        $sShare   = $g['service_share'] / 100;
-        $blended  = round((1 - $sShare) * $g['goods'] + $sShare * $g['service'], 2);
-        $base     = $total / (1 + $blended / 100);
-        $goodsVal = round($base * (1 - $sShare), 2);
-        $servVal  = round(($total - $goodsVal * (1 + $g['goods'] / 100)) / (1 + $g['service'] / 100), 2);
+        // ── Quotation lines and GST ──
+        $lines = self::lines($bom, $total, $cfg, self::fmt($kw) . ' kW ' . $sysName, $panels, $watt);
+        [, $lSub, $lTax] = Tax::lines($lines);
+        $g = $cfg['gst'];
 
         // ── Subsidy ──
         $wantSub = ! array_key_exists('subsidy', $in) || ! empty($in['subsidy']);
@@ -431,30 +465,6 @@ class QuickQuote
         $consume  = $mode === 'bill' ? $units : $genBm;
         $saveBm   = round(self::slabBill($consume, $cfg['tariff']) - self::slabBill(max(0, $consume - $genBm), $cfg['tariff']));
         $saveYear = $saveBm * 6;
-
-        $techName = self::TECHS[$tech][0];
-        $sysName  = self::SYSTEMS[$system][0];
-        $invDesc  = $micro ? 'Micro inverter (1 per panel)' : self::fmt($inv['kw']) . 'kW ' . $phase . 'Ph' . ($kind === 'hybrid' ? ' Hybrid' : '');
-        $bom      = array_values(array_filter([
-            ['Module ' . $techName . ' ' . ($dcr ? 'DCR' : 'NDCR'), $techName . ' ' . $watt . 'W', $brand, $panels, 'Nos'],
-            [($micro ? 'Micro' : ($kind === 'hybrid' ? 'Hybrid' : 'On-Grid')) . ' Inverter', $invDesc, $invBrand, $micro ? $panels : 1, $micro ? 'Nos' : 'No'],
-            $battery > 0 ? ['Battery Bank', self::fmt($battery) . ' kWh Lithium', $m['battery'], 1, 'Set'] : null,
-            ['Module Mounting Structure', self::STRUCTURES[$struct][1], $m['structure'], $panels, 'Nos'],
-            $micro ? null : ['DCDB', $kw > 6 ? '2 in 2 out' : '1 in 1 out', $m['dcdb'], 1, 'No'],
-            ['ACDB', $phase === 3 ? '3 Phase' : '1 in 1 out', $m['acdb'], 1, 'No'],
-            $micro ? null : ['DC Cable', (string) ($in['dc_cable'] ?? self::DC_CABLES[0]), $m['dc_cable'], 1, 'As Req'],
-            ['Copper Cable, PVC Insulated', (string) ($in['ac_cable'] ?? self::AC_CABLES[2]), $m['ac_cable'], 1, 'As Req'],
-            ['Flexible Conduits', 'PVC', $m['conduit'], 1, 'As Req'],
-            ['Earth Pit', 'Earth pit & Chambers', $m['earthing'], (int) $c['earth_pits'], 'Nos'],
-            ['Earth Cable', self::fmt($earthLen) . 'm', $m['earth_cable'], self::fmt($earthLen), 'Mts'],
-            ['Lightning Arrestor', 'Spike', $m['la'], 1, 'No'],
-            ['Miscellaneous Items', 'plugs, screws, MC4 connectors', 'Multiple', 1, 'Set'],
-        ]));
-        foreach ($cfg['extras'] as $x) {
-            $bom[] = [$x['name'], '', $x['make'] ?: 'Branded', 1, 'No'];
-        }
-        $bom[] = ['Transport', 'Roadways', $m['transport'], self::fmt($kw), 'Lot'];
-        $bom[] = ['Installation', 'End to End', $installer ?: 'Our team', self::fmt($kw), 'KW'];
 
         return [
             'ok'     => true,
@@ -474,8 +484,9 @@ class QuickQuote
             'bom'    => $bom,
             'cost'   => ['lines' => array_map(static fn ($v) => round($v, 2), $cost), 'total' => $costTotal, 'margin' => $cfg['margin']],
             'price'  => ['package' => $package, 'list' => $price, 'adjust' => $adjust, 'total' => $total, 'per_kw' => $kw > 0 ? round($total / $kw) : 0],
-            'gst'    => ['blended' => $blended, 'goods_rate' => $g['goods'], 'service_rate' => $g['service'], 'goods_value' => $goodsVal, 'service_value' => $servVal,
-                'hsn' => $g['hsn'], 'sac' => $g['sac'], 'subtotal' => round($goodsVal + $servVal, 2), 'tax' => round($total - $goodsVal - $servVal, 2)],
+            'lines'  => $lines,
+            'gst'    => ['mode' => $cfg['line_gst'], 'blended' => $lSub > 0 ? round($lTax / $lSub * 100, 1) : 0.0, 'goods_rate' => $g['goods'], 'service_rate' => $g['service'],
+                'subtotal' => $lSub, 'tax' => $lTax],
             'subsidy' => ['central' => $central, 'state' => $state, 'state_label' => $cfg['state_label'], 'total' => $central + $state],
             'savings' => ['units_per_kw_day' => $upkd, 'gen_year' => $genYear, 'gen_bimonthly' => round($genBm), 'bimonthly' => $saveBm, 'year' => $saveYear,
                 'tariff_avg' => $genYear > 0 ? round($saveYear / $genYear, 2) : 0],
@@ -518,6 +529,8 @@ class QuickQuote
         if (! is_array($spec) || empty($spec['savings'])) {
             return null;
         }
+        // Quotations saved before items were linked kept each row as a plain list.
+        $spec['bom'] = array_map(static fn ($b) => isset($b[0]) ? ['key' => '', 'item' => $b[0], 'desc' => (string) $b[1], 'make' => (string) $b[2], 'qty' => $b[3], 'uom' => $b[4], 'cost' => 0, 'item_id' => 0] : $b, $spec['bom'] ?? []);
         $net  = round((float) $q['total'] - (float) $q['subsidy_amount'], 2);
         $a    = $spec['assume'];
         $proj = self::projection((float) $spec['savings']['year'], $net, (float) $a['escalation'], (float) $a['degradation'], (int) $a['years']);
@@ -580,6 +593,180 @@ class QuickQuote
         $z = round($y(0), 1);
 
         return $svg . '<line x1="' . $pl . '" x2="' . $w . '" y1="' . $z . '" y2="' . $z . '" stroke="#d4a72c" stroke-width="1.5"/></svg>';
+    }
+
+    /** Component keys that are services (installation-side GST rate and SAC code). */
+    public const SERVICE_KEYS = ['installation', 'transport'];
+
+    /** Components an admin can link to an inventory item (panels, inverters and extras are linked on their own rows). */
+    public const ITEM_KEYS = [
+        'structure' => 'Mounting structure', 'structure_high' => 'Elevated / high-rise structure', 'dcdb' => 'DCDB', 'acdb' => 'ACDB',
+        'dc_cable' => 'DC cable', 'ac_cable' => 'AC copper cable', 'conduit' => 'Flexible conduits', 'earth_pit' => 'Earth pit / earthing kit',
+        'earth_cable' => 'Earth cable', 'la' => 'Lightning arrestor', 'misc' => 'Miscellaneous (MC4 etc.)', 'battery' => 'Battery (hybrid)',
+        'micro' => 'Micro inverter', 'transport' => 'Transport (service)', 'installation' => 'Installation (service)',
+    ];
+
+    /**
+     * Quotation lines (tax-exclusive rate per line) that add up to $total incl. GST.
+     *
+     * items mode: one line per component; linked inventory items keep their item,
+     * HSN and GST rate, so the invoice and dispatch use real stock. The price is
+     * shared out in proportion to each component's cost; installation takes the
+     * rounding so the total is exact.
+     * split mode: two lines, supply (goods rate) and installation (service rate),
+     * in the admin's goods : services ratio.
+     */
+    public static function lines(array $bom, float $total, array $cfg, string $sysLabel, int $panels, int $watt): array
+    {
+        $g    = $cfg['gst'];
+        $sum  = array_sum(array_column($bom, 'cost'));
+        if ($cfg['line_gst'] === 'split' || $sum <= 0 || $total <= 0) {
+            $s       = $g['service_share'] / 100;
+            $blended = (1 - $s) * $g['goods'] + $s * $g['service'];
+            $goods   = round($total / (1 + $blended / 100) * (1 - $s), 2);
+            $serv    = round(($total - $goods * (1 + $g['goods'] / 100)) / (1 + $g['service'] / 100), 2);
+
+            return [
+                ['item_id' => null, 'description' => 'Supply of ' . $sysLabel . ' Solar Power Plant (' . $panels . ' × ' . $watt . 'W modules, inverter and balance of system)',
+                    'hsn' => $g['hsn'], 'qty' => 1, 'rate' => $goods, 'tax_percent' => $g['goods']],
+                ['item_id' => null, 'description' => 'Installation, testing & commissioning of ' . $sysLabel . ' Solar Power Plant',
+                    'hsn' => $g['sac'], 'qty' => 1, 'rate' => $serv, 'tax_percent' => $g['service']],
+            ];
+        }
+        // The line that absorbs rounding: installation, else the last line with a cost.
+        $absorb = null;
+        $rank   = static fn ($b) => $b['key'] === 'installation' ? 3 : (in_array($b['key'], self::SERVICE_KEYS, true) ? 2 : (empty($b['item_id']) ? 1 : 0));
+        foreach ($bom as $i => $b) {
+            if ($b['cost'] > 0 && ($absorb === null || $rank($b) >= $rank($bom[$absorb]))) {
+                $absorb = $i;
+            }
+        }
+        $out  = [];
+        $done = 0.0;
+        foreach ($bom as $i => $b) {
+            if ($b['cost'] <= 0 && empty($b['item_id'])) {
+                continue; // nothing to charge and nothing to take from stock
+            }
+            $service = in_array($b['key'], self::SERVICE_KEYS, true);
+            $tax     = isset($b['tax']) && $b['tax'] !== null ? (float) $b['tax'] : (float) ($service ? $g['service'] : $g['goods']);
+            $line    = [
+                'item_id'     => ! empty($b['item_id']) ? (int) $b['item_id'] : null,
+                'description' => ! empty($b['item_name']) ? $b['item_name'] : trim($b['item'] . ($b['desc'] !== '' ? ' – ' . $b['desc'] : '') . ($b['make'] !== '' && $b['make'] !== 'Multiple' ? ' (' . $b['make'] . ')' : '')),
+                'hsn'         => ($b['hsn'] ?? '') ?: ($service ? $g['sac'] : $g['hsn']),
+                'qty'         => $b['qty'],
+                'tax_percent' => $tax,
+                '_i'          => $i,
+            ];
+            if ($service && empty($b['item_name'])) {
+                $line['description'] = ($b['key'] === 'installation' ? 'Installation, testing & commissioning' : 'Transport') . ' – ' . $sysLabel;
+            }
+            if ($service || ($i === $absorb && empty($b['item_id']))) {
+                $line['qty'] = 1; // a lump sum, so it can carry the rounding exactly
+            }
+            $out[] = $line;
+        }
+        foreach ($out as &$l) {
+            if ($l['_i'] === $absorb) {
+                continue;
+            }
+            $incl      = $total * $bom[$l['_i']]['cost'] / $sum;
+            $l['rate'] = round($incl / (1 + $l['tax_percent'] / 100) / $l['qty'], 2);
+            $amount    = round($l['qty'] * $l['rate'], 2);
+            $done     += $amount + round($amount * $l['tax_percent'] / 100, 2);
+        }
+        unset($l);
+        foreach ($out as &$l) {
+            if ($l['_i'] === $absorb) {
+                $l['rate'] = max(0, round(($total - $done) / (1 + $l['tax_percent'] / 100) / $l['qty'], 2));
+            }
+            unset($l['_i']);
+        }
+        unset($l);
+
+        return $out;
+    }
+
+    /**
+     * Fills item_id / item_name / unit / tax / hsn / stock on each component:
+     * the admin's link first, else a match on the item name (brand, wattage, kW,
+     * keywords). Items: [id, name, unit, hsn, tax_percent, stock].
+     */
+    public static function attachItems(array $bom, array $items, array $ctx): array
+    {
+        $byId = array_column($items, null, 'id');
+        foreach ($bom as &$b) {
+            $it = ! empty($b['item_id']) ? ($byId[$b['item_id']] ?? null) : null;
+            $b['item_auto'] = false;
+            if (! $it && ($it = self::matchItem($b['key'], $ctx, $items))) {
+                $b['item_auto'] = true;
+            }
+            $b['item_id']   = $it ? (int) $it['id'] : 0;
+            $b['item_name'] = $it['name'] ?? null;
+            $b['unit']      = $it['unit'] ?? null;
+            $b['tax']       = $it ? (float) $it['tax_percent'] : null;
+            $b['hsn']       = $it['hsn'] ?? null;
+            $b['stock']     = $it && isset($it['stock']) ? (float) $it['stock'] : null;
+        }
+        unset($b);
+
+        return $bom;
+    }
+
+    /** Best inventory item for a component, guessed from item names; null when nothing fits. */
+    public static function matchItem(string $key, array $ctx, array $items): ?array
+    {
+        $q     = static fn (string $w) => preg_quote($w, '/');
+        $brand = trim((string) ($ctx['brand'] ?? ''));
+        $watt  = (int) ($ctx['watt'] ?? 0);
+        $kw    = isset($ctx['inv_kw']) && $ctx['inv_kw'] !== null ? (float) $ctx['inv_kw'] : null;
+        $kwRe  = $kw !== null ? '(?<![\d.])' . $q(self::fmt($kw)) . '(\.0+)?\s*k\s*(w|va)?\b' : null;
+        $wRe   = $watt ? '(?<!\d)' . $watt . '\s*(w|wp)?\b' : null;
+        $tech  = ['bifacial' => 'bifacial|bi-facial', 'topcon' => 'topcon|top-con|n-type', 'hjt' => 'hjt|heterojunction'][$ctx['tech'] ?? ''] ?? null;
+        $bRe   = $brand !== '' ? $q($brand) : null;
+        // Each rule: list of regexes that must all match; first rule with a hit wins. 'not' excludes.
+        [$rules, $not] = match ($key) {
+            'panels' => [array_filter([
+                $bRe && $wRe && $tech ? [$bRe, $wRe, $tech] : null, $bRe && $wRe ? [$bRe, $wRe] : null,
+                $wRe ? [$wRe, 'panel|module'] : null, $bRe ? [$bRe, 'panel|module'] : null,
+            ]), 'inverter|cable|structure'],
+            'inverter' => match ($ctx['kind'] ?? 'ongrid') {
+                'micro'  => [[array_filter([$bRe, 'micro']), ['micro.*inverter|inverter.*micro']], null],
+                'hybrid' => [array_filter([$bRe && $kwRe ? [$bRe, $kwRe, 'hybrid'] : null, $kwRe ? [$kwRe, 'hybrid'] : null]), 'micro'],
+                default  => [array_filter([$bRe && $kwRe ? [$bRe, $kwRe, 'inverter|grid|tie'] : null, $bRe && $kwRe ? [$bRe, $kwRe] : null, $kwRe ? [$kwRe, 'inverter'] : null]), 'hybrid|micro|battery'],
+            },
+            'battery'        => [[['battery']], 'inverter'],
+            'structure'      => [[['structure|mounting'], ['\bmms\b']], 'elevat|high.?rise'],
+            'structure_high' => [[['elevat|high.?rise', 'structure|mounting']], null],
+            'dcdb'           => [[['\bdcdb\b|dc\s*distribution|dc\s*junction']], null],
+            'acdb'           => [[['\bacdb\b|ac\s*distribution']], null],
+            'dc_cable'       => [[['\bdc\b|solar', 'cable|wire']], 'earth|\bac\b|dcdb'],
+            'ac_cable'       => [[['\bac\b|copper|armou?red', 'cable|wire']], 'earth|\bdc\b|solar|acdb'],
+            'conduit'        => [[['conduit'], ['\bpipe\b|flexible']], null],
+            'earth_pit'      => [[['earth|earthing|grounding', 'pit|electrode|rod|chemical|kit|chamber']], 'cable|wire|strip'],
+            'earth_cable'    => [[['earth|earthing', 'cable|wire|strip']], null],
+            'la'             => [[['lightning|arrest']], null],
+            'misc'           => [[['\bmc4\b|misc|accessor|connector']], null],
+            'transport'      => [[['transport|freight']], null],
+            'installation'   => [[['install|commission']], null],
+            default          => [[], null],
+        };
+        foreach ($rules as $rule) {
+            foreach ($items as $it) {
+                $name = (string) $it['name'];
+                if ($not && preg_match('/' . $not . '/i', $name)) {
+                    continue;
+                }
+                foreach ($rule as $re) {
+                    if (! preg_match('/' . $re . '/i', $name)) {
+                        continue 2;
+                    }
+                }
+
+                return $it;
+            }
+        }
+
+        return null;
     }
 
     public static function fmt(float $n): string

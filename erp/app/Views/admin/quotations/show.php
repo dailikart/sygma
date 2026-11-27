@@ -2,9 +2,12 @@
 <?= $this->section('title') ?>Quotation <?= esc($q['quote_no']) ?><?= $this->endSection() ?>
 <?= $this->section('content') ?>
 <?php $st = \App\Controllers\Admin\Quotations::STATUSES; $badge = ['draft' => 'secondary', 'sent' => 'info', 'accepted' => 'primary', 'rejected' => 'danger', 'converted' => 'success'];
-$manage = can('quotations.manage'); $open = $q['status'] !== 'converted'; ?>
+$manage = can('quotations.manage'); $old = ! empty($q['superseded_by']); $open = $q['status'] !== 'converted' && ! $old; ?>
+<?php if ($old): $latest = $versions[0] ?? null; ?><div class="alert alert-warning d-flex align-items-center gap-2"><i class="bi bi-clock-history fs-5"></i>
+    <div>This is an older version. <?= $latest ? 'The latest is <a class="alert-link" href="' . site_url('admin/quotations/' . $latest['id']) . '">' . esc($latest['quote_no']) . '</a>.' : '' ?> Older versions cannot be changed, sent for acceptance or converted.</div></div><?php endif ?>
 <div class="d-flex flex-wrap gap-2 mb-3 align-items-center">
     <span class="badge fs-6 text-bg-<?= $badge[$q['status']] ?? 'light' ?>"><?= esc($st[$q['status']] ?? $q['status']) ?></span>
+    <?php if (! empty($q['revision'])): ?><span class="badge fs-6 text-bg-warning">R<?= (int) $q['revision'] ?></span><?php endif ?>
     <?php if ($q['viewed_at']): ?><span class="small text-success"><i class="bi bi-eye"></i> Customer opened the link <?= fdate($q['viewed_at'], true) ?></span><?php endif ?>
     <div class="ms-auto d-flex flex-wrap gap-2">
         <div class="btn-group"><a href="<?= site_url('admin/quotations/' . $q['id'] . '/pdf') ?>" target="_blank" class="btn btn-outline-secondary"><i class="bi bi-file-earmark-pdf"></i> View PDF</a>
@@ -12,7 +15,8 @@ $manage = can('quotations.manage'); $open = $q['status'] !== 'converted'; ?>
         <?php if ($manage): ?>
             <a href="<?= site_url('admin/quotations/' . $q['id'] . '/whatsapp') ?>" target="_blank" class="btn btn-outline-success<?= $q['party_phone'] ? '' : ' disabled' ?>"><i class="bi bi-whatsapp"></i> WhatsApp</a>
             <button class="btn btn-outline-secondary" data-bs-toggle="collapse" data-bs-target="#emailForm"><i class="bi bi-envelope"></i> Email</button>
-            <?php if ($open && $qq): ?><a href="<?= site_url('admin/quotations/' . $q['id'] . '/quick') ?>" class="btn btn-outline-primary"><i class="bi bi-arrow-repeat"></i> Revise</a><?php endif ?>
+            <?php if ($open && $qq): ?><a href="<?= site_url('admin/quotations/' . $q['id'] . '/quick') ?>" class="btn btn-outline-primary" title="Change the options; saved as a new version, this one is kept"><i class="bi bi-arrow-repeat"></i> Revise</a><?php endif ?>
+            <?php if (! $old && \App\Controllers\Admin\Quotations::hasVersions()): ?><a href="<?= site_url('admin/quotations/' . $q['id'] . '/agreement') ?>" class="btn btn-outline-dark"><i class="bi bi-file-earmark-text"></i> Agreement</a><?php endif ?>
             <?php if ($open): ?><a href="<?= site_url('admin/quotations/' . $q['id'] . '/edit') ?>" class="btn btn-outline-<?= $qq ? 'secondary' : 'primary' ?>" title="Edit the lines and price by hand"><i class="bi bi-pencil-square"></i> Edit<?= $qq ? ' lines' : '' ?></a><?php endif ?>
             <?php if ($open && can('invoices.manage')): ?><form method="post" action="<?= site_url('admin/quotations/' . $q['id'] . '/convert') ?>"><?= csrf_field() ?><button class="btn btn-success" data-confirm="Convert to an invoice?<?= $q['customer_id'] ? '' : ' A customer is created from these details first.' ?>"><i class="bi bi-receipt"></i> Convert to invoice</button></form><?php endif ?>
         <?php endif ?>
@@ -79,6 +83,13 @@ $manage = can('quotations.manage'); $open = $q['status'] !== 'converted'; ?>
                 <?php endif ?>
             </table>
             <div class="card-body small text-muted py-2"><?= $qq ? 'EB slab tariff, ' . qty($qq['assume']['escalation']) . '% yearly tariff rise, ' . qty($qq['assume']['degradation']) . '% panel degradation.' : 'Based on ' . qty($q['units_per_kw_day']) . ' units/kW/day at ₹' . qty($q['tariff']) . '/unit.' ?></div></div>
+        <?php if ($versions): ?><div class="card mt-3"><div class="card-header bg-white fw-semibold"><i class="bi bi-clock-history"></i> Versions</div>
+            <div class="list-group list-group-flush small">
+            <?php foreach ($versions as $ver): ?>
+                <a href="<?= site_url('admin/quotations/' . $ver['id']) ?>" class="list-group-item list-group-item-action d-flex gap-2 <?= (int) $ver['id'] === (int) $q['id'] ? 'active' : '' ?>">
+                    <span><b><?= esc($ver['quote_no']) ?></b><br><?= fdate($ver['quote_date']) ?> · <?= qty($ver['capacity_kw']) ?> kW<?= $ver['username'] ? ' · by ' . esc($ver['username']) : '' ?></span>
+                    <span class="ms-auto text-end"><?= money($ver['total']) ?><br><?= $ver['superseded_by'] ? '<span class="opacity-75">earlier</span>' : '<span class="badge text-bg-success">latest</span>' ?></span></a>
+            <?php endforeach ?></div></div><?php endif ?>
         <?php if (! empty($q['roof_design_id']) && can('designs.view')): ?><a class="btn btn-sm btn-outline-primary w-100 mt-3" href="<?= site_url('admin/designs/' . $q['roof_design_id']) ?>"><i class="bi bi-badge-3d"></i> Open the 3D roof design</a><?php endif ?>
         <?php if ($q['design_path']): ?><div class="card mt-3"><div class="card-header bg-white fw-semibold">Design</div><div class="card-body text-center">
             <?php if (preg_match('/\.(jpe?g|png|webp)$/i', $q['design_path'])): ?><a href="<?= site_url('admin/quotations/' . $q['id'] . '/design') ?>" target="_blank"><img src="<?= site_url('admin/quotations/' . $q['id'] . '/design') ?>" class="img-fluid rounded" alt="Design"></a>

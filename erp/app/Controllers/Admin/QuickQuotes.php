@@ -47,9 +47,15 @@ class QuickQuotes extends AdminController
     public function edit($id)
     {
         $this->requirePermission('quotations.manage');
+        if ($missing = $this->missingColumn()) {
+            return $missing;
+        }
         $q = $this->findOr404('quotations', $id);
         if ($q['status'] === 'converted') {
             return $this->back('This quotation is already converted to an invoice.');
+        }
+        if ($q['superseded_by']) {
+            return redirect()->to('admin/quotations/' . $this->latestId((int) $q['id']) . '/quick')->with('warning', $q['quote_no'] . ' has a newer version: revising the latest one.');
         }
         $spec = json_decode((string) ($q['quick_spec'] ?? ''), true);
         if (! is_array($spec)) {
@@ -64,15 +70,20 @@ class QuickQuotes extends AdminController
     {
         $this->requirePermission('quotations.manage');
         $cfg = $this->effectiveConfig();
-        $r   = QuickQuote::build($this->input(), $cfg, (string) setting('Solar.companyName'));
+        $r   = QuickQuote::build($this->input(), $cfg, (string) setting('Solar.companyName'), $this->stockItems());
+        if (! $r['ok']) {
+            return $this->response->setJSON(['ok' => false, 'error' => $r['error']]);
+        }
+        $net = $r['price']['total'] - $r['subsidy']['total'];
 
-        return $this->response->setJSON($r['ok'] ? [
+        return $this->response->setJSON([
             'ok' => true, 'warnings' => $r['warnings'], 'title' => $r['title'], 'size' => $r['size'], 'price' => $r['price'],
-            'subsidy' => $r['subsidy'], 'savings' => $r['savings'], 'gst' => $r['gst'],
-            'net' => $r['price']['total'] - $r['subsidy']['total'],
-            'payback' => QuickQuote::projection($r['savings']['year'], $r['price']['total'] - $r['subsidy']['total'], $cfg['escalation'], $cfg['degradation'], $cfg['years'])['payback'],
+            'subsidy' => $r['subsidy'], 'savings' => $r['savings'], 'gst' => $r['gst'], 'net' => $net,
+            'payback' => QuickQuote::projection($r['savings']['year'], $net, $cfg['escalation'], $cfg['degradation'], $cfg['years'])['payback'],
             'cost' => can('settings.manage') ? $r['cost'] : null,
-        ] : ['ok' => false, 'error' => $r['error']]);
+            'items' => array_map(static fn ($b) => ['part' => $b['item'], 'qty' => $b['qty'], 'uom' => $b['uom'], 'item' => $b['item_name'],
+                'auto' => $b['item_auto'] ?? false, 'stock' => $b['stock'] ?? null], $r['bom']),
+        ]);
     }
 
     public function store()
@@ -80,6 +91,7 @@ class QuickQuotes extends AdminController
         return $this->save(null);
     }
 
+    /** Revise: saves the changed quotation as a new version (…-R1, -R2); the old version is kept. */
     public function update($id)
     {
         return $this->save((int) $id);
@@ -95,6 +107,9 @@ class QuickQuotes extends AdminController
         if ($old && $old['status'] === 'converted') {
             return $this->back('This quotation is already converted to an invoice.');
         }
+        if ($old && $old['superseded_by']) {
+            return redirect()->to('admin/quotations/' . $this->latestId((int) $old['id']))->with('error', 'A newer version of this quotation exists: revise that one.');
+        }
         if (! $this->validate([
             'party_name'  => 'required|max_length[150]',
             'party_phone' => 'permit_empty|max_length[20]',
@@ -103,24 +118,19 @@ class QuickQuotes extends AdminController
             return redirect()->back()->withInput()->with('error', implode(' ', $this->validator->getErrors()));
         }
         $cfg = $this->effectiveConfig();
-        $r   = QuickQuote::build($this->input(), $cfg, (string) setting('Solar.companyName'));
+        $r   = QuickQuote::build($this->input(), $cfg, (string) setting('Solar.companyName'), $this->stockItems());
         if (! $r['ok']) {
             return redirect()->back()->withInput()->with('error', $r['error']);
         }
         $p     = $this->request->getPost();
         $s     = static fn ($k) => trim((string) ($p[$k] ?? '')) ?: null;
         $state = $s('party_state') ?? (string) setting('Solar.companyState');
-        $kind  = trim($r['size']['kw'] . ' kW ' . $r['system_name']);
-        [$lines, $sub, $tax, $total] = Tax::lines([
-            ['description' => 'Supply of ' . $kind . ' Solar Power Plant (' . $r['size']['panels'] . ' × ' . $r['size']['watt'] . 'W modules, inverter and balance of system)',
-                'hsn' => $r['gst']['hsn'], 'qty' => 1, 'rate' => $r['gst']['goods_value'], 'tax_percent' => $r['gst']['goods_rate']],
-            ['description' => 'Installation, testing & commissioning of ' . $kind . ' Solar Power Plant',
-                'hsn' => $r['gst']['sac'], 'qty' => 1, 'rate' => $r['gst']['service_value'], 'tax_percent' => $r['gst']['service_rate']],
-        ]);
-        $r['party'] = ['pincode' => $s('pincode'), 'eb_number' => $s('eb_number')];
+        [$lines, $sub, $tax, $total] = Tax::lines($r['lines']);
+        $r['party']       = ['pincode' => $s('pincode'), 'eb_number' => $s('eb_number')];
         $r['prepared_by'] = auth()->user()->username ?? '';
-        unset($r['ok']);
-        $date = $old['quote_date'] ?? date('Y-m-d');
+        unset($r['ok'], $r['lines']);
+        $date = date('Y-m-d');
+        $now  = date('Y-m-d H:i:s');
         $head = [
             'lead_id' => ((int) ($p['lead_id'] ?? 0)) ?: null, 'customer_id' => ((int) ($p['customer_id'] ?? 0)) ?: null,
             'party_name' => trim($p['party_name']), 'party_phone' => $s('party_phone'), 'party_email' => $s('party_email'),
@@ -128,35 +138,92 @@ class QuickQuotes extends AdminController
             'customer_type' => 'b2c', 'quote_date' => $date,
             'valid_until' => date('Y-m-d', strtotime($date . ' +' . max(1, (int) setting('Solar.quoteValidDays')) . ' days')),
             'subsidy_type' => $r['subsidy']['total'] > 0 ? 'subsidy' : 'non_subsidy', 'capacity_kw' => $r['size']['kw'],
-            'gst_type' => Tax::gstType($state), 'print_format' => 'itemwise',
+            'gst_type' => Tax::gstType($state), 'print_format' => $cfg['line_gst'] === 'items' ? 'cumulative' : 'itemwise',
             'subtotal' => $sub, 'tax_total' => $tax, 'total' => $total, 'subsidy_amount' => $r['subsidy']['total'],
             'units_per_kw_day' => $r['savings']['units_per_kw_day'], 'tariff' => $r['savings']['tariff_avg'],
             'eb_charges_by' => null, 'eb_charges_amount' => null, // the EB meter cost is printed as a note, not added to the net cost
             'notes' => $s('notes'), 'quick_spec' => json_encode($r, JSON_UNESCAPED_UNICODE),
-            'updated_at' => date('Y-m-d H:i:s'),
+            'status' => 'draft', 'share_token' => bin2hex(random_bytes(16)), 'created_by' => auth()->id(), 'created_at' => $now, 'updated_at' => $now,
         ];
         $db = db_connect();
         $db->transException(true)->transStart();
         if ($old) {
-            $db->table('quotations')->where('id', $old['id'])->update($head);
-            $db->table('quotation_items')->where('quotation_id', $old['id'])->delete();
-            $id = (int) $old['id'];
+            $rootId = (int) ($old['root_id'] ?: $old['id']);
+            $root   = $db->table('quotations')->select('quote_no')->where('id', $rootId)->get()->getRowArray();
+            $rev    = 1 + (int) $db->table('quotations')->selectMax('revision', 'r')->groupStart()->where('id', $rootId)->orWhere('root_id', $rootId)->groupEnd()->get()->getRow('r');
+            $head  += [
+                'quote_no' => ($root['quote_no'] ?? $old['quote_no']) . '-R' . $rev, 'root_id' => $rootId, 'revision' => $rev,
+                'roof_design_id' => $old['roof_design_id'], 'installation_type_id' => $old['installation_type_id'], 'agreement' => $this->carryAgreement($old['agreement'] ?? null),
+            ];
         } else {
-            $db->table('quotations')->insert($head + [
-                'quote_no' => Numbering::next('quotations', 'quote_no', (string) setting('Solar.quotePrefix'), $date),
-                'status' => 'draft', 'share_token' => bin2hex(random_bytes(16)), 'created_by' => auth()->id(), 'created_at' => $head['updated_at'],
-            ]);
-            $id = (int) $db->insertID();
+            $head['quote_no'] = Numbering::next('quotations', 'quote_no', (string) setting('Solar.quotePrefix'), $date);
         }
+        $db->table('quotations')->insert($head);
+        $id = (int) $db->insertID();
         foreach ($lines as $l) {
-            $db->table('quotation_items')->insert(['quotation_id' => $id, 'item_id' => null, 'description' => $l['description'], 'hsn' => $l['hsn'],
+            $db->table('quotation_items')->insert(['quotation_id' => $id, 'item_id' => $l['item_id'] ?? null, 'description' => $l['description'], 'hsn' => $l['hsn'],
                 'qty' => $l['qty'], 'rate' => $l['rate'], 'tax_percent' => $l['tax_percent'], 'tax_amount' => $l['tax_amount'], 'amount' => $l['amount']]);
         }
+        if ($old) {
+            $db->table('quotations')->where('id', $old['id'])->update(['superseded_by' => $id, 'updated_at' => $now]);
+        }
         $db->transComplete();
-        Workflow::log('quotation', $id, $old ? 'edited' : 'created', 'Quick quote ' . $r['title'] . ' for ' . $head['party_name'] . ' (' . money($total) . ')');
+        if ($old && $old['design_path'] && is_file(WRITEPATH . 'uploads/' . $old['design_path'])) {
+            $rel = 'quotations/design-' . $id . '-' . time() . '.' . pathinfo($old['design_path'], PATHINFO_EXTENSION);
+            if (copy(WRITEPATH . 'uploads/' . $old['design_path'], WRITEPATH . 'uploads/' . $rel)) {
+                $db->table('quotations')->where('id', $id)->update(['design_path' => $rel]);
+            }
+        }
+        Workflow::log('quotation', $id, $old ? 'revised' : 'created', ($old ? 'Revised from ' . $old['quote_no'] . ': ' : 'Quick quote ') . $r['title'] . ' for ' . $head['party_name'] . ' (' . money($total) . ')');
+        if ($old) {
+            Workflow::log('quotation', (int) $old['id'], 'superseded', 'Replaced by ' . $head['quote_no']);
+        }
+        $linked = count(array_filter($lines, static fn ($l) => ! empty($l['item_id'])));
 
-        return redirect()->to('admin/quotations/' . $id)->with('message', 'Quotation ready: ' . $r['title'] . ', ' . money($total) . '.')
+        return redirect()->to('admin/quotations/' . $id)
+            ->with('message', ($old ? 'New version ' . $head['quote_no'] . ' saved: ' : 'Quotation ready: ') . $r['title'] . ', ' . money($total) . '. ' . $linked . ' stock item(s) added from Inventory.')
             ->with('warning', $r['warnings'] ? implode(' ', $r['warnings']) : null);
+    }
+
+    /** Agreement details carried to a new version; amounts are worked out again from the new total. */
+    private function carryAgreement(?string $json): ?string
+    {
+        $a = json_decode((string) $json, true);
+        if (! is_array($a)) {
+            return null;
+        }
+        unset($a['date']);
+        $a['stages'] = array_map(static function ($s) {
+            unset($s['amount']);
+
+            return $s;
+        }, $a['stages'] ?? []);
+
+        return json_encode($a, JSON_UNESCAPED_UNICODE);
+    }
+
+    /** Newest version in the chain of a quotation. */
+    private function latestId(int $id): int
+    {
+        $db = db_connect();
+        for ($i = 0; $i < 100; $i++) {
+            $next = $db->table('quotations')->select('superseded_by')->where('id', $id)->get()->getRow('superseded_by');
+            if (! $next) {
+                break;
+            }
+            $id = (int) $next;
+        }
+
+        return $id;
+    }
+
+    /** Active inventory items with the quantity in stock (all locations). */
+    private function stockItems(): array
+    {
+        $stock = array_map('array_sum', \App\Libraries\Stock::balances());
+
+        return array_map(static fn ($i) => $i + ['stock' => $stock[(int) $i['id']] ?? 0.0],
+            db_connect()->table('items')->select('id, name, unit, hsn, tax_percent')->where(['is_active' => 1, 'deleted_at' => null])->orderBy('id')->get()->getResultArray());
     }
 
     // ── Rate card (admins) ──────────────────────────────────────────────────
@@ -165,7 +232,8 @@ class QuickQuotes extends AdminController
     {
         $this->requirePermission('settings.manage');
 
-        return $this->render('quotations/quick_settings', ['cfg' => QuickQuote::config(), 'saved' => (string) setting('Solar.quickQuote') !== '']);
+        return $this->render('quotations/quick_settings', ['cfg' => QuickQuote::config(), 'saved' => (string) setting('Solar.quickQuote') !== '',
+            'items' => db_connect()->table('items')->select('id, name')->where(['is_active' => 1, 'deleted_at' => null])->orderBy('name')->get()->getResultArray()]);
     }
 
     public function saveSettings()
@@ -192,11 +260,15 @@ class QuickQuotes extends AdminController
     {
         $this->requirePermission('quotations.view', 'quotations.manage');
         [$from, $to] = fy_range();
-        $rows = db_connect()->table('quotations q')
+        $b = db_connect()->table('quotations q')
             ->select('q.created_by, u.username, q.status, COUNT(*) AS n, SUM(q.total) AS value')
             ->join('users u', 'u.id = q.created_by', 'left')
             ->where('q.quote_date >=', $from)->where('q.quote_date <=', $to)
-            ->groupBy('q.created_by, u.username, q.status')->get()->getResultArray();
+            ->groupBy('q.created_by, u.username, q.status');
+        if (Quotations::hasVersions()) {
+            $b->where('q.superseded_by', null); // count each quotation once, at its latest version
+        }
+        $rows = $b->get()->getResultArray();
         $people = [];
         $team   = ['n' => 0, 'by' => [], 'won' => 0, 'won_value' => 0.0, 'sent' => 0];
         foreach ($rows as $r) {
@@ -253,7 +325,7 @@ class QuickQuotes extends AdminController
 
     private function missingColumn()
     {
-        if (! db_connect()->fieldExists('quick_spec', 'quotations')) {
+        if (! db_connect()->fieldExists('superseded_by', 'quotations')) {
             return redirect()->to('admin/quotations')->with('error', 'Quick quote needs a database update: open Administration → Database Updates and run it once.');
         }
 

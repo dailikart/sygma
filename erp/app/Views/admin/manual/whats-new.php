@@ -1,5 +1,12 @@
 <p>The latest additions to Sygma Solar Suite, newest first. Each item links to its chapter for the full steps.</p>
 
+<h4><i class="bi bi-boxes"></i> Quick Quote: stock items, versions and the agreement</h4>
+<ul>
+    <li><strong>Items fetched automatically.</strong> The quick quote now fills the quotation with your real Inventory items: panels, inverter, structure, DCDB, ACDB, cables, earthing, lightning arrestor and so on, with the right quantity, HSN and GST rate. The live summary lists each item and its stock. The invoice made from the quotation then dispatches the right stock. Link items in <span class="path">Quick Quote Prices → Items</span> (or on each panel / inverter price row); anything not linked is matched by its name, or added as a typed line.</li>
+    <li><strong>Versions.</strong> <em>Revise</em> saves the changed quotation as a new version (<code>QT/2026-27/0003-R1</code>, <code>-R2</code> …) and keeps the old one. The list shows only the latest version (tick <em>Show earlier versions</em> to see all); every version lists the others on its page. Older versions cannot be changed, accepted or converted, and Sales Team Progress counts each quotation once.</li>
+    <li><strong>Agreement.</strong> <em>Agreement</em> on a quotation makes the consumer–vendor agreement for PM Surya Ghar: name, address, EB number, system size, panel and inverter makes and the total come from the quotation; type the father's / husband's name, Aadhaar and date, adjust the payment stages for this customer, and print it (optionally leaving the top half of page 1 blank for stamp paper). Edit the standard text in <span class="path">Quick Quote Prices → Terms &amp; agreement</span>.</li>
+</ul>
+
 <h4><i class="bi bi-lightning-charge"></i> Quick Quote: the full proposal in one click</h4>
 <ul>
     <li><span class="path">Sales → Quick Quote</span> (or <em>Quick Quote</em> on a lead / customer): type the customer, then either the bi-monthly units from the EB bill or the kW size, and tap the building type, system type (On-Grid DCR / NDCR, Hybrid, Micro inverter), panel technology, wattage, brand and inverter. The price, subsidy, net cost and payback show live on the right.</li>

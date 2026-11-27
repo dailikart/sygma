@@ -16,6 +16,14 @@ $sel = static function (string $name, array $opts, $cur) {
     return $h . '</select>';
 };
 $c = $cfg['costs'];
+$itemSel = static function (string $name, $cur) use ($items) {
+    $h = '<select class="form-select form-select-sm" name="' . $name . '"><option value="0">— Auto: match by name —</option>';
+    foreach ($items as $it) {
+        $h .= '<option value="' . (int) $it['id'] . '" ' . ((int) $cur === (int) $it['id'] ? 'selected' : '') . '>' . esc($it['name']) . '</option>';
+    }
+
+    return $h . '</select>';
+};
 $systems = array_map(static fn ($s) => $s[0], QQ::SYSTEMS);
 $techs   = array_map(static fn ($s) => $s[0], QQ::TECHS);
 ?>
@@ -32,6 +40,7 @@ $techs   = array_map(static fn ($s) => $s[0], QQ::TECHS);
 </div>
 <ul class="nav nav-tabs mb-3" role="tablist">
     <li class="nav-item"><button type="button" class="nav-link active" data-bs-toggle="tab" data-bs-target="#t-prices">Prices</button></li>
+    <li class="nav-item"><button type="button" class="nav-link" data-bs-toggle="tab" data-bs-target="#t-items">Items</button></li>
     <li class="nav-item"><button type="button" class="nav-link" data-bs-toggle="tab" data-bs-target="#t-terms">Terms &amp; agreement</button></li>
     <li class="nav-item"><button type="button" class="nav-link" data-bs-toggle="tab" data-bs-target="#t-savings">Savings &amp; subsidy</button></li>
 </ul>
@@ -49,13 +58,13 @@ $techs   = array_map(static fn ($s) => $s[0], QQ::TECHS);
     </table></div>
 
     <div class="card mb-3"><div class="card-header">Panel prices <span class="fw-normal small text-muted">₹ per watt, GST included · DCR = made in India, subsidy eligible · NDCR = imported, no subsidy</span></div>
-        <table class="table table-sm mb-0"><thead><tr><th>Brand</th><th>Technology</th><th>Type</th><th class="text-end">₹ / W</th><th></th></tr></thead>
+        <table class="table table-sm mb-0"><thead><tr><th>Brand</th><th>Technology</th><th>Type</th><th class="text-end">₹ / W</th><th>Inventory item</th><th></th></tr></thead>
         <tbody data-rows="panels">
         <?php foreach ($cfg['panels'] as $k => $p): ?>
             <tr><td><input class="form-control form-control-sm" name="cfg[panels][<?= $k ?>][brand]" value="<?= esc($p['brand']) ?>"></td><td><?= $sel("cfg[panels][$k][tech]", $techs, $p['tech']) ?></td>
-                <td><?= $sel("cfg[panels][$k][dcr]", ['1' => 'DCR', '0' => 'NDCR'], (string) $p['dcr']) ?></td><td><?= $n("cfg[panels][$k][rate]", $p['rate'], '₹') ?></td><td><button type="button" class="btn btn-sm btn-link text-danger del">✕</button></td></tr>
+                <td><?= $sel("cfg[panels][$k][dcr]", ['1' => 'DCR', '0' => 'NDCR'], (string) $p['dcr']) ?></td><td><?= $n("cfg[panels][$k][rate]", $p['rate'], '₹') ?></td><td><?= $itemSel("cfg[panels][$k][item_id]", $p['item_id'] ?? 0) ?></td><td><button type="button" class="btn btn-sm btn-link text-danger del">✕</button></td></tr>
         <?php endforeach ?></tbody></table>
-        <template data-for="panels"><tr><td><input class="form-control form-control-sm" name="cfg[panels][__i__][brand]"></td><td><?= $sel('cfg[panels][__i__][tech]', $techs, 'bifacial') ?></td><td><?= $sel('cfg[panels][__i__][dcr]', ['1' => 'DCR', '0' => 'NDCR'], '1') ?></td><td><?= $n('cfg[panels][__i__][rate]', 0, '₹') ?></td><td><button type="button" class="btn btn-sm btn-link text-danger del">✕</button></td></tr></template>
+        <template data-for="panels"><tr><td><input class="form-control form-control-sm" name="cfg[panels][__i__][brand]"></td><td><?= $sel('cfg[panels][__i__][tech]', $techs, 'bifacial') ?></td><td><?= $sel('cfg[panels][__i__][dcr]', ['1' => 'DCR', '0' => 'NDCR'], '1') ?></td><td><?= $n('cfg[panels][__i__][rate]', 0, '₹') ?></td><td><?= $itemSel('cfg[panels][__i__][item_id]', 0) ?></td><td><button type="button" class="btn btn-sm btn-link text-danger del">✕</button></td></tr></template>
         <div class="card-body py-2"><button type="button" class="btn btn-sm btn-outline-primary add" data-for="panels">+ Add panel price</button></div></div>
 
     <div class="card mb-3"><div class="card-header">Common costs</div><table class="table table-sm mb-0">
@@ -81,20 +90,20 @@ $techs   = array_map(static fn ($s) => $s[0], QQ::TECHS);
 
     <?php foreach (['ongrid' => 'On-grid inverter prices', 'hybrid' => 'Hybrid inverter prices'] as $kind => $label): ?>
     <div class="card mb-3"><div class="card-header"><?= $label ?></div>
-        <table class="table table-sm mb-0"><thead><tr><th>Phase</th><th>Size (kW)</th><th class="text-end">Price</th><th></th></tr></thead><tbody data-rows="<?= $kind ?>">
+        <table class="table table-sm mb-0"><thead><tr><th>Phase</th><th>Size (kW)</th><th class="text-end">Price</th><th>Inventory item</th><th></th></tr></thead><tbody data-rows="<?= $kind ?>">
         <?php foreach ($cfg['inverters'][$kind] as $k => $r): ?>
-            <tr><td><?= $sel("cfg[inverters][$kind][$k][phase]", ['1' => 'Single (1Ph)', '3' => 'Three (3Ph)'], (string) $r['phase']) ?></td><td><?= $n("cfg[inverters][$kind][$k][kw]", $r['kw'], 'kW') ?></td><td><?= $n("cfg[inverters][$kind][$k][price]", $r['price'], '₹') ?></td><td><button type="button" class="btn btn-sm btn-link text-danger del">✕</button></td></tr>
+            <tr><td><?= $sel("cfg[inverters][$kind][$k][phase]", ['1' => 'Single (1Ph)', '3' => 'Three (3Ph)'], (string) $r['phase']) ?></td><td><?= $n("cfg[inverters][$kind][$k][kw]", $r['kw'], 'kW') ?></td><td><?= $n("cfg[inverters][$kind][$k][price]", $r['price'], '₹') ?></td><td><?= $itemSel("cfg[inverters][$kind][$k][item_id]", $r['item_id'] ?? 0) ?></td><td><button type="button" class="btn btn-sm btn-link text-danger del">✕</button></td></tr>
         <?php endforeach ?></tbody></table>
-        <template data-for="<?= $kind ?>"><tr><td><?= $sel("cfg[inverters][$kind][__i__][phase]", ['1' => 'Single (1Ph)', '3' => 'Three (3Ph)'], '1') ?></td><td><?= $n("cfg[inverters][$kind][__i__][kw]", 0, 'kW') ?></td><td><?= $n("cfg[inverters][$kind][__i__][price]", 0, '₹') ?></td><td><button type="button" class="btn btn-sm btn-link text-danger del">✕</button></td></tr></template>
+        <template data-for="<?= $kind ?>"><tr><td><?= $sel("cfg[inverters][$kind][__i__][phase]", ['1' => 'Single (1Ph)', '3' => 'Three (3Ph)'], '1') ?></td><td><?= $n("cfg[inverters][$kind][__i__][kw]", 0, 'kW') ?></td><td><?= $n("cfg[inverters][$kind][__i__][price]", 0, '₹') ?></td><td><?= $itemSel("cfg[inverters][$kind][__i__][item_id]", 0) ?></td><td><button type="button" class="btn btn-sm btn-link text-danger del">✕</button></td></tr></template>
         <div class="card-body py-2"><button type="button" class="btn btn-sm btn-outline-primary add" data-for="<?= $kind ?>">+ Add size &amp; price</button></div></div>
     <?php endforeach ?>
 
     <div class="card mb-3"><div class="card-header">Extra components <span class="fw-normal small text-muted">added to every quick quote</span></div>
-        <table class="table table-sm mb-0"><thead><tr><th>Name</th><th>Make</th><th class="text-end">Price</th><th>Per kW?</th><th></th></tr></thead><tbody data-rows="extras">
+        <table class="table table-sm mb-0"><thead><tr><th>Name</th><th>Make</th><th class="text-end">Price</th><th>Per kW?</th><th>Inventory item</th><th></th></tr></thead><tbody data-rows="extras">
         <?php foreach ($cfg['extras'] as $k => $x): ?>
-            <tr><td><input class="form-control form-control-sm" name="cfg[extras][<?= $k ?>][name]" value="<?= esc($x['name']) ?>"></td><td><input class="form-control form-control-sm" name="cfg[extras][<?= $k ?>][make]" value="<?= esc($x['make']) ?>"></td><td><?= $n("cfg[extras][$k][price]", $x['price'], '₹') ?></td><td><?= $sel("cfg[extras][$k][per_kw]", ['0' => 'Fixed', '1' => 'Per kW'], (string) $x['per_kw']) ?></td><td><button type="button" class="btn btn-sm btn-link text-danger del">✕</button></td></tr>
+            <tr><td><input class="form-control form-control-sm" name="cfg[extras][<?= $k ?>][name]" value="<?= esc($x['name']) ?>"></td><td><input class="form-control form-control-sm" name="cfg[extras][<?= $k ?>][make]" value="<?= esc($x['make']) ?>"></td><td><?= $n("cfg[extras][$k][price]", $x['price'], '₹') ?></td><td><?= $sel("cfg[extras][$k][per_kw]", ['0' => 'Fixed', '1' => 'Per kW'], (string) $x['per_kw']) ?></td><td><?= $itemSel("cfg[extras][$k][item_id]", $x['item_id'] ?? 0) ?></td><td><button type="button" class="btn btn-sm btn-link text-danger del">✕</button></td></tr>
         <?php endforeach ?></tbody></table>
-        <template data-for="extras"><tr><td><input class="form-control form-control-sm" name="cfg[extras][__i__][name]" placeholder="e.g. Walkway"></td><td><input class="form-control form-control-sm" name="cfg[extras][__i__][make]"></td><td><?= $n('cfg[extras][__i__][price]', 0, '₹') ?></td><td><?= $sel('cfg[extras][__i__][per_kw]', ['0' => 'Fixed', '1' => 'Per kW'], '0') ?></td><td><button type="button" class="btn btn-sm btn-link text-danger del">✕</button></td></tr></template>
+        <template data-for="extras"><tr><td><input class="form-control form-control-sm" name="cfg[extras][__i__][name]" placeholder="e.g. Walkway"></td><td><input class="form-control form-control-sm" name="cfg[extras][__i__][make]"></td><td><?= $n('cfg[extras][__i__][price]', 0, '₹') ?></td><td><?= $sel('cfg[extras][__i__][per_kw]', ['0' => 'Fixed', '1' => 'Per kW'], '0') ?></td><td><?= $itemSel('cfg[extras][__i__][item_id]', 0) ?></td><td><button type="button" class="btn btn-sm btn-link text-danger del">✕</button></td></tr></template>
         <div class="card-body py-2"><button type="button" class="btn btn-sm btn-outline-primary add" data-for="extras">+ Add component</button></div></div>
 
     <div class="card mb-3"><div class="card-header">Packages <span class="fw-normal small text-muted">fixed price, GST included</span></div><div class="card-body">
@@ -117,6 +126,25 @@ $techs   = array_map(static fn ($s) => $s[0], QQ::TECHS);
     </div></div>
 </div>
 
+<!-- ── Items ── -->
+<div class="tab-pane fade" id="t-items">
+    <div class="card mb-3"><div class="card-header">Quotation lines</div><div class="card-body">
+        <div class="form-check"><input class="form-check-input" type="radio" name="cfg[line_gst]" value="items" id="lg1" <?= $cfg['line_gst'] === 'items' ? 'checked' : '' ?>>
+            <label class="form-check-label" for="lg1"><b>Inventory items</b> (recommended): one line per part, using the item below with its own HSN and GST rate. The invoice made from the quotation then dispatches the right stock. The price is shared across the lines by their cost; the B2C invoice still prints as one system line.</label></div>
+        <div class="form-check mt-2"><input class="form-check-input" type="radio" name="cfg[line_gst]" value="split" id="lg2" <?= $cfg['line_gst'] === 'split' ? 'checked' : '' ?>>
+            <label class="form-check-label" for="lg2"><b>Two lines</b>: supply at the goods GST rate and installation at the services GST rate (the 70 : 30 split under Terms &amp; agreement → GST split). No stock items.</label></div>
+    </div></div>
+    <div class="card mb-3"><div class="card-header">Inventory item for each part <span class="fw-normal small text-muted">panels, inverters and extra components are linked on their own rows in Prices</span></div>
+        <?php if (! $items): ?><div class="card-body text-muted small">No items in Inventory yet. Add them in Inventory → Items, then link them here.</div><?php endif ?>
+        <table class="table table-sm mb-0">
+        <?php foreach (\App\Libraries\QuickQuote::ITEM_KEYS as $k => $label): ?>
+            <tr><td><?= esc($label) ?></td><td style="width:55%"><?= $itemSel("cfg[item_map][$k]", $cfg['item_map'][$k] ?? 0) ?></td></tr>
+        <?php endforeach ?>
+        </table>
+        <div class="card-body small text-muted">"Auto" picks the first item whose name fits: for panels the brand and wattage (e.g. <i>Adani 550W Bifacial DCR Module</i>), for inverters the brand and kW (e.g. <i>Growatt 4kW On-Grid Inverter</i>), for the rest keywords such as DCDB, ACDB, structure, earth pit, lightning arrestor. The quick quote shows each match with a <i class="bi bi-magic"></i> so salespeople can see it.</div>
+    </div>
+</div>
+
 <!-- ── Terms & agreement ── -->
 <div class="tab-pane fade" id="t-terms">
     <div class="card mb-3"><div class="card-header">Payment stages <span class="fw-normal small text-muted">percent of the total; must add up to 100%</span></div>
@@ -128,6 +156,19 @@ $techs   = array_map(static fn ($s) => $s[0], QQ::TECHS);
         <?php endforeach ?></div>
         <template data-for="stages"><div class="border rounded p-2 mb-2 stage"><div class="d-flex gap-2 mb-2"><input class="form-control form-control-sm" name="cfg[stages][__i__][name]" placeholder="Stage name"><div style="width:130px"><?= $n('cfg[stages][__i__][pct]', 0, '%') ?></div><button type="button" class="btn btn-sm btn-outline-danger del">✕</button></div><textarea class="form-control form-control-sm" rows="2" name="cfg[stages][__i__][text]" placeholder="When it is paid"></textarea></div></template>
         <button type="button" class="btn btn-sm btn-outline-primary add" data-for="stages">+ Add stage</button> <span class="ms-2 fw-semibold small" id="stageTotal"></span></div></div>
+    <div class="card mb-3"><div class="card-header">Agreement <span class="fw-normal small text-muted">consumer–vendor agreement made from a quotation (Quotation → Agreement)</span></div><div class="card-body">
+        <div class="row g-3 mb-2">
+            <div class="col-md-6"><label class="form-label small">Company legal name (blank = company name in Settings)</label><input class="form-control form-control-sm" name="cfg[legal_name]" value="<?= esc($cfg['legal_name']) ?>" placeholder="<?= esc((string) setting('Solar.companyName')) ?>"></div>
+            <div class="col-md-6"><label class="form-label small">Registered office address (blank = address in Settings)</label><textarea class="form-control form-control-sm" rows="2" name="cfg[legal_address]"><?= esc($cfg['legal_address']) ?></textarea></div>
+        </div>
+        <div class="form-check mb-2"><input type="hidden" name="cfg[agreement_stamp]" value="0"><input class="form-check-input" type="checkbox" name="cfg[agreement_stamp]" value="1" id="ast" <?= $cfg['agreement_stamp'] ? 'checked' : '' ?>><label class="form-check-label" for="ast">Print on stamp paper: leave the top half of page 1 blank (default; can be changed per agreement)</label></div>
+        <div class="small text-muted mb-1">Click where the detail should go in the text, then click the detail. The app fills it in for each customer.</div>
+        <div class="d-flex flex-wrap gap-1 mb-2"><?php foreach (\App\Libraries\Agreement::PLACEHOLDERS as $k => $l): ?><button type="button" class="btn btn-sm btn-outline-secondary rounded-pill ph" data-ph="{<?= $k ?>}"><?= esc($l) ?></button><?php endforeach ?></div>
+        <div class="small text-muted mb-1"><code># title</code> · <code>## centred line</code> · <code>### underlined heading</code> · <code>- numbered clause</code> · <code>&gt; small note</code> · <code>**bold**</code></div>
+        <textarea class="form-control font-monospace" rows="16" name="cfg[agreement_text]" id="agText"><?= esc($cfg['agreement_text']) ?></textarea>
+        <button type="button" class="btn btn-sm btn-outline-primary mt-2" id="agReset" data-text="<?= esc(\App\Libraries\Agreement::defaultText(), 'attr') ?>">Reset to the standard PM Surya Ghar text</button>
+        <div class="small text-muted mt-1">Check the text with your DISCOM's current format before use.</div>
+    </div></div>
     <div class="card mb-3"><div class="card-header">Project timeline</div><div class="card-body"><textarea class="form-control" rows="3" name="cfg[timeline]"><?= esc($cfg['timeline']) ?></textarea></div></div>
     <div class="card mb-3"><div class="card-header">Warranty</div><table class="table table-sm mb-0">
         <?= $row('Panel performance warranty', $n('cfg[warranty][panel_perf]', $cfg['warranty']['panel_perf'], 'years', '1')) ?>
@@ -196,6 +237,12 @@ $techs   = array_map(static fn ($s) => $s[0], QQ::TECHS);
     }
     document.addEventListener('input', e => { if (e.target.name && e.target.name.endsWith('[pct]')) stages(); });
     stages();
+    const ta = document.getElementById('agText');
+    document.querySelectorAll('.ph').forEach(b => b.addEventListener('click', () => {
+        const st = ta.selectionStart, en = ta.selectionEnd, t = b.dataset.ph;
+        ta.value = ta.value.slice(0, st) + t + ta.value.slice(en); ta.focus(); ta.selectionStart = ta.selectionEnd = st + t.length;
+    }));
+    document.getElementById('agReset').addEventListener('click', e => { if (confirm('Replace the agreement text with the standard text?')) ta.value = e.target.dataset.text; });
 })();
 </script>
 <?= $this->endSection() ?>
